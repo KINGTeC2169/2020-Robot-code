@@ -1,12 +1,12 @@
-package com.kingtec.frc2020;
+package frc.robot;
 
-import com.kingtec.frc2020.auto.actions.DoNothing;
-import com.kingtec.frc2020.util.ColorSensor;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.auto.actions.DoNothing;
+import frc.robot.util.ColorSensor;
 
 public class Robot extends TimedRobot {
 
@@ -57,6 +57,8 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
+        colorSensor.handle();
+        SmartDashboard.putString("Sensor", colorSensor.toString());
     }
 
     @Override
@@ -65,7 +67,5 @@ public class Robot extends TimedRobot {
 
     @Override
     public void testPeriodic() {
-        colorSensor.handle();
-        System.out.println(colorSensor);
     }
 }

@@ -1,4 +1,4 @@
-package com.kingtec.frc2020;
+package frc.robot;
 
 import edu.wpi.first.wpilibj.RobotBase;
 

@@ -1,4 +1,4 @@
-package com.kingtec.frc2020.auto.actions;
+package frc.robot.auto.actions;
 
 import edu.wpi.first.wpilibj.command.Command;
 
