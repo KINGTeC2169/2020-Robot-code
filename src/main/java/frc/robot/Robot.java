@@ -6,10 +6,12 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.actions.DoNothing;
+import frc.robot.subsystems.Superstructure;
 import frc.robot.util.ColorSensor;
 
 public class Robot extends TimedRobot {
 
+    private Superstructure superstructure = new Superstructure();
     private ColorSensor colorSensor = new ColorSensor();
 
     private Command autoCommand;
@@ -57,6 +59,9 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
+
+        superstructure.handle();
+
         colorSensor.handle();
         SmartDashboard.putString("Sensor", colorSensor.toString());
     }
