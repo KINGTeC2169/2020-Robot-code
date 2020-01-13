@@ -23,7 +23,7 @@ public class ColorSensor {
     }
 
     // Runs at 50hz
-    public void handle() {
+    public void update() {
         detected = colorSensor.getColor();
     }
 

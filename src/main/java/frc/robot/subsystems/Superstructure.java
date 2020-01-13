@@ -1,17 +1,23 @@
 package frc.robot.subsystems;
 
+import frc.robot.states.RobotState;
+
 public class Superstructure {
-    private final int SUBSYSTEMS = 1;
 
-    private Subsystem[] subsystems = new Subsystem[SUBSYSTEMS];
+    private static Superstructure instance;
 
-    public Superstructure() {
-        subsystems[0] = new Drive();
+    public static Superstructure getInstance() {
+        if(instance == null) {
+            return instance = new Superstructure();
+        } else {
+            return instance;
+        }
     }
 
-    public void handle() {
-        for(int i = 0; i < SUBSYSTEMS; i++) {
-            subsystems[i].handle();
-        }
+    private Drive drive = new Drive();
+
+    public void update(RobotState state) {
+        state.update();
+        drive.update(state.getDriveState());
     }
 }
