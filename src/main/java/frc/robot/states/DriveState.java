@@ -7,6 +7,7 @@ public class DriveState {
     private final double WIDTH = 0.8128;
 
     private Vector2 frontLeft = new Vector2(0, 0);
+    private Vector2 frontLeftVelocity = new Vector2(0, 0);
     private double oldAngle = 0;
     private double angle = 0; // Angle of front of DT
     private double oldLeftPos = 0;
@@ -31,7 +32,8 @@ public class DriveState {
         // Recalculate position
         double dl = leftPos - oldLeftPos; // Left wheel displacement
         double arc = Math.abs(angle - oldAngle);
-        frontLeft = frontLeft.add(Vector2.chord(arc * dl, this.angle, angle));
+        frontLeftVelocity = Vector2.chord(arc * dl, this.angle, angle);
+        frontLeft = frontLeft.add(frontLeftVelocity);
 
         SmartDashboard.putNumber("Front Left X", frontLeft.x);
         SmartDashboard.putNumber("Front Left Y", frontLeft.y);
@@ -46,4 +48,6 @@ public class DriveState {
     public Vector2 getFrontRight() {
         return frontLeft.add(new Vector2(WIDTH, angle, true));
     }
+
+    public Vector2 getFrontLeftVelocity() {return frontLeftVelocity;}
 }

@@ -24,14 +24,23 @@ public class Vector2 {
         return new Vector2(x + v.x, y + v.y);
     }
 
-    public void scale(double scalar) {
-        x *= scalar;
-        y *= scalar;
+    public Vector2 sub(Vector2 v) {
+        return new Vector2(x - v.x, y - v.y);
+    }
+
+    public Vector2 scale(double scalar) {
+        return new Vector2(x * scalar, y * scalar);
+    }
+
+    public Vector2 rotate(double angle) {
+        return new Vector2(Math.cos(angle) * x - Math.sin(angle) * y, Math.sin(angle) * x + Math.cos(angle) * y);
     }
 
     public double norm() {
         return Math.sqrt(x*x+y*y);
     }
+
+    public double angle() {return Math.atan2(y, x);}
 
     // Find the vector for a chord on a circle. For clockwise chords, radius should be negative
     public static Vector2 chord(double radius, double angle1, double angle2) {
