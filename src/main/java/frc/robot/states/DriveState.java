@@ -1,9 +1,10 @@
 package frc.robot.states;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.util.geometry.Vector2;
 
 public class DriveState {
-    private final double WIDTH = 1;
+    private final double WIDTH = 0.8128;
 
     private Vector2 frontLeft = new Vector2(0, 0);
     private double oldAngle = 0;
@@ -22,16 +23,18 @@ public class DriveState {
     public void updateWheelPosition(double leftPos, double rightPos) {
         oldLeftPos = this.leftPos;
         oldRightPos = this.rightPos;
-        this.leftPos = leftPos;
-        this.rightPos = rightPos;
+        this.leftPos = leftPos * 0.00920388;
+        this.rightPos = rightPos * 0.00920388;
     }
 
     public void update() {
         // Recalculate position
         double dl = leftPos - oldLeftPos; // Left wheel displacement
-        double dr = rightPos - oldRightPos; // Right wheel displacement
         double arc = Math.abs(angle - oldAngle);
         frontLeft = frontLeft.add(Vector2.chord(arc * dl, this.angle, angle));
+
+        SmartDashboard.putNumber("Front Left X", frontLeft.x);
+        SmartDashboard.putNumber("Front Left Y", frontLeft.y);
     }
 
     // Position vector of front left corner
