@@ -57,41 +57,25 @@ class Drive{
     }
 
     public void update(DriveState driveState) {
-        //driveState.updateAngle(navX.getAngle());
-        //driveState.updateWheelPosition(left.getSelectedSensorPosition(), right.getSelectedSensorPosition());
+        driveState.updateAngle(navX.getAngle());
+        driveState.updateWheelPosition(left.getSelectedSensorPosition(), right.getSelectedSensorPosition());
 
         if(Controls.leftTrigger()) {
             visionDrive(driveState);
-        } else if(Controls.rightTrigger()) {
+        } else {
             left.set(ControlMode.PercentOutput, Controls.leftY());
             right.set(ControlMode.PercentOutput, Controls.rightY());
-        } else {
-            left.set(ControlMode.PercentOutput, 0);
-            right.set(ControlMode.PercentOutput, 0);
         }
     }
 
     public void visionDrive(DriveState driveState) {
-        visionDrive(driveState, false, true);
-    }
-
-    public void visionDrive(DriveState driveState, boolean adjustOutput, boolean adjustAngle) {
-        double leftOutput = 0;
-        double rightOutput = 0;
-        if(adjustOutput) {
-            leftOutput = driveState.getVisionDrive();
-            rightOutput = driveState.getVisionDrive();
+        final double STEER = .01;
+        if(driveState.isInvalidTarget()) {
+            left.set(ControlMode.PercentOutput,  Controls.leftY() - STEER * driveState.getTx());
+            right.set(ControlMode.PercentOutput, Controls.leftY() + STEER * driveState.getTy());
         } else {
-            leftOutput = Controls.leftY();
-            rightOutput = Controls.leftY();
+            left.set(ControlMode.PercentOutput, 0);
+            right.set(ControlMode.PercentOutput, 0);
         }
-        if(adjustAngle) {
-            leftOutput -= driveState.getVisionTurn();
-            rightOutput += driveState.getVisionTurn();
-        }
-        SmartDashboard.putNumber("Left Output", leftOutput);
-        SmartDashboard.putNumber("Right Output", rightOutput);
-        left.set(ControlMode.PercentOutput, leftOutput);
-        right.set(ControlMode.PercentOutput, rightOutput);
     }
 }
