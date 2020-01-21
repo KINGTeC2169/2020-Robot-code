@@ -11,6 +11,10 @@ public class RobotState {
         }
     }
 
+    public void reset() {
+        driveState.reset();
+    }
+
     public void update() {
         driveState.update();
     }

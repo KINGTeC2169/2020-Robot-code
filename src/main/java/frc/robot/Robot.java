@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -17,7 +18,7 @@ public class Robot extends TimedRobot {
     private ColorSensor colorSensor = new ColorSensor();
 
     private Command autoCommand;
-    private SendableChooser<Command> chooser = new SendableChooser<>();
+    private SendableChooser<Command> chooser = new SendableChooser<Command>();
 
     @Override
     public void robotInit() {
@@ -53,9 +54,13 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
+        superstructure.reset();
+        RobotState.getInstance().reset();
         if (autoCommand != null) {
             autoCommand.cancel();
         }
+
+        NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
     }
 
     @Override

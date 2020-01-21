@@ -20,4 +20,8 @@ public class Superstructure {
         state.update();
         drive.update(state.getDriveState());
     }
+
+    public void reset() {
+        drive.reset();
+    }
 }
