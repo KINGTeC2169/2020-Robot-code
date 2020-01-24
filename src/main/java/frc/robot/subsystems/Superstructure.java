@@ -18,7 +18,7 @@ public class Superstructure {
 
     public void update(RobotState state) {
         state.update();
-        drive.update(state.getDriveState());
+        drive.update(state.getVisionState(), state.getDriveState());
     }
 
     public void reset() {

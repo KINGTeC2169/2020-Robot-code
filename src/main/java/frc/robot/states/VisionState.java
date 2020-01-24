@@ -22,14 +22,16 @@ public class VisionState {
 
     public void update() {
         // Basic vision target information
+        limelight = NetworkTableInstance.getDefault().getTable("limelight");
         tx = limelight.getEntry("tx").getDouble(0);
         ty = limelight.getEntry("ty").getDouble(0);
         ta = limelight.getEntry("ta").getDouble(0);
         invalidTarget = limelight.getEntry("tv").getDouble(0) > 1;
 
         // Rectangle corners
-        double[] tcornx = limelight.getEntry("tcornx").getDoubleArray(new double[0]);
-        double[] tcorny = limelight.getEntry("tcorny").getDoubleArray(new double[0]);
+        double[] defaultValue = {-1,-1,-1,-1};
+        double[] tcornx = limelight.getEntry("tcornx").getDoubleArray(defaultValue);
+        double[] tcorny = limelight.getEntry("tcorny").getDoubleArray(defaultValue);
         int[] idxs = findLargestTwo(tcorny); // Find the two uppermost corners
         // Point 0 should always be to the left of point 1
         if(tcornx[idxs[0]] > tcornx[idxs[1]]) {

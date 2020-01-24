@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.states.DriveState;
+import frc.robot.states.VisionState;
 import frc.robot.util.ActuatorMap;
 import frc.robot.util.Controls;
 
@@ -56,23 +57,23 @@ class Drive{
         right.setSelectedSensorPosition(0);
     }
 
-    public void update(DriveState driveState) {
+    public void update(VisionState visionState, DriveState driveState) {
         driveState.updateAngle(navX.getAngle());
         driveState.updateWheelPosition(left.getSelectedSensorPosition(), right.getSelectedSensorPosition());
 
         if(Controls.leftTrigger()) {
-            visionDrive(driveState);
+            visionDrive(visionState, driveState);
         } else {
             left.set(ControlMode.PercentOutput, Controls.leftY());
             right.set(ControlMode.PercentOutput, Controls.rightY());
         }
     }
 
-    public void visionDrive(DriveState driveState) {
+    public void visionDrive(VisionState visionState, DriveState driveState) {
         final double STEER = .01;
-        if(driveState.isInvalidTarget()) {
-            left.set(ControlMode.PercentOutput,  Controls.leftY() - STEER * driveState.getTx());
-            right.set(ControlMode.PercentOutput, Controls.leftY() + STEER * driveState.getTy());
+        if(visionState.isInvalidTarget()) {
+            left.set(ControlMode.PercentOutput,  Controls.leftY() - STEER * visionState.getTx());
+            right.set(ControlMode.PercentOutput, Controls.leftY() + STEER * visionState.getTy());
         } else {
             left.set(ControlMode.PercentOutput, 0);
             right.set(ControlMode.PercentOutput, 0);
