@@ -17,11 +17,14 @@ public class RobotState {
 
     public void update() {
         driveState.update();
+        visionState.update();
     }
 
     private DriveState driveState = new DriveState();
+    private VisionState visionState = new VisionState();
 
     public DriveState getDriveState() {
         return driveState;
     }
+    public VisionState getVisionState() {return visionState;}
 }

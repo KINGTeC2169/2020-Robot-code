@@ -17,11 +17,6 @@ public class DriveState {
     private double oldRightPos = 0;
     private double rightPos = 0;
 
-    private boolean invalidTarget = true;
-    private double tx = 0; // Target X displacement
-    private double ty = 0; // Target Y displacement
-    private double ta = 0; // Target area
-
     // Called periodically
     public void updateAngle(double angle) {
         angle = angle * Math.PI / 180 + Math.PI / 2;
@@ -46,33 +41,6 @@ public class DriveState {
             frontLeftVelocity = Vector2.chord(dl / arc, oldAngle, angle);
         }
         frontLeft = frontLeft.add(frontLeftVelocity);
-
-        SmartDashboard.putNumber("Front Left X", frontLeft.x);
-        SmartDashboard.putNumber("Front Left Y", frontLeft.y);
-        SmartDashboard.putNumber("Front Left X Vel", frontLeftVelocity.x);
-        SmartDashboard.putNumber("Front Left Y Vel", frontLeftVelocity.y);
-
-        NetworkTable limelight = NetworkTableInstance.getDefault().getTable("limelight");
-        tx = limelight.getEntry("tx").getDouble(0);
-        ty = limelight.getEntry("ty").getDouble(0);
-        ta = limelight.getEntry("ta").getDouble(0);
-        invalidTarget = limelight.getEntry("tv").getDouble(0) > 1;
-    }
-
-    public double getTx() {
-        return tx;
-    }
-
-    public double getTy() {
-        return ty;
-    }
-
-    public double getTa() {
-        return ta;
-    }
-
-    public boolean isInvalidTarget() {
-        return invalidTarget;
     }
 
     public void reset() {
