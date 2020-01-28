@@ -2,11 +2,11 @@ package frc.robot;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.auto.actions.DoNothing;
+import frc.robot.auto.modes.Mode;
+import frc.robot.auto.modes.TestMode;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.util.ColorSensor;
 import frc.robot.states.RobotState;
@@ -17,12 +17,12 @@ public class Robot extends TimedRobot {
     private RobotState state = RobotState.getInstance();
     private ColorSensor colorSensor = new ColorSensor();
 
-    private Command autoCommand;
-    private SendableChooser<Command> chooser = new SendableChooser<Command>();
+    private Mode autoMode;
+    private SendableChooser<Mode> chooser = new SendableChooser<Mode>();
 
     @Override
     public void robotInit() {
-        chooser.setDefaultOption("Autonomous Command", new DoNothing());
+        chooser.setDefaultOption("Test Mode", new TestMode());
         SmartDashboard.putData("Auto mode", chooser);
     }
 
@@ -41,23 +41,24 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-        autoCommand = chooser.getSelected();
-        if (autoCommand != null) {
-            autoCommand.start();
+        autoMode = chooser.getSelected();
+        if (autoMode != null) {
+            autoMode.start();
         }
+        autoMode = new TestMode();
     }
 
     @Override
     public void autonomousPeriodic() {
-        Scheduler.getInstance().run();
+        autoMode.run();
     }
 
     @Override
     public void teleopInit() {
         superstructure.reset();
         RobotState.getInstance().reset();
-        if (autoCommand != null) {
-            autoCommand.cancel();
+        if (autoMode != null) {
+            autoMode.stop();
         }
 
         NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);

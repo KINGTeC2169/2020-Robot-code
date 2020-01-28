@@ -14,11 +14,11 @@ import frc.robot.states.VisionState;
 import frc.robot.util.ActuatorMap;
 import frc.robot.util.Controls;
 
-class Drive{
-    private Drive instance;
+public class Drive{
+    private static Drive instance;
     private AHRS navX;
 
-    public Drive getInstance() {
+    public static Drive getInstance() {
         if(instance == null) {
             return instance = new Drive();
         } else {
@@ -78,5 +78,22 @@ class Drive{
             left.set(ControlMode.PercentOutput, 0);
             right.set(ControlMode.PercentOutput, 0);
         }
+    }
+
+    public void setOutput(double l, double r) {
+        left.set(ControlMode.PercentOutput, l);
+        right.set(ControlMode.PercentOutput, r);
+    }
+
+    public double getLeftSensor() {
+        return left.getSelectedSensorPosition(0);
+    }
+
+    public double getRightSensor() {
+        return right.getSelectedSensorPosition(0);
+    }
+
+    public double getAngle() {
+        return navX.getAngle();
     }
 }
