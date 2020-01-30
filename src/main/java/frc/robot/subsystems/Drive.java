@@ -18,6 +18,8 @@ public class Drive{
     private static Drive instance;
     private AHRS navX;
 
+    private Double lastTx;
+
     public static Drive getInstance() {
         if(instance == null) {
             return instance = new Drive();
@@ -70,14 +72,23 @@ public class Drive{
     }
 
     public void visionDrive(VisionState visionState, DriveState driveState) {
-        final double STEER = .01;
+        double tx = visionState.getTx();
+        if (lastTx == null) {
+            lastTx = tx;
+        }
+        final double PROPORTIONAL = .01;
+        final double DERIVATIVE = .0;
+
         if(visionState.isInvalidTarget()) {
-            left.set(ControlMode.PercentOutput,  Controls.leftY() - STEER * visionState.getTx());
-            right.set(ControlMode.PercentOutput, Controls.leftY() + STEER * visionState.getTy());
+
+            left.set(ControlMode.PercentOutput,  Controls.leftY() - PROPORTIONAL * visionState.getTx() - (lastTx - tx) * DERIVATIVE);
+            right.set(ControlMode.PercentOutput, Controls.leftY() + PROPORTIONAL * visionState.getTx() + (lastTx - tx) * DERIVATIVE);
         } else {
             left.set(ControlMode.PercentOutput, 0);
             right.set(ControlMode.PercentOutput, 0);
         }
+
+        lastTx = visionState.getTx();
     }
 
     public void setOutput(double l, double r) {
