@@ -48,4 +48,9 @@ public class Vector2 {
     public static Vector2 chord(double radius, double angle1, double angle2) {
         return new Vector2(radius * (Math.cos(angle2) - Math.cos(angle1)), radius * (Math.sin(angle2) - Math.sin(angle1)));
     }
+
+    @Override
+    public String toString() {
+        return "<" + x + "," + y + ">";
+    }
 }

@@ -4,15 +4,12 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.states.DriveState;
-import frc.robot.states.VisionState;
 import frc.robot.util.ActuatorMap;
 import frc.robot.util.Controls;
+import frc.robot.util.Limelight;
+import frc.robot.util.geometry.Vector2;
 
 public class Drive{
     private static Drive instance;
@@ -57,23 +54,25 @@ public class Drive{
         right.setSelectedSensorPosition(0);
     }
 
-    public void update(VisionState visionState, DriveState driveState) {
+    public void update(Limelight limelight, DriveState driveState) {
         driveState.updateAngle(navX.getAngle());
         driveState.updateWheelPosition(left.getSelectedSensorPosition(), right.getSelectedSensorPosition());
 
         if(Controls.leftTrigger()) {
-            visionDrive(visionState, driveState);
+            visionDrive(limelight);
         } else {
             left.set(ControlMode.PercentOutput, Controls.leftY());
             right.set(ControlMode.PercentOutput, Controls.rightY());
         }
     }
 
-    public void visionDrive(VisionState visionState, DriveState driveState) {
+    public void visionDrive(Limelight limelight) {
+        Vector2 center = limelight.getCenter();
+
         final double STEER = .01;
-        if(visionState.isInvalidTarget()) {
-            left.set(ControlMode.PercentOutput,  Controls.leftY() - STEER * visionState.getTx());
-            right.set(ControlMode.PercentOutput, Controls.leftY() + STEER * visionState.getTy());
+        if(limelight.isValidTarget()) {
+            left.set(ControlMode.PercentOutput,  Controls.leftY() - STEER * center.x);
+            right.set(ControlMode.PercentOutput, Controls.leftY() + STEER * center.y);
         } else {
             left.set(ControlMode.PercentOutput, 0);
             right.set(ControlMode.PercentOutput, 0);

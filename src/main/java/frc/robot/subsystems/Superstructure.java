@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
 import frc.robot.states.RobotState;
+import frc.robot.util.Debug;
+import frc.robot.util.Limelight;
 
 public class Superstructure {
 
@@ -16,9 +18,13 @@ public class Superstructure {
 
     private Drive drive = new Drive();
 
+    private Limelight limelight = new Limelight();
+
     public void update(RobotState state) {
+        Debug.vision(limelight);
+
         state.update();
-        drive.update(state.getVisionState(), state.getDriveState());
+        drive.update(limelight, state.getDriveState());
     }
 
     public void reset() {
