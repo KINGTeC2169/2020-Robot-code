@@ -15,6 +15,8 @@ public class Drive{
     private static Drive instance;
     private AHRS navX;
 
+    private Double lastTx;
+
     public static Drive getInstance() {
         if(instance == null) {
             return instance = new Drive();
@@ -67,16 +69,23 @@ public class Drive{
     }
 
     public void visionDrive(Limelight limelight) {
-        Vector2 center = limelight.getCenter();
+        double tx = limelight.getCenter().x;
+        if (lastTx == null) {
+            lastTx = tx;
+        }
+        final double PROPORTIONAL = .01;
+        final double DERIVATIVE = .0;
 
-        final double STEER = .01;
         if(limelight.isValidTarget()) {
-            left.set(ControlMode.PercentOutput,  Controls.leftY() - STEER * center.x);
-            right.set(ControlMode.PercentOutput, Controls.leftY() + STEER * center.y);
+
+            left.set(ControlMode.PercentOutput,  Controls.leftY() - PROPORTIONAL * tx - (lastTx - tx) * DERIVATIVE);
+            right.set(ControlMode.PercentOutput, Controls.leftY() + PROPORTIONAL * tx + (lastTx - tx) * DERIVATIVE);
         } else {
             left.set(ControlMode.PercentOutput, 0);
             right.set(ControlMode.PercentOutput, 0);
         }
+
+        lastTx = tx;
     }
 
     public void setOutput(double l, double r) {
