@@ -5,13 +5,14 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.util.Constants;
 import frc.robot.util.Limelight;
+import frc.robot.util.geometry.Pos2;
+import frc.robot.util.geometry.Twist2;
 import frc.robot.util.geometry.Vector2;
 
 public class DriveState {
     private final double WIDTH = 0.6223;
 
-    private Vector2 frontLeft = new Vector2(0, 0);
-    private Vector2 frontLeftVelocity = new Vector2(0, 0);
+    private Vector2 frontLeft = new Vector2();
     private double oldAngle = 0;
     private double angle = 0; // Angle of front of DT
     private double oldLeftPos = 0;
@@ -36,24 +37,33 @@ public class DriveState {
     private int consecutiveOutliers = 0;
     private Vector2 lastOutlier;
     public void update(Limelight limelight) {
-        // Recalculate position with encoders
-        /*double dl = leftPos - oldLeftPos; // Left wheel displacement
-        double arc = Math.abs(angle - oldAngle);
-        if(arc < 0.1) {
-            frontLeftVelocity = new Vector2(dl * Math.cos(angle), dl * Math.sin(angle));
+        // Recalculate position with encoders and gyro
+        double d = (leftPos + rightPos - oldLeftPos - oldRightPos) / 2; // Average change in wheel position
+        double dtheta = angle - oldAngle;
+        Twist2 motion;
+        if(Math.abs(dtheta) < 0.1) {
+            motion = new Twist2(d, 0, dtheta);
         } else {
-            frontLeftVelocity = Vector2.chord(dl / arc, oldAngle, angle);
+            motion = new Twist2(d, 0, 0);
         }
-        frontLeft = frontLeft.add(frontLeftVelocity);*/
+        Vector2 encoderGyroEstimate = frontLeft.add(motion.toPos2().getTranslation());
 
         // Recalculate position with vision
+        Vector2 visionEstimate = null;
         Vector2 estimate = limelight.getPosition().sub(new Vector2(WIDTH / 2, angle, true));
         if(estimate.sub(frontLeft).norm() < Constants.minPositionChange || consecutiveOutliers > Constants.consecutiveOutliers) {
-            frontLeft = estimate;
+            visionEstimate = estimate;
             consecutiveOutliers = 0;
         } else if(consecutiveOutliers == 0 || lastOutlier.sub(estimate).norm() < Constants.minPositionChange) {
             // Oh no, the limelight is acting up
             consecutiveOutliers++;
+        }
+
+        // Combine estimates
+        if(visionEstimate == null) {
+            frontLeft = encoderGyroEstimate;
+        } else {
+            frontLeft = visionEstimate;
         }
     }
 
@@ -79,5 +89,5 @@ public class DriveState {
         return frontLeft.add(new Vector2(WIDTH, angle, true));
     }
 
-    public Vector2 getFrontLeftVelocity() {return frontLeftVelocity;}
+    public Vector2 getFrontLeftVelocity() {return new Vector2();}
 }
