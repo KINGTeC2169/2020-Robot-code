@@ -9,7 +9,6 @@ import frc.robot.states.DriveState;
 import frc.robot.util.ActuatorMap;
 import frc.robot.util.Controls;
 import frc.robot.util.Limelight;
-import frc.robot.util.geometry.Vector2;
 
 public class Drive{
     private static Drive instance;

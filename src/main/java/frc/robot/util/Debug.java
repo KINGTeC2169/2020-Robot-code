@@ -1,6 +1,7 @@
 package frc.robot.util;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.states.RobotState;
 import frc.robot.util.geometry.Rotation2;
 import frc.robot.util.geometry.Vector2;
 
@@ -9,6 +10,9 @@ public class Debug {
     private static final boolean targetInformation = true;
     private static final boolean targetCorners = true;
     private static final boolean visionPositionEstimate = true;
+
+    // Robot state
+    private static final boolean positionEstimate = true;
 
     public static void vision(Limelight limelight) {
         if(targetInformation) {
@@ -26,6 +30,12 @@ public class Debug {
             Rotation2 rotation = limelight.getRotation();
             out("Position", limelight.getPosition());
             out("Rotation", limelight.getRotation());
+        }
+    }
+
+    public static void state(RobotState state) {
+        if(positionEstimate) {
+            out("Position Estimate", state.getDriveState().getFrontLeft());
         }
     }
 

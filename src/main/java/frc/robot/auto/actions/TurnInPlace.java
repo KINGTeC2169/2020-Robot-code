@@ -31,7 +31,7 @@ public class TurnInPlace implements Action {
 
     @Override
     public void stop() {
-
+        drive.setOutput(0, 0);
     }
 
     @Override

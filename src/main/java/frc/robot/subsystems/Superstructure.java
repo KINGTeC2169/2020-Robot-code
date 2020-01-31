@@ -22,8 +22,9 @@ public class Superstructure {
 
     public void update(RobotState state) {
         Debug.vision(limelight);
+        Debug.state(state);
 
-        state.update();
+        state.update(limelight);
         drive.update(limelight, state.getDriveState());
     }
 

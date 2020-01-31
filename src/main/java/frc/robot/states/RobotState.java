@@ -1,5 +1,7 @@
 package frc.robot.states;
 
+import frc.robot.util.Limelight;
+
 public class RobotState {
     private static RobotState instance;
 
@@ -15,8 +17,8 @@ public class RobotState {
         driveState.reset();
     }
 
-    public void update() {
-        driveState.update();
+    public void update(Limelight limelight) {
+        driveState.update(limelight);
     }
 
     private DriveState driveState = new DriveState();
