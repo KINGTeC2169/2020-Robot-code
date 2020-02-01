@@ -6,6 +6,15 @@ import frc.robot.util.geometry.Rotation2;
 import frc.robot.util.geometry.Vector2;
 
 public class Limelight {
+    private static Limelight instance;
+    public static Limelight getInstance() {
+        if(instance == null) {
+            return instance = new Limelight();
+        } else {
+            return instance;
+        }
+    }
+
     private NetworkTable limelight;
     public void start() {
         limelight = NetworkTableInstance.getDefault().getTable("limelight");

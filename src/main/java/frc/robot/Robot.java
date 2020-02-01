@@ -8,20 +8,20 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.modes.Mode;
 import frc.robot.auto.modes.TestMode;
 import frc.robot.subsystems.Superstructure;
-import frc.robot.util.ColorSensor;
 import frc.robot.states.RobotState;
 
 public class Robot extends TimedRobot {
 
     private Superstructure superstructure = Superstructure.getInstance();
     private RobotState state = RobotState.getInstance();
-    private ColorSensor colorSensor = new ColorSensor();
 
+    // Auto stuff
     private Mode autoMode;
     private SendableChooser<Mode> chooser = new SendableChooser<Mode>();
 
     @Override
     public void robotInit() {
+        superstructure.start();
         chooser.setDefaultOption("Test Mode", new TestMode());
         SmartDashboard.putData("Auto mode", chooser);
     }
@@ -32,11 +32,11 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledInit(){
+        RobotState.getInstance().reset();
     }
 
     @Override
     public void disabledPeriodic() {
-        Scheduler.getInstance().run();
     }
 
     @Override
@@ -45,7 +45,6 @@ public class Robot extends TimedRobot {
         if (autoMode != null) {
             autoMode.start();
         }
-        autoMode = new TestMode();
     }
 
     @Override
@@ -56,7 +55,6 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopInit() {
         superstructure.reset();
-        RobotState.getInstance().reset();
         if (autoMode != null) {
             autoMode.stop();
         }
@@ -66,12 +64,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
-        Scheduler.getInstance().run();
-
-        superstructure.update(state);
-
-        colorSensor.update();
-        SmartDashboard.putString("Sensor", colorSensor.toString());
+        state.update();
+        superstructure.update();
     }
 
     @Override

@@ -1,7 +1,5 @@
 package frc.robot.util.geometry;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 public class Vector2 {
     public double x;
     public double y;

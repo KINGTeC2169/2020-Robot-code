@@ -1,11 +1,8 @@
 package frc.robot.util;
 
-import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
-import frc.robot.subsystems.Drive;
 
 import static frc.robot.util.ColorSensor.CpColor.*;
 
@@ -22,9 +19,6 @@ public class ColorSensor {
 
     private ColorSensorV3 colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
     private Color detected;
-    private void compareDistance(){
-
-    }
 
     public enum CpColor {
         GREEN, RED, YELLOW, CYAN

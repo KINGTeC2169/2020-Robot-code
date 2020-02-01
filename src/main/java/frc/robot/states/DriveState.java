@@ -1,93 +1,82 @@
 package frc.robot.states;
 
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.util.Constants;
+import frc.robot.util.Conversion;
+import frc.robot.util.Interpolate;
 import frc.robot.util.Limelight;
-import frc.robot.util.geometry.Pos2;
-import frc.robot.util.geometry.Twist2;
-import frc.robot.util.geometry.Vector2;
+import frc.robot.util.geometry.*;
 
 public class DriveState {
-    private final double WIDTH = 0.6223;
+    private final double WIDTH = 26;
+    private final double LENGTH = 26;
 
-    private Vector2 frontLeft = new Vector2();
-    private double oldAngle = 0;
-    private double angle = 0; // Angle of front of DT
-    private double oldLeftPos = 0;
-    private double leftPos = 0;
-    private double oldRightPos = 0;
-    private double rightPos = 0;
+    private Limelight limelight;
 
-    // Called periodically
-    public void updateAngle(double angle) {
-        angle = angle * Math.PI / 180 + Math.PI / 2;
-        oldAngle = this.angle;
-        this.angle = angle;
+    private Pos2 pos = new Pos2();
+    private Pos2 oldPos = new Pos2();
+    /* Drive wheel distance traveled in inches */
+    private double oldLeft = 0;
+    private double left = 0;
+    private double oldRight = 0;
+    private double right = 0;
+
+    public DriveState() {
+        limelight = Limelight.getInstance();
     }
 
-    public void updateWheelPosition(double leftPos, double rightPos) {
-        oldLeftPos = this.leftPos;
-        oldRightPos = this.rightPos;
-        this.leftPos = leftPos * 0.00011688933;
-        this.rightPos = rightPos * 0.00011688933;
+    public void updateAngle(double angle) {
+        oldPos.rotation = pos.rotation;
+        pos.rotation = new Rotation2(Conversion.degToRad(angle)).rotateCC();
+    }
+
+    public void updateWheelPosition(double leftRotations, double rightRotations) {
+        oldLeft = left;
+        oldRight = right;
+        left = Conversion.rotationsToInches(leftRotations, Constants.driveWheelDiameter);
+        right = Conversion.rotationsToInches(rightRotations, Constants.driveWheelDiameter);
     }
 
     private int consecutiveOutliers = 0;
     private Vector2 lastOutlier;
-    public void update(Limelight limelight) {
+    public void update() {
         // Recalculate position with encoders and gyro
-        double d = (leftPos + rightPos - oldLeftPos - oldRightPos) / 2; // Average change in wheel position
-        double dtheta = angle - oldAngle;
-        Twist2 motion;
-        if(Math.abs(dtheta) < 0.1) {
-            motion = new Twist2(d, 0, dtheta);
-        } else {
-            motion = new Twist2(d, 0, 0);
-        }
-        Vector2 encoderGyroEstimate = frontLeft.add(motion.toPos2().getTranslation());
+        double d = ((left - oldLeft) + (right - oldRight)) / 2; // Average change in wheel position
+        double dtheta = pos.rotation.angle - oldPos.rotation.angle;
+        Twist2 kinematics = new Twist2(d, 0, dtheta);
+        Vector2 encoderGyroEstimate = pos.translation.add(kinematics.toPos2().translation);
 
         // Recalculate position with vision
         Vector2 visionEstimate = null;
-        Vector2 estimate = limelight.getPosition().sub(new Vector2(WIDTH / 2, angle, true));
-        if(estimate.sub(frontLeft).norm() < Constants.minPositionChange || consecutiveOutliers > Constants.consecutiveOutliers) {
-            visionEstimate = estimate;
+        Vector2 position = limelight.getPosition().sub(new Vector2(LENGTH / 2, pos.rotation.rotateCC().angle, true));
+        if(position.sub(pos.translation).norm() < Constants.maxPositionChange || consecutiveOutliers > Constants.consecutiveOutliers) {
+            visionEstimate = position;
             consecutiveOutliers = 0;
-        } else if(consecutiveOutliers == 0 || lastOutlier.sub(estimate).norm() < Constants.minPositionChange) {
+        } else if(consecutiveOutliers == 0 || lastOutlier.sub(position).norm() < Constants.maxPositionChange) {
             // Oh no, the limelight is acting up
+            lastOutlier = position;
             consecutiveOutliers++;
         }
 
         // Combine estimates
-        if(visionEstimate == null) {
-            frontLeft = encoderGyroEstimate;
-        } else {
-            frontLeft = visionEstimate;
+        if(visionEstimate == null && Constants.encoderPositionPrediction) {
+            pos.translation = encoderGyroEstimate;
+        } else if(Constants.visionPositionPrediction && Constants.encoderPositionPrediction) {
+            pos.translation = Interpolate.interpolate(encoderGyroEstimate, visionEstimate, 0.2);
+        } else if(Constants.visionPositionPrediction) {
+            pos.translation = visionEstimate;
         }
     }
 
     public void reset() {
-        frontLeft = new Vector2(0, 0);
-        leftPos = 0;
-        oldLeftPos = 0;
-        rightPos = 0;
-        oldRightPos = 0;
+        pos = new Pos2();
+        left = 0;
+        oldLeft = 0;
+        right = 0;
+        oldRight = 0;
     }
 
     // Position vector of front left corner
-    public Vector2 getFrontLeft() {
-        return frontLeft;
+    public Pos2 getPos() {
+        return pos;
     }
-
-    public Vector2 getFrontCenter() {
-        return frontLeft.add(new Vector2(WIDTH / 2, angle, true));
-    }
-
-    // Position vector of front right corner
-    public Vector2 getFrontRight() {
-        return frontLeft.add(new Vector2(WIDTH, angle, true));
-    }
-
-    public Vector2 getFrontLeftVelocity() {return new Vector2();}
 }

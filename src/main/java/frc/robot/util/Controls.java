@@ -3,22 +3,31 @@ package frc.robot.util;
 import edu.wpi.first.wpilibj.Joystick;
 
 public class Controls {
-    private static Joystick leftJoy = new Joystick(0);
-    private static Joystick rightJoy = new Joystick(1);
+    private static Controls instance;
+    public static Controls getInstance() {
+        if(instance == null) {
+            return instance = new Controls();
+        } else {
+            return instance;
+        }
+    }
 
-    public static boolean leftTrigger() {
+    private Joystick leftJoy = new Joystick(0);
+    private Joystick rightJoy = new Joystick(1);
+
+    public boolean leftTrigger() {
         return leftJoy.getRawButton(1);
     }
 
-    public static boolean rightTrigger() {
+    public boolean rightTrigger() {
         return rightJoy.getRawButton(1);
     }
 
-    public static double leftY() {
+    public double leftY() {
         return leftJoy.getRawAxis(1);
     }
 
-    public static double rightY() {
+    public double rightY() {
         return rightJoy.getRawAxis(1);
     }
 }

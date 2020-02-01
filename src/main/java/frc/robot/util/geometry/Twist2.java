@@ -3,9 +3,9 @@ package frc.robot.util.geometry;
 import java.text.DecimalFormat;
 
 public class Twist2 {
-    public double dx = 0;
-    public double dy = 0;
-    public double dtheta = 0;
+    public double dx;
+    public double dy;
+    public double dtheta;
 
     public Twist2(double dx, double dy, double dtheta) {
         this.dx = dx;
