@@ -9,6 +9,10 @@ public class Conversion {
         return deg * Math.PI / 180;
     }
 
+    public static double encoderTicksToRotations(double ticks) {
+        return ticks / Constants.ticksPerRotation;
+    }
+
     public static double rotationsToInches(double rotations, double diameter) {
         return rotations * diameter * Math.PI;
     }

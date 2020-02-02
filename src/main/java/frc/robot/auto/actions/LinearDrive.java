@@ -23,7 +23,7 @@ public class LinearDrive implements Action {
 
     @Override
     public void run() {
-        double newDistance = drive.getLeftSensor();
+        double newDistance = drive.getLeftRotations();
         double dDistance = distance - newDistance;
         distance = newDistance;
 

@@ -22,9 +22,9 @@ public class Superstructure {
     private Patrick patrick = Patrick.getInstance();
 
     // Other systems
-    private Limelight limelight = new Limelight();
-    private ColorSensor colorSensor = new ColorSensor();
-    private Controls controls = new Controls();
+    private Limelight limelight = Limelight.getInstance();
+    private ColorSensor colorSensor = ColorSensor.getInstance();
+    private Controls controls = Controls.getInstance();
 
     public void start() {
         drive.reset();

@@ -2,7 +2,6 @@ package frc.robot;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.modes.Mode;
@@ -22,8 +21,7 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         superstructure.start();
-        chooser.setDefaultOption("Test Mode", new TestMode());
-        SmartDashboard.putData("Auto mode", chooser);
+        autoMode = new TestMode();
     }
 
     @Override
@@ -41,7 +39,6 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-        autoMode = chooser.getSelected();
         if (autoMode != null) {
             autoMode.start();
         }

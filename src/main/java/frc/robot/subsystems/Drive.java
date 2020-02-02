@@ -7,9 +7,7 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import frc.robot.states.DriveState;
 import frc.robot.states.RobotState;
-import frc.robot.util.ActuatorMap;
-import frc.robot.util.Controls;
-import frc.robot.util.Limelight;
+import frc.robot.util.*;
 
 public class Drive implements Subsystem {
     private static Drive instance;
@@ -25,20 +23,22 @@ public class Drive implements Subsystem {
     private Limelight limelight;
     private DriveState driveState;
     private AHRS navX;
-    private Double lastTx;
+    private PD visionDrive;
 
-    // Talons
+    // Master talons
     private TalonSRX left = new TalonSRX(ActuatorMap.leftFront);
-    private TalonSRX leftTop = new TalonSRX(ActuatorMap.leftTop);
-    private TalonSRX leftBack = new TalonSRX(ActuatorMap.leftBack);
     private TalonSRX right = new TalonSRX(ActuatorMap.rightFront);
-    private TalonSRX rightTop = new TalonSRX(ActuatorMap.rightTop);
-    private TalonSRX rightBack = new TalonSRX(ActuatorMap.rightBack);
 
     public Drive() {
         controls = Controls.getInstance();
         limelight = Limelight.getInstance();
         driveState = RobotState.getInstance().getDriveState();
+
+        // Slave talons
+        TalonSRX leftTop = new TalonSRX(ActuatorMap.leftTop);
+        TalonSRX leftBack = new TalonSRX(ActuatorMap.leftBack);
+        TalonSRX rightTop = new TalonSRX(ActuatorMap.rightTop);
+        TalonSRX rightBack = new TalonSRX(ActuatorMap.rightBack);
 
         leftTop.set(ControlMode.Follower, ActuatorMap.leftFront);
         leftBack.set(ControlMode.Follower, ActuatorMap.leftFront);
@@ -56,12 +56,14 @@ public class Drive implements Subsystem {
 
         left.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
         right.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
+
+        visionDrive = new PD(Constants.visionDriveP, Constants.visionDriveD);
     }
 
     @Override
     public void update() {
         driveState.updateAngle(navX.getAngle());
-        driveState.updateWheelPosition(left.getSelectedSensorPosition(), right.getSelectedSensorPosition());
+        driveState.updateWheelPosition(getLeftRotations(), getRightRotations());
 
         if(controls.leftTrigger()) {
             visionDrive();
@@ -77,24 +79,15 @@ public class Drive implements Subsystem {
         right.setSelectedSensorPosition(0);
     }
 
+    // Aim at the target
     public void visionDrive() {
-        double tx = limelight.getCenter().x;
-        if (lastTx == null) {
-            lastTx = tx;
-        }
-        final double PROPORTIONAL = .01;
-        final double DERIVATIVE = .0;
-
         if(limelight.isValidTarget()) {
-
-            left.set(ControlMode.PercentOutput,  controls.leftY() - PROPORTIONAL * tx - (lastTx - tx) * DERIVATIVE);
-            right.set(ControlMode.PercentOutput, controls.leftY() + PROPORTIONAL * tx + (lastTx - tx) * DERIVATIVE);
+            double output = visionDrive.getOutput(limelight.getCenter().x);
+            left.set(ControlMode.PercentOutput,  controls.leftY() - output);
+            right.set(ControlMode.PercentOutput, controls.leftY() + output);
         } else {
-            left.set(ControlMode.PercentOutput, 0);
-            right.set(ControlMode.PercentOutput, 0);
+            setOutput(0, 0);
         }
-
-        lastTx = tx;
     }
 
     public void setOutput(double l, double r) {
@@ -102,12 +95,12 @@ public class Drive implements Subsystem {
         right.set(ControlMode.PercentOutput, r);
     }
 
-    public double getLeftSensor() {
-        return left.getSelectedSensorPosition(0);
+    public double getLeftRotations() {
+        return Conversion.encoderTicksToRotations(left.getSelectedSensorPosition(0));
     }
 
-    public double getRightSensor() {
-        return right.getSelectedSensorPosition(0);
+    public double getRightRotations() {
+        return Conversion.encoderTicksToRotations(right.getSelectedSensorPosition(0));
     }
 
     public double getAngle() {
