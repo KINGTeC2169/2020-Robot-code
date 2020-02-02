@@ -3,13 +3,14 @@ package frc.robot.util;
 public class Constants {
     /* Physical measurements */
 
+    public static final double cameraToPowerPort = 66.25;
     public static final double ticksPerRotation = 8192;
     public static final double driveWheelDiameter = 8;
 
     /* Autonomous */
 
     // Finding target
-    public static final double turnTowardsTargetOutput = .5;
+    public static final double turnTowardsTargetOutput = .25;
     public static final double pointingTowardsTarget = 30;
     public static final double backAwayFromTargetOutput = .5;
 
@@ -36,8 +37,8 @@ public class Constants {
     public static final double visionDriveD = 0;
 
     // Getting in range of target
-    public static final double turnTowardsTargetP = 0;
-    public static final double turnTowardsTargetD = 0;
+    public static final double turnTowardsTargetP = 0.02;
+    public static final double turnTowardsTargetD = 0.2;
 
     // Aligning to angle on gyro
     public static final double alignToGyroP = 0;
@@ -56,7 +57,7 @@ public class Constants {
     /* Other constants */
 
     // Predicting position
-    public static final boolean encoderPositionPrediction = true;
+    public static final boolean encoderPositionPrediction = false;
     public static final boolean visionPositionPrediction = true;
     // Any change in position greater than this many inches won't be counted
     public static final double maxPositionChange = 10;

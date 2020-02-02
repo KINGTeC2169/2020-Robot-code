@@ -34,6 +34,7 @@ public class Debug {
             }
         }
         if(visionPositionEstimate) {
+            out("Distance", limelight.getDistance());
             out("Position", limelight.getPosition());
             out("Rotation", limelight.getRotation());
         }

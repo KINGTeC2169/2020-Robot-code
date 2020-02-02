@@ -16,6 +16,8 @@ public class PD {
         if(lastError == null) {
             lastError = error;
         }
-        return P * error + D * (error - lastError);
+        double output = P * error + D * (lastError - error);
+        lastError = error;
+        return output;
     }
 }

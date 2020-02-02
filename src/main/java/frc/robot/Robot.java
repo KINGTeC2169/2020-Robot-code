@@ -8,6 +8,7 @@ import frc.robot.auto.modes.Mode;
 import frc.robot.auto.modes.TestMode;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.states.RobotState;
+import frc.robot.util.Debug;
 
 public class Robot extends TimedRobot {
 
@@ -46,6 +47,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousPeriodic() {
+        superstructure.update();
         autoMode.run();
     }
 

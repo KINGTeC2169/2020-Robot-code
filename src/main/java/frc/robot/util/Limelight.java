@@ -16,6 +16,7 @@ public class Limelight {
     }
 
     private NetworkTable limelight;
+
     public void start() {
         limelight = NetworkTableInstance.getDefault().getTable("limelight");
     }
@@ -31,7 +32,7 @@ public class Limelight {
     }
 
     public boolean isValidTarget() {
-        return limelight.getEntry("tv").getDouble(0) > 1;
+        return limelight.getEntry("tv").getDouble(0) > 0;
     }
 
     public Vector2[] getCorners() {
@@ -48,6 +49,10 @@ public class Limelight {
         } else {
             return new Vector2[0];
         }
+    }
+
+    public double getDistance() {
+        return Constants.cameraToPowerPort / Math.tan(Conversion.degToRad(limelight.getEntry("ty").getDouble(0)));
     }
 
     public Vector2 getPosition() {

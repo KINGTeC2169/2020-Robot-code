@@ -1,5 +1,7 @@
 package frc.robot.util.geometry;
 
+import java.text.DecimalFormat;
+
 public class Vector2 {
     public double x;
     public double y;
@@ -54,6 +56,7 @@ public class Vector2 {
 
     @Override
     public String toString() {
-        return "<" + x + "," + y + ">";
+        DecimalFormat f = new DecimalFormat("#0.000");
+        return "<" + f.format(x) + "," + f.format(y) + ">";
     }
 }

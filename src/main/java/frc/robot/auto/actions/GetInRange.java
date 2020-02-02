@@ -57,6 +57,7 @@ public class GetInRange implements Action {
     }
 
     private void beginLookAtTarget() {
+        System.out.println("Looking at target");
         if(lookAtTarget == null) {
             lookAtTarget = new LookAtTarget();
             lookAtTarget.start();
@@ -78,8 +79,8 @@ public class GetInRange implements Action {
         if(correctingWideAngle || limelight.isValidTarget()) {
             // Clear look at target action
             if(lookAtTarget != null) {
-                lookAtTarget = null;
                 lookAtTarget.stop();
+                lookAtTarget = null;
             }
 
             Vector2 position = state.getPos().translation;
@@ -88,9 +89,9 @@ public class GetInRange implements Action {
             } else {
                 if(correctingWideAngle && !limelight.isValidTarget()) {
                     beginLookAtTarget();
-                } else if(position.y < shootingMinY) {
+                } else if(limelight.getDistance() < shootingMinY) {
                     tooClose();
-                } else if(position.y > shootingMaxY) {
+                } else if(limelight.getDistance() > shootingMaxY) {
                     tooFar();
                 } else if(Math.abs(position.x / position.y) > shootingMaxSlope) {
                     tooWide();

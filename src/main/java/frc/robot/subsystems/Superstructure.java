@@ -33,11 +33,13 @@ public class Superstructure {
     }
 
     public void update() {
-        Debug.debugAll();
+        colorSensor.update();
 
         // Update subsystems
         drive.update();
         patrick.update();
+
+        Debug.debugAll();
     }
 
     public void reset() {
