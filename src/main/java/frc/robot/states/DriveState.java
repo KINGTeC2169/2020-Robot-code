@@ -14,6 +14,8 @@ public class DriveState {
 
     private Pos2 pos = new Pos2();
     private Pos2 oldPos = new Pos2();
+    private Rotation2 oldRotation;
+    private Rotation2 rotation;
     /* Drive wheel distance traveled in inches */
     private double oldLeft = 0;
     private double left = 0;
@@ -25,8 +27,8 @@ public class DriveState {
     }
 
     public void updateAngle(double angle) {
-        oldPos.rotation = pos.rotation;
-        pos.rotation = new Rotation2(Conversion.degToRad(angle)).rotateCC();
+        oldRotation = rotation;
+        rotation = new Rotation2(Conversion.degToRad(angle)).rotateC();
     }
 
     public void updateWheelPosition(double leftRotations, double rightRotations) {
@@ -41,9 +43,9 @@ public class DriveState {
     public void update() {
         // Recalculate position with encoders and gyro
         double d = ((left - oldLeft) + (right - oldRight)) / 2; // Average change in wheel position
-        double dtheta = pos.rotation.angle - oldPos.rotation.angle;
-        Twist2 kinematics = new Twist2(d, 0, dtheta);
-        Vector2 encoderGyroEstimate = pos.translation.add(kinematics.toPos2().translation);
+        double dtheta = rotation.angle - oldRotation.angle;
+        Twist2 kinematics = new Twist2(d,0, dtheta);
+        Pos2 encoderGyroEstimate = pos.transform(kinematics.toPos2());
 
         // Recalculate position with vision
         Vector2 visionEstimate = null;
@@ -58,17 +60,21 @@ public class DriveState {
         }
 
         // Combine estimates
-        if(visionEstimate == null && Constants.encoderPositionPrediction) {
+        pos = encoderGyroEstimate;
+        /*if(visionEstimate == null && Constants.encoderPositionPrediction) {
             pos.translation = encoderGyroEstimate;
         } else if(Constants.visionPositionPrediction && Constants.encoderPositionPrediction) {
             pos.translation = Interpolate.interpolate(encoderGyroEstimate, visionEstimate, 0.2);
         } else if(Constants.visionPositionPrediction) {
             pos.translation = visionEstimate;
-        }
+        }*/
     }
 
     public void reset() {
-        pos = new Pos2();
+        pos = new Pos2(new Vector2(), new Rotation2(-Math.PI / 2));
+        oldPos = new Pos2(new Vector2(), new Rotation2(-Math.PI / 2));
+        rotation = new Rotation2(-Math.PI / 2);
+        oldRotation = new Rotation2(-Math.PI / 2);
         left = 0;
         oldLeft = 0;
         right = 0;

@@ -57,7 +57,6 @@ public class GetInRange implements Action {
     }
 
     private void beginLookAtTarget() {
-        System.out.println("Looking at target");
         if(lookAtTarget == null) {
             lookAtTarget = new LookAtTarget();
             lookAtTarget.start();

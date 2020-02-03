@@ -29,7 +29,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledInit(){
-        RobotState.getInstance().reset();
+
     }
 
     @Override
@@ -38,6 +38,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
+        state.reset();
         if (autoMode != null) {
             autoMode.start();
         }
@@ -46,6 +47,7 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousPeriodic() {
         superstructure.update();
+        state.update();
         autoMode.run();
     }
 

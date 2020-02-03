@@ -61,8 +61,8 @@ public class Constants {
     public static final boolean usingTestBed = true;
 
     // Predicting position
-    public static final boolean encoderPositionPrediction = false;
-    public static final boolean visionPositionPrediction = true;
+    public static final boolean encoderPositionPrediction = true;
+    public static final boolean visionPositionPrediction = false;
     // Any change in position greater than this many inches won't be counted
     public static final double maxPositionChange = 10;
     // Once we've hit this many similar outliers, they're no longer outliers

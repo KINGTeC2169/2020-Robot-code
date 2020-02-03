@@ -46,12 +46,12 @@ public class Rotation2 {
 
     // Rotate 90 degrees counterclockwise
     public Rotation2 rotateCC() {
-        return new Rotation2(cos, -sin);
+        return new Rotation2(-sin, cos);
     }
 
     // Rotate 90 degrees clockwise
     public Rotation2 rotateC() {
-        return new Rotation2(-cos, sin);
+        return new Rotation2(sin, -cos);
     }
 
     // Rotate 180 degrees

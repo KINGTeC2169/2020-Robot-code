@@ -41,7 +41,6 @@ public class ColorSensor {
         if(testing) {
             detected = Color.kWhite;
             int rgb[] = Conversion.hsvToRgb(Debug.getNumber("Color Sensor Input"), .7, .5);
-            System.out.println(rgb[0] + " " + rgb[1] + " " + rgb[2]);
             detected = new Color(new Color8Bit(rgb[0], rgb[1], rgb[2]));
         } else {
             detected = colorSensor.getColor();

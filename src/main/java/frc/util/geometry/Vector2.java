@@ -43,6 +43,10 @@ public class Vector2 {
         return new Vector2(Math.cos(angle) * x - Math.sin(angle) * y, Math.sin(angle) * x + Math.cos(angle) * y);
     }
 
+    public Vector2 rotate(Rotation2 rotation) {
+        return new Vector2(rotation.cos * x - rotation.sin * y, rotation.sin * x + rotation.cos * y);
+    }
+
     public double norm() {
         return Math.sqrt(x*x+y*y);
     }

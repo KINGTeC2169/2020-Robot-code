@@ -28,6 +28,10 @@ public class Pos2 {
         return rotation.angle;
     }
 
+    public Pos2 transform(Pos2 pos) {
+        return new Pos2(translation.add(pos.translation.rotate(rotation)), rotation.rotate(pos.rotation));
+    }
+
     @Override
     public String toString() {
         DecimalFormat f = new DecimalFormat("#0.000");
