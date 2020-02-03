@@ -1,4 +1,4 @@
-package frc.robot.util;
+package frc.util;
 
 public class Conversion {
     public static double radToDeg(double rad) {

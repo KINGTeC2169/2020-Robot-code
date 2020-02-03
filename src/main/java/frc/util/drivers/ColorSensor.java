@@ -1,10 +1,11 @@
-package frc.robot.util;
+package frc.util.drivers;
 
 import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.util.Color;
+import frc.util.Constants;
 
-import static frc.robot.util.ColorSensor.CpColor.*;
+import static frc.util.drivers.ColorSensor.CpColor.*;
 
 public class ColorSensor {
 
@@ -17,7 +18,7 @@ public class ColorSensor {
         }
     }
 
-    private ColorSensorV3 colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
+    private ColorSensorV3 colorSensor;
     private Color detected;
 
     public enum CpColor {
@@ -25,12 +26,18 @@ public class ColorSensor {
     }
 
     public ColorSensor() {
-
+        if(!Constants.usingTestBed) {
+            colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
+        }
     }
 
     // Runs at 50hz
     public void update() {
-        detected = colorSensor.getColor();
+        if(Constants.usingTestBed) {
+            detected = Color.kWhite;
+        } else {
+            detected = colorSensor.getColor();
+        }
     }
 
     public CpColor getColor() {
@@ -74,10 +81,16 @@ public class ColorSensor {
     }
 
     public int getProximity() {
+        if(Constants.usingTestBed) {
+            return 0;
+        }
         return colorSensor.getProximity();
     }
 
     public int getIR() {
+        if(Constants.usingTestBed) {
+            return 0;
+        }
         return colorSensor.getIR();
     }
 

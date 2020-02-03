@@ -3,12 +3,10 @@ package frc.robot;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.modes.Mode;
 import frc.robot.auto.modes.TestMode;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.states.RobotState;
-import frc.robot.util.Debug;
 
 public class Robot extends TimedRobot {
 

@@ -1,10 +1,10 @@
 package frc.robot.states;
 
-import frc.robot.util.Constants;
-import frc.robot.util.Conversion;
-import frc.robot.util.Interpolate;
-import frc.robot.util.Limelight;
-import frc.robot.util.geometry.*;
+import frc.util.Constants;
+import frc.util.Conversion;
+import frc.util.Interpolate;
+import frc.util.Limelight;
+import frc.util.geometry.*;
 
 public class DriveState {
     private final double WIDTH = 26;

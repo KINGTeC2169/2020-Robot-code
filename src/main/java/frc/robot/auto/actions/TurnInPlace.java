@@ -1,7 +1,7 @@
 package frc.robot.auto.actions;
 
 import frc.robot.subsystems.Drive;
-import frc.robot.util.Constants;
+import frc.util.Constants;
 
 public class TurnInPlace implements Action {
     private Drive drive;

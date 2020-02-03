@@ -1,4 +1,4 @@
-package frc.robot.util;
+package frc.util;
 
 public class ActuatorMap {
     public static final int leftFront = 1;

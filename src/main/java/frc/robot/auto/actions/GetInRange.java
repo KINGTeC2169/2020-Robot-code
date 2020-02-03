@@ -3,10 +3,10 @@ package frc.robot.auto.actions;
 import frc.robot.states.DriveState;
 import frc.robot.states.RobotState;
 import frc.robot.subsystems.Drive;
-import frc.robot.util.Constants;
-import frc.robot.util.Limelight;
-import frc.robot.util.PD;
-import frc.robot.util.geometry.Vector2;
+import frc.util.Constants;
+import frc.util.Limelight;
+import frc.util.PD;
+import frc.util.geometry.Vector2;
 
 public class GetInRange implements Action {
     private LookAtTarget lookAtTarget;

@@ -1,9 +1,9 @@
-package frc.robot.util;
+package frc.util;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import frc.robot.util.geometry.Rotation2;
-import frc.robot.util.geometry.Vector2;
+import frc.util.geometry.Rotation2;
+import frc.util.geometry.Vector2;
 
 public class Limelight {
     private static Limelight instance;

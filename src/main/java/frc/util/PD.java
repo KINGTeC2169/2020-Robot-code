@@ -1,4 +1,4 @@
-package frc.robot.util;
+package frc.util;
 
 public class PD {
     /* Simple interface for a proportional derivative control loop */

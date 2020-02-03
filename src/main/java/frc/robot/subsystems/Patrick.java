@@ -1,6 +1,6 @@
 package frc.robot.subsystems;
 
-import frc.robot.util.ColorSensor;
+import frc.util.drivers.ColorSensor;
 
 public class Patrick implements Subsystem {
     private static Patrick instance;

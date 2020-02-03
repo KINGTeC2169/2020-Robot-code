@@ -1,8 +1,9 @@
-package frc.robot.util;
+package frc.util;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.states.RobotState;
-import frc.robot.util.geometry.Vector2;
+import frc.util.drivers.ColorSensor;
+import frc.util.geometry.Vector2;
 
 public class Debug {
     // Vision
@@ -50,6 +51,10 @@ public class Debug {
         if(positionEstimate) {
             out("Position Estimate", state.getDriveState().getPos());
         }
+    }
+
+    public static void putNumber(String key, double x) {
+        SmartDashboard.putNumber(key, x);
     }
 
     private static void out(String key, Object x) {

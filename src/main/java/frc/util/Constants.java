@@ -1,4 +1,4 @@
-package frc.robot.util;
+package frc.util;
 
 public class Constants {
     /* Physical measurements */
@@ -55,6 +55,8 @@ public class Constants {
     public static final double turnInPlaceD = 0;
 
     /* Other constants */
+
+    public static final boolean usingTestBed = true;
 
     // Predicting position
     public static final boolean encoderPositionPrediction = false;

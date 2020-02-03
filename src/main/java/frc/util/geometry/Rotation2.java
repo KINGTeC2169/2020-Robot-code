@@ -1,4 +1,4 @@
-package frc.robot.util.geometry;
+package frc.util.geometry;
 
 import java.text.DecimalFormat;
 

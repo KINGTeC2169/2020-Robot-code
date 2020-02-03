@@ -1,6 +1,6 @@
-package frc.robot.util;
+package frc.util;
 
-import frc.robot.util.geometry.Vector2;
+import frc.util.geometry.Vector2;
 
 public class Interpolate {
     public static double interpolate(double x, double y, double q) {

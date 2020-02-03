@@ -2,7 +2,7 @@ package frc.robot.auto.actions;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Drive;
-import frc.robot.util.Constants;
+import frc.util.Constants;
 
 public class LinearDrive implements Action {
     private Drive drive;
