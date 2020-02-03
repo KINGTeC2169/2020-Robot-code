@@ -12,22 +12,22 @@ public class TestMode implements Mode {
 
     @Override
     public void start() {
-        lookAtTarget.start();
+        aimAtTarget.start();
     }
 
     private boolean sawTarget = false;
 
     @Override
     public void run() {
-        if(lookAtTarget.isFinished()) {
-            lookAtTarget.stop();
+        if(aimAtTarget.isFinished()) {
+            aimAtTarget.stop();
         } else {
-            lookAtTarget.run();
+            aimAtTarget.run();
         }
     }
 
     @Override
     public void stop() {
-        lookAtTarget.stop();
+        aimAtTarget.stop();
     }
 }

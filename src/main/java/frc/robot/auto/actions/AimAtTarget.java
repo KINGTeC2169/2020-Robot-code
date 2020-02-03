@@ -2,6 +2,7 @@ package frc.robot.auto.actions;
 
 import frc.robot.subsystems.Drive;
 import frc.util.Constants;
+import frc.util.PID;
 import frc.util.drivers.Limelight;
 import frc.util.PD;
 
@@ -11,7 +12,7 @@ public class AimAtTarget implements Action {
     private Drive drive;
     private Limelight limelight;
 
-    private PD alignToTarget;
+    private PID alignToTarget;
 
     public AimAtTarget() {
     }
@@ -28,12 +29,16 @@ public class AimAtTarget implements Action {
     public void start() {
         drive = Drive.getInstance();
         limelight = Limelight.getInstance();
-        alignToTarget = new PD(Constants.turnTowardsTargetP, Constants.turnTowardsTargetD);
+        alignToTarget = new PID(Constants.turnTowardsTargetP, Constants.turnTowardsTargetI, Constants.turnTowardsTargetD);
     }
 
     @Override
     public void run() {
         if(limelight.isValidTarget()) {
+            if(lookAtTarget != null) {
+                lookAtTarget.stop();
+                lookAtTarget = null;
+            }
             double output = alignToTarget.getOutput(limelight.getCenter().x);
             drive.setOutput(-output, output);
         } else {
@@ -48,6 +53,6 @@ public class AimAtTarget implements Action {
 
     @Override
     public boolean isFinished() {
-        return false;
+        return limelight.isValidTarget() && Math.abs(limelight.getCenter().x) < Constants.acceptedAimError;
     }
 }

@@ -35,9 +35,11 @@ public class Constants {
     // Aiming
     public static final double visionDriveP = .1;
     public static final double visionDriveD = 0;
+    public static final double acceptedAimError = 1;
 
     // Getting in range of target
     public static final double turnTowardsTargetP = 0.02;
+    public static final double turnTowardsTargetI = 0.01;
     public static final double turnTowardsTargetD = 0.2;
 
     // Aligning to angle on gyro
