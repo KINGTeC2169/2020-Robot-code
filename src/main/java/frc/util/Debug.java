@@ -36,7 +36,7 @@ public class Debug {
             }
         }
         if(visionPositionEstimate) {
-            out("Distance", limelight.getDistance());
+            putNumber("Distance", limelight.getDistance());
             out("Position", limelight.getPosition());
             out("Rotation", limelight.getRotation());
         }
@@ -55,7 +55,7 @@ public class Debug {
     }
 
     public static void putNumber(String key, double x) {
-        SmartDashboard.putNumber(key, x);
+        SmartDashboard.putNumber(key, Math.floor(x*10000)/10000);
     }
 
     public static double getNumber(String key) {

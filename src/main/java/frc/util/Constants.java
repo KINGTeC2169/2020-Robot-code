@@ -41,8 +41,8 @@ public class Constants {
     public static final double turnTowardsTargetD = 0.2;
 
     // Aligning to angle on gyro
-    public static final double alignToGyroP = 0;
-    public static final double alignToGyroD = 0;
+    public static final double alignToGyroP = 0.005;
+    public static final double alignToGyroD = 0.05;
 
     // Linear Drive
     public static final double linearDriveTurnP = 0;

@@ -38,23 +38,22 @@ public class LookAtTarget implements Action {
             } else {
                 drive.setOutput(-Constants.turnTowardsTargetOutput, Constants.turnTowardsTargetOutput);
             }
-            drive.setOutput(-Constants.turnTowardsTargetOutput, Constants.turnTowardsTargetOutput);
 
-            /*// Check if we've turned 360 degrees
+            // Check if we've turned 360 degrees
             if(startingAngle > 0 != drive.getAngle() > 0) passedZero = true;
             if(passedZero && (
-               startingAngle > 0 && startingAngle > drive.getAngle() ||
-               startingAngle < 0 && startingAngle < drive.getAngle())
-            ) turned360 = true;*/
+               startingAngle > 0 && drive.getAngle() > 0 && startingAngle < drive.getAngle() ||
+               startingAngle < 0 && drive.getAngle() < 0 && startingAngle > drive.getAngle())
+            ) turned360 = true;
 
         } else if(Math.abs(drive.getAngle()) > Constants.pointingTowardsTarget) {
             // If we're not pointing towards the target, turn towards target
             double output = turnTowardsZero.getOutput(drive.getAngle());
-            drive.setOutput(-output, output);
+            drive.setOutput(output, -output);
         } else {
             // Otherwise, drive back
             double output = turnTowardsZero.getOutput(drive.getAngle());
-            drive.setOutput(-output - Constants.backAwayFromTargetOutput, output - Constants.backAwayFromTargetOutput);
+            drive.setOutput(output - Constants.backAwayFromTargetOutput, -output - Constants.backAwayFromTargetOutput);
         }
     }
 

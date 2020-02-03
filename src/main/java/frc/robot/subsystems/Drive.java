@@ -1,11 +1,10 @@
 package frc.robot.subsystems;
 
-import com.kauailabs.navx.frc.AHRS;
-import edu.wpi.first.wpilibj.SPI;
 import frc.robot.states.DriveState;
 import frc.robot.states.RobotState;
 import frc.util.*;
 import frc.util.drivers.Limelight;
+import frc.util.drivers.NavX;
 import frc.util.drivers.Talon;
 import frc.util.drivers.TalonFactory;
 
@@ -22,7 +21,7 @@ public class Drive implements Subsystem {
     private Controls controls;
     private Limelight limelight;
     private DriveState driveState;
-    private AHRS navX;
+    private NavX navX;
     private PD visionDrive;
 
     // Master talons
@@ -44,7 +43,7 @@ public class Drive implements Subsystem {
         left.setName("Left Drive");
         right.setName("Right Drive");
 
-        configNavX();
+        navX = NavX.getInstance();
 
         visionDrive = new PD(Constants.visionDriveP, Constants.visionDriveD);
     }
@@ -53,13 +52,6 @@ public class Drive implements Subsystem {
     public void update() {
         driveState.updateAngle(getAngle());
         driveState.updateWheelPosition(getLeftRotations(), getRightRotations());
-
-        if(controls.leftTrigger()) {
-            visionDrive();
-        } else {
-            left.setOutput(controls.leftY());
-            right.setOutput(controls.rightY());
-        }
     }
 
     @Override
@@ -68,9 +60,12 @@ public class Drive implements Subsystem {
         right.reset();
     }
 
-    private void configNavX() {
-        if(!Constants.usingTestBed) {
-            navX = new AHRS(SPI.Port.kMXP, (byte) 200);
+    public void manualDrive() {
+        if(controls.leftTrigger()) {
+            visionDrive();
+        } else {
+            left.setOutput(controls.leftY());
+            right.setOutput(controls.rightY());
         }
     }
 
