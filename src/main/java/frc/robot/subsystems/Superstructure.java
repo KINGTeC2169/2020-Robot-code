@@ -3,7 +3,7 @@ package frc.robot.subsystems;
 import frc.util.drivers.ColorSensor;
 import frc.util.Controls;
 import frc.util.Debug;
-import frc.util.Limelight;
+import frc.util.drivers.Limelight;
 
 public class Superstructure {
 

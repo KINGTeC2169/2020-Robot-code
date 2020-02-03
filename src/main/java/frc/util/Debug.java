@@ -3,6 +3,7 @@ package frc.util;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.states.RobotState;
 import frc.util.drivers.ColorSensor;
+import frc.util.drivers.Limelight;
 import frc.util.geometry.Vector2;
 
 public class Debug {
@@ -55,6 +56,24 @@ public class Debug {
 
     public static void putNumber(String key, double x) {
         SmartDashboard.putNumber(key, x);
+    }
+
+    public static double getNumber(String key) {
+        if(!SmartDashboard.containsKey(key)) {
+            SmartDashboard.putNumber(key, 0);
+            return 0;
+        } else {
+            return SmartDashboard.getNumber(key, 0);
+        }
+    }
+
+    public static boolean getBoolean(String key) {
+        if(!SmartDashboard.containsKey(key)) {
+            SmartDashboard.putBoolean(key, false);
+            return false;
+        } else {
+            return SmartDashboard.getBoolean(key, false);
+        }
     }
 
     private static void out(String key, Object x) {

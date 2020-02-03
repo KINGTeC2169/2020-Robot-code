@@ -1,5 +1,7 @@
 package frc.util;
 
+import java.awt.*;
+
 public class Conversion {
     public static double radToDeg(double rad) {
         return rad * 180 / Math.PI;
@@ -15,5 +17,11 @@ public class Conversion {
 
     public static double rotationsToInches(double rotations, double diameter) {
         return rotations * diameter * Math.PI;
+    }
+
+    public static int[] hsvToRgb(double h, double s, double v) {
+        int x = Color.HSBtoRGB((float) h, (float) s, (float) v);
+        int[] rgb = {(x>>16)&0xFF, (x>>8)&0xFF, x&0xFF};
+        return rgb;
     }
 }

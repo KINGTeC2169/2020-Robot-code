@@ -51,7 +51,9 @@ public class Talon {
     }
 
     public double getSensor() {
-        if(testing) {
+        if(testing && name != null) {
+            return Debug.getNumber(name + " encoder value");
+        } else if(testing) {
             return 0;
         }
         return talon.getSelectedSensorPosition(0);

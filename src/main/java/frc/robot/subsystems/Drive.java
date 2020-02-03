@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.SPI;
 import frc.robot.states.DriveState;
 import frc.robot.states.RobotState;
 import frc.util.*;
+import frc.util.drivers.Limelight;
 import frc.util.drivers.Talon;
 import frc.util.drivers.TalonFactory;
 
@@ -40,14 +41,17 @@ public class Drive implements Subsystem {
         TalonFactory.slaveTalon(ActuatorMap.rightTop, false, right);
         TalonFactory.slaveTalon(ActuatorMap.rightBack, false, right);
 
-        navX = new AHRS(SPI.Port.kMXP, (byte) 200);
+        left.setName("Left Drive");
+        right.setName("Right Drive");
+
+        configNavX();
 
         visionDrive = new PD(Constants.visionDriveP, Constants.visionDriveD);
     }
 
     @Override
     public void update() {
-        driveState.updateAngle(navX.getAngle());
+        driveState.updateAngle(getAngle());
         driveState.updateWheelPosition(getLeftRotations(), getRightRotations());
 
         if(controls.leftTrigger()) {
@@ -62,6 +66,12 @@ public class Drive implements Subsystem {
     public void reset() {
         left.reset();
         right.reset();
+    }
+
+    private void configNavX() {
+        if(!Constants.usingTestBed) {
+            navX = new AHRS(SPI.Port.kMXP, (byte) 200);
+        }
     }
 
     // Aim at the target
@@ -89,6 +99,10 @@ public class Drive implements Subsystem {
     }
 
     public double getAngle() {
-        return navX.getAngle();
+        if(Constants.usingTestBed) {
+            return Debug.getNumber("navX angle");
+        } else {
+            return navX.getAngle();
+        }
     }
 }

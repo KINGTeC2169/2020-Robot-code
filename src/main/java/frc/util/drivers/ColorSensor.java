@@ -3,7 +3,10 @@ package frc.util.drivers;
 import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.util.Constants;
+import frc.util.Conversion;
+import frc.util.Debug;
 
 import static frc.util.drivers.ColorSensor.CpColor.*;
 
@@ -20,12 +23,14 @@ public class ColorSensor {
 
     private ColorSensorV3 colorSensor;
     private Color detected;
+    private final boolean testing;
 
     public enum CpColor {
         GREEN, RED, YELLOW, CYAN
     }
 
     public ColorSensor() {
+        testing = Constants.usingTestBed;
         if(!Constants.usingTestBed) {
             colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
         }
@@ -33,8 +38,11 @@ public class ColorSensor {
 
     // Runs at 50hz
     public void update() {
-        if(Constants.usingTestBed) {
+        if(testing) {
             detected = Color.kWhite;
+            int rgb[] = Conversion.hsvToRgb(Debug.getNumber("Color Sensor Input"), .7, .5);
+            System.out.println(rgb[0] + " " + rgb[1] + " " + rgb[2]);
+            detected = new Color(new Color8Bit(rgb[0], rgb[1], rgb[2]));
         } else {
             detected = colorSensor.getColor();
         }

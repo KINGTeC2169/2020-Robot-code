@@ -1,7 +1,10 @@
-package frc.util;
+package frc.util.drivers;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import frc.util.Constants;
+import frc.util.Conversion;
+import frc.util.Debug;
 import frc.util.geometry.Rotation2;
 import frc.util.geometry.Vector2;
 
@@ -16,6 +19,11 @@ public class Limelight {
     }
 
     private NetworkTable limelight;
+    private final boolean testing;
+
+    public Limelight() {
+        testing = Constants.usingTestBed;
+    }
 
     public void start() {
         limelight = NetworkTableInstance.getDefault().getTable("limelight");
@@ -24,14 +32,24 @@ public class Limelight {
     public Vector2 getCenter() {
         double x = limelight.getEntry("tx").getDouble(0);
         double y = limelight.getEntry("ty").getDouble(0);
+        if(testing) {
+            x = Debug.getNumber("tx");
+            y = Debug.getNumber("ty");
+        }
         return new Vector2(x, y);
     }
 
     public double targetArea() {
+        if(testing) {
+            return Debug.getNumber("ta");
+        }
         return limelight.getEntry("ta").getDouble(0);
     }
 
     public boolean isValidTarget() {
+        if(testing) {
+            return Debug.getBoolean("Valid Target");
+        }
         return limelight.getEntry("tv").getDouble(0) > 0;
     }
 
@@ -52,7 +70,7 @@ public class Limelight {
     }
 
     public double getDistance() {
-        return Constants.cameraToPowerPort / Math.tan(Conversion.degToRad(limelight.getEntry("ty").getDouble(0)));
+        return Constants.cameraToPowerPort / Math.tan(Conversion.degToRad(getCenter().y));
     }
 
     public Vector2 getPosition() {
