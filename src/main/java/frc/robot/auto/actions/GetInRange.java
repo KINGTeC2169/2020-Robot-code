@@ -44,6 +44,10 @@ public class GetInRange implements Action {
 
     // Angle is too wide to make a shot
     private void tooWide() {
+        Vector2[] corners = limelight.getCorners();
+        double x1 = corners[0].x;
+        double x2 = corners[1].x;
+
         if(Constants.encoderPositionPrediction) {
             correctingWideAngle = true;
             double targetAngle = Constants.tooWideSteerAngle;
@@ -75,6 +79,16 @@ public class GetInRange implements Action {
 
     @Override
     public void run() {
+
+        double corner1;
+        double corner2;
+        //TODO find what is too far to the side
+        final double xTolerance = 0;
+
+        Vector2[] corners = limelight.getCorners();
+        corner1 = corners[0].x;
+        corner2 = corners[1].x;
+
         if(correctingWideAngle || limelight.isValidTarget()) {
             // Clear look at target action
             if(lookAtTarget != null) {
@@ -86,13 +100,16 @@ public class GetInRange implements Action {
             if(Math.abs(position.x / position.y) > shootingMaxSlope) {
                 tooWide();
             } else {
+                //TODO figure out which side belongs with what combination of the 0 and 1 points
                 if(correctingWideAngle && !limelight.isValidTarget()) {
                     beginLookAtTarget();
                 } else if(limelight.getDistance() < shootingMinY) {
                     tooClose();
                 } else if(limelight.getDistance() > shootingMaxY) {
                     tooFar();
-                } else if(Math.abs(position.x / position.y) > shootingMaxSlope) {
+                } else if (Math.abs(corner1) - Math.abs(corner2) < xTolerance) {
+                    tooWide();
+                } else if (Math.abs(corner2) - Math.abs(corner1) < xTolerance){
                     tooWide();
                 } else {
                     isFinished = true;
