@@ -41,7 +41,7 @@ public class Drive implements Subsystem {
         dog.setName("High Gear");
 
         left = ControllerFactory.masterTalon(ActuatorMap.leftFront, false);
-        right = ControllerFactory.masterTalon(ActuatorMap.leftFront, false);
+        right = ControllerFactory.masterTalon(ActuatorMap.rightFront, false);
         ControllerFactory.slaveTalon(ActuatorMap.leftTop, true, left);
         ControllerFactory.slaveTalon(ActuatorMap.leftBack, true, left);
         ControllerFactory.slaveTalon(ActuatorMap.rightTop, false, right);
