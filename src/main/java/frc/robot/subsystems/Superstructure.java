@@ -44,6 +44,7 @@ public class Superstructure {
 
     public void reset() {
         drive.reset();
+        intake.reset();
         patrick.reset();
     }
 }

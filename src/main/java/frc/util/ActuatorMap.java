@@ -2,6 +2,7 @@ package frc.util;
 
 public class ActuatorMap {
     // PCM
+    public static final int dog = 0;
     public static final int intakeL = 2;
     public static final int intakeR = 3;
 

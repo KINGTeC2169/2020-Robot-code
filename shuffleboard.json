@@ -93,9 +93,14 @@
               1
             ],
             "content": {
-              "_type": "Text View",
+              "_type": "Number Bar",
               "_source0": "network_table:///SmartDashboard/Left Drive",
-              "_title": "Left Drive"
+              "_title": "Left Drive",
+              "Range/Min": -1.0,
+              "Range/Max": 1.0,
+              "Range/Center": 0.0,
+              "Visuals/Num tick marks": 5.0,
+              "Visuals/Show text": true
             }
           },
           "1,1": {
@@ -104,9 +109,14 @@
               1
             ],
             "content": {
-              "_type": "Text View",
+              "_type": "Number Bar",
               "_source0": "network_table:///SmartDashboard/Right Drive",
-              "_title": "Right Drive"
+              "_title": "Right Drive",
+              "Range/Min": -1.0,
+              "Range/Max": 1.0,
+              "Range/Center": 0.0,
+              "Visuals/Num tick marks": 5.0,
+              "Visuals/Show text": true
             }
           },
           "0,2": {
@@ -202,6 +212,48 @@
               "Slider Settings/Min": 0.0,
               "Slider Settings/Max": 1.0,
               "Slider Settings/Block increment": 1.0
+            }
+          },
+          "2,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Number Bar",
+              "_source0": "network_table:///SmartDashboard/Intake",
+              "_title": "Intake",
+              "Range/Min": -1.0,
+              "Range/Max": 1.0,
+              "Range/Center": 0.0,
+              "Visuals/Num tick marks": 5.0,
+              "Visuals/Show text": true
+            }
+          },
+          "3,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Intake Sol",
+              "_title": "Intake Sol",
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "4,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/High Gear",
+              "_title": "High Gear",
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
             }
           }
         }

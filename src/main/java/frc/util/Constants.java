@@ -61,6 +61,23 @@ public class Constants {
     public static final boolean usingTestBed = true;
     public static final boolean usingControls = true;
 
+    // Cheesy drive
+    public static final double quickTurnThreshold = 0.5;
+    public static final double throttleDeadband = 0.02;
+    public static final double wheelDeadband = 0.02;
+    public static final double highWheelNonLinearity = .65;
+    public static final double lowWheelNonLinearity = .5;
+    public static final double highNegInertiaScalar = 4.0;
+    public static final double lowNegInertiaThreshold = .65;
+    public static final double lowNegInertiaTurnScalar = 3.5;
+    public static final double lowNegInertiaCloseScalar = 4;
+    public static final double lowNegInertiaFarScalar = 5;
+    public static final double highSensitivity = 0.65;
+    public static final double lowSensitivity = 0.65;
+    public static final double quickStopDeadband = 0.5;
+    public static final double quickStopWeight = 0.1;
+    public static final double quickStopScalar = 5.0;
+
     // Predicting position
     public static final boolean encoderPositionPrediction = true;
     public static final boolean visionPositionPrediction = false;
