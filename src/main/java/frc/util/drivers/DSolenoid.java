@@ -21,7 +21,7 @@ public class DSolenoid {
         if(!testing) {
             solenoid.set(on);
         } else if(name != null) {
-            Debug.putNumber(name, on ? 0 : 1);
+            Debug.putBoolean(name, on);
         }
     }
 

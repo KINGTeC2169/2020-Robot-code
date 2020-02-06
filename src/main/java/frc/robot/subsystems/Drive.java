@@ -63,11 +63,11 @@ public class Drive implements Subsystem {
     }
 
     public void manualDrive() {
-        if(controls.leftButton(3)) {
+        if(controls.left.getRawButton(3)) {
             visionDrive();
         } else {
-            left.setOutput(controls.leftY());
-            right.setOutput(controls.rightY());
+            left.setOutput(controls.left.getY());
+            right.setOutput(controls.right.getY());
         }
     }
 
@@ -75,8 +75,8 @@ public class Drive implements Subsystem {
     public void visionDrive() {
         if(limelight.isValidTarget()) {
             double output = visionDrive.getOutput(limelight.getCenter().x);
-            left.setOutput(controls.leftY() - output);
-            right.setOutput(controls.leftY() + output);
+            left.setOutput(controls.left.getY() - output);
+            right.setOutput(controls.left.getY() + output);
         } else {
             setOutput(0, 0);
         }

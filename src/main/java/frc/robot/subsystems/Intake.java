@@ -20,13 +20,13 @@ public class Intake implements Subsystem {
     private DSolenoid lsol;
     private DSolenoid rsol;
     private Victor victor;
+    private boolean solenoidState = true;
 
     public Intake() {
         controls = new Controls();
         lsol = new DSolenoid(ActuatorMap.intakeL);
         rsol = new DSolenoid(ActuatorMap.intakeR);
-        lsol.setName("Left Intake Sol");
-        rsol.setName("Right Intake Sol");
+        lsol.setName("Intake Sol");
         lsol.set(true);
         rsol.set(true);
         victor = ControllerFactory.victor(ActuatorMap.intake, false);
@@ -35,16 +35,18 @@ public class Intake implements Subsystem {
 
     @Override
     public void update() {
-        if(controls.xboxYPressed()) {
-            lsol.set(!lsol.get());
-            rsol.set(!rsol.get()); // It's toggle time
+        if(controls.yButton()) {
+            solenoidState = !solenoidState;
+            lsol.set(solenoidState);
+            rsol.set(solenoidState); // It's toggle time
         }
 
-        if(controls.rightButton(1)) {
+        if(controls.right.getRawButton(1)) {
             victor.setOutput(1);
-        }
-        if(controls.rightButton(2)) {
+        } else if(controls.right.getRawButton(2)) {
             victor.setOutput(-1);
+        } else {
+            victor.setOutput(0);
         }
     }
 

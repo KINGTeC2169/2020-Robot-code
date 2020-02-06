@@ -73,6 +73,10 @@ public class Debug {
         SmartDashboard.putString(key, str);
     }
 
+    public static void putBoolean(String key, boolean bool) {
+        SmartDashboard.putBoolean(key, bool);
+    }
+
     public static double getNumber(String key) {
         if(!SmartDashboard.containsKey(key)) {
             SmartDashboard.putNumber(key, 0);

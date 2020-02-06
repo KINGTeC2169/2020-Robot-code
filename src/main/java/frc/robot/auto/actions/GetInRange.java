@@ -25,6 +25,9 @@ public class GetInRange implements Action {
     private boolean correctingWideAngle = false;
     private boolean isFinished = false;
 
+    private double corner1;
+    private double corner2;
+
     public GetInRange(double shootingMinY, double shootingMaxY, double shootingMaxSlope) {
         this.shootingMinY = shootingMinY;
         this.shootingMaxY = shootingMaxY;
@@ -77,17 +80,16 @@ public class GetInRange implements Action {
 
     @Override
     public void run() {
-
-        double corner1;
-        double corner2;
         //TODO find what is too far to the side and move tolerance to constants
         final double xTolerance = 27;
         //temporary solution to get code to run
         final boolean wantToRun = true;
 
         Vector2[] corners = limelight.getCorners();
-        corner1 = corners[0].x;
-        corner2 = corners[1].x;
+        if(corners.length >= 2) {
+            corner1 = corners[0].x;
+            corner2 = corners[1].x;
+        }
 
         if(correctingWideAngle || limelight.isValidTarget()) {
             // Clear look at target action
