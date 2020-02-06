@@ -81,9 +81,13 @@ public class Drive implements Subsystem {
         dog.set(highGear);
     }
 
+    private double handleDeadband(double val, double deadband) {
+        return (Math.abs(val) > Math.abs(deadband)) ? val : 0.0;
+    }
+
     public void cheesyDrive() {
-        double throttle = controls.left.getY();
-        double wheel = controls.right.getX();
+        double throttle = handleDeadband(controls.left.getY(), Constants.throttleDeadband);
+        double wheel = handleDeadband(controls.right.getX(), Constants.wheelDeadband);
         boolean quickTurn = controls.right.getZ() > Constants.quickTurnThreshold;
 
         double negInertia = wheel - oldWheel;
@@ -107,7 +111,7 @@ public class Drive implements Subsystem {
         } else {
             if (wheel * negInertia > 0) {
                 // If we are moving away from 0.0
-                negInertiaScalar = Constants.lowNegInertiaCloseScalar;
+                negInertiaScalar = Constants.lowNegInertiaTurnScalar;
             } else {
                 // Otherwise, we are attempting to go back to 0.0
                 if (Math.abs(wheel) > Constants.lowNegInertiaThreshold) {
