@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import frc.util.drivers.ColorSensor;
-import frc.util.Controls;
 import frc.util.Debug;
 import frc.util.drivers.Limelight;
 
@@ -20,11 +19,11 @@ public class Superstructure {
     // Subsystems
     private Drive drive = Drive.getInstance();
     private Patrick patrick = Patrick.getInstance();
+    private Intake intake = Intake.getInstance();
 
     // Other systems
     private Limelight limelight = Limelight.getInstance();
     private ColorSensor colorSensor = ColorSensor.getInstance();
-    private Controls controls = Controls.getInstance();
 
     public void start() {
         drive.reset();
@@ -37,6 +36,7 @@ public class Superstructure {
 
         // Update subsystems
         drive.update();
+        intake.update();
         patrick.update();
 
         Debug.debugAll();

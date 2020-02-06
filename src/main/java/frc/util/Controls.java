@@ -19,7 +19,7 @@ public class Controls {
     private XboxController xbox = new XboxController(2);
 
     public Controls() {
-        testing = Constants.usingTestBed;
+        testing = !Constants.usingControls;
     }
 
     public boolean leftButton(int button) {

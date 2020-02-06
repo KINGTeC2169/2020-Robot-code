@@ -6,7 +6,7 @@ import frc.util.*;
 import frc.util.drivers.Limelight;
 import frc.util.drivers.NavX;
 import frc.util.drivers.Talon;
-import frc.util.drivers.TalonFactory;
+import frc.util.drivers.ControllerFactory;
 
 public class Drive implements Subsystem {
     private static Drive instance;
@@ -33,12 +33,12 @@ public class Drive implements Subsystem {
         limelight = Limelight.getInstance();
         driveState = RobotState.getInstance().getDriveState();
 
-        left = TalonFactory.masterTalon(ActuatorMap.leftFront, false);
-        right = TalonFactory.masterTalon(ActuatorMap.leftFront, false);
-        TalonFactory.slaveTalon(ActuatorMap.leftTop, true, left);
-        TalonFactory.slaveTalon(ActuatorMap.leftBack, true, left);
-        TalonFactory.slaveTalon(ActuatorMap.rightTop, false, right);
-        TalonFactory.slaveTalon(ActuatorMap.rightBack, false, right);
+        left = ControllerFactory.masterTalon(ActuatorMap.leftFront, false);
+        right = ControllerFactory.masterTalon(ActuatorMap.leftFront, false);
+        ControllerFactory.slaveTalon(ActuatorMap.leftTop, true, left);
+        ControllerFactory.slaveTalon(ActuatorMap.leftBack, true, left);
+        ControllerFactory.slaveTalon(ActuatorMap.rightTop, false, right);
+        ControllerFactory.slaveTalon(ActuatorMap.rightBack, false, right);
 
         left.setName("Left Drive");
         right.setName("Right Drive");
@@ -50,6 +50,8 @@ public class Drive implements Subsystem {
 
     @Override
     public void update() {
+        manualDrive();
+
         driveState.updateAngle(getAngle());
         driveState.updateWheelPosition(getLeftRotations(), getRightRotations());
     }
@@ -61,7 +63,7 @@ public class Drive implements Subsystem {
     }
 
     public void manualDrive() {
-        if(controls.leftButton(0)) {
+        if(controls.leftButton(3)) {
             visionDrive();
         } else {
             left.setOutput(controls.leftY());
