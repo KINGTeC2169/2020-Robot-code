@@ -69,6 +69,10 @@ public class Debug {
         SmartDashboard.putNumber(key, Math.floor(x*10000)/10000);
     }
 
+    public static void putString(String key, String str) {
+        SmartDashboard.putString(key, str);
+    }
+
     public static double getNumber(String key) {
         if(!SmartDashboard.containsKey(key)) {
             SmartDashboard.putNumber(key, 0);

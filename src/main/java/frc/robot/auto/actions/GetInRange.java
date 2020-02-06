@@ -4,6 +4,7 @@ import frc.robot.states.DriveState;
 import frc.robot.states.RobotState;
 import frc.robot.subsystems.Drive;
 import frc.util.Constants;
+import frc.util.Debug;
 import frc.util.drivers.Limelight;
 import frc.util.PD;
 import frc.util.geometry.Vector2;
@@ -44,9 +45,6 @@ public class GetInRange implements Action {
 
     // Angle is too wide to make a shot
     private void tooWide() {
-        Vector2[] corners = limelight.getCorners();
-        double x1 = corners[0].x;
-        double x2 = corners[1].x;
 
         if(Constants.encoderPositionPrediction) {
             correctingWideAngle = true;
@@ -82,8 +80,10 @@ public class GetInRange implements Action {
 
         double corner1;
         double corner2;
-        //TODO find what is too far to the side
-        final double xTolerance = 0;
+        //TODO find what is too far to the side and move tolerance to constants
+        final double xTolerance = 27;
+        //temporary solution to get code to run
+        final boolean wantToRun = true;
 
         Vector2[] corners = limelight.getCorners();
         corner1 = corners[0].x;
@@ -97,7 +97,7 @@ public class GetInRange implements Action {
             }
 
             Vector2 position = state.getPos().translation;
-            if(Math.abs(position.x / position.y) > shootingMaxSlope) {
+            if(Math.abs(position.x / position.y) > shootingMaxSlope && !wantToRun) {
                 tooWide();
             } else {
                 //TODO figure out which side belongs with what combination of the 0 and 1 points
@@ -108,9 +108,9 @@ public class GetInRange implements Action {
                 } else if(limelight.getDistance() > shootingMaxY) {
                     tooFar();
                 } else if (Math.abs(corner1) - Math.abs(corner2) < xTolerance) {
-                    tooWide();
+                    Debug.putString("Side:", "1");
                 } else if (Math.abs(corner2) - Math.abs(corner1) < xTolerance){
-                    tooWide();
+                    Debug.putString("Side:", "2");
                 } else {
                     isFinished = true;
                 }
