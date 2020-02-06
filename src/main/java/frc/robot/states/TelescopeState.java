@@ -7,24 +7,26 @@ public class TelescopeState {
     private boolean up = false;
     private boolean extending = false;
     private boolean retracting = false;
+    private boolean pawl = false;
 
     public TelescopeState() {
         controls = Controls.getInstance();
     }
 
     public void update() {
-        // TODO: This control scheme is totally wrong. Fix it
-        if(controls.xbox.getPOV() == 1) {
+        if(controls.xbox.getPOV() == 270) {
             up = true;
-        } else if(controls.xbox.getPOV() == 4 && !extending) {
+        } else if(controls.xbox.getPOV() == 90 && !extending && !retracting) {
             up = false;
         }
-        if(controls.xbox.getPOV() == 2 && up) {
+        if(controls.xbox.getPOV() == 0 && up && pawl) {
             extending = true;
-        } else if(controls.xbox.getPOV() == 3) {
-            extending = false;
+        } else if(retracting && controls.xbox.getRawButton(5)) {
+            pawl = false;
+        } else if(controls.xbox.getPOV() == 180 && up) {
             retracting = true;
         } else {
+            extending = false;
             retracting = false;
         }
     }
@@ -32,6 +34,7 @@ public class TelescopeState {
     public void reset() {
         extending = false;
         retracting = false;
+        pawl = true;
         up = false;
     }
 
@@ -45,5 +48,9 @@ public class TelescopeState {
 
     public boolean isUp() {
         return up;
+    }
+
+    public boolean isPawl() {
+        return pawl;
     }
 }

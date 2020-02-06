@@ -23,6 +23,7 @@ public class Telescope implements Subsystem {
     private Talon master;
     private DSolenoid left;
     private DSolenoid right;
+    private DSolenoid pawl;
 
     public Telescope() {
         state = RobotState.getInstance().getTelescopeState();
@@ -30,14 +31,17 @@ public class Telescope implements Subsystem {
         ControllerFactory.slaveVictor(ActuatorMap.telescopingSlave, false, master);
         left = new DSolenoid(ActuatorMap.climberL);
         right = new DSolenoid(ActuatorMap.climberR);
+        pawl = new DSolenoid(ActuatorMap.pawlRelease);
 
         master.setName("Telescoping Master");
         left.setName("Climber Piston");
+        pawl.setName("Pawl");
     }
 
 
     @Override
     public void update() {
+        pawl.set(state.isPawl());
         if(state.isExtending()) {
             master.setOutput(1);
         } else if(state.isRetracting()) {
