@@ -61,7 +61,7 @@ public class Drive implements Subsystem {
     }
 
     public void manualDrive() {
-        if(controls.leftTrigger()) {
+        if(controls.leftButton(0)) {
             visionDrive();
         } else {
             left.setOutput(controls.leftY());
