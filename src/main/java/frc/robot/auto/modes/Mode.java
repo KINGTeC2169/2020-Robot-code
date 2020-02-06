@@ -4,4 +4,5 @@ public interface Mode {
     public void start();
     public void run();
     public void stop();
+    public boolean isRunning();
 }

@@ -58,7 +58,7 @@ public class Constants {
 
     /* Other constants */
 
-    public static final boolean usingTestBed = true;
+    public static final boolean usingTestBed = false;
 
     // Predicting position
     public static final boolean encoderPositionPrediction = true;

@@ -2,6 +2,7 @@ package frc.robot.states;
 
 import frc.util.Constants;
 import frc.util.Conversion;
+import frc.util.Debug;
 import frc.util.Interpolate;
 import frc.util.drivers.Limelight;
 import frc.util.geometry.*;
@@ -49,14 +50,32 @@ public class DriveState {
 
         // Recalculate position with vision
         Vector2 visionEstimate = null;
-        Vector2 position = limelight.getPosition().sub(new Vector2(LENGTH / 2, pos.rotation.rotateCC().angle, true));
-        if(position.sub(pos.translation).norm() < Constants.maxPositionChange || consecutiveOutliers > Constants.consecutiveOutliers) {
-            visionEstimate = position;
-            consecutiveOutliers = 0;
-        } else if(consecutiveOutliers == 0 || lastOutlier.sub(position).norm() < Constants.maxPositionChange) {
-            // Oh no, the limelight is acting up
-            lastOutlier = position;
-            consecutiveOutliers++;
+
+        Vector2[] corners = limelight.getCorners();
+
+        if(corners.length == 4) {
+            // Calculate angles from pixel values
+            double p1ty = Conversion.degToRad((25/360.0) * (359.5 - corners[0].y));
+            double p2ty = Conversion.degToRad((25/360.0) * (359.5 - corners[1].y));
+
+            // Calculate lengths between the camera and the points on the ground
+            double cd1 = 66.25 / Math.tan(p1ty);
+            double cd2 = 66.25 / Math.tan(p2ty);
+
+            // Calculate angle d1d2c
+            double d1d2 = 20 * Math.sqrt(3);
+            double d1d2c = Math.acos((cd1*cd1 + d1d2*d1d2 - cd2*cd2) / (2*cd1*d1d2)); // Law of cosines
+
+            // Calculate x and y
+            double robotY = cd2 * Math.sin(d1d2c > Math.PI / 2 ? d1d2c : Math.PI - d1d2c);
+            visionEstimate = new Vector2(
+                    Math.sqrt(cd2*cd2 - robotY * robotY) * ((d1d2c > Math.PI / 2) ? 1 : -1),
+                    robotY
+            );
+
+            Debug.visionEstimate(Conversion.radToDeg(p1ty), Conversion.radToDeg(p2ty), cd1, cd2, Conversion.radToDeg(d1d2c), visionEstimate);
+        } else {
+            visionEstimate = new Vector2();
         }
 
         // Combine estimates

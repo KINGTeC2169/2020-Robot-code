@@ -6,6 +6,8 @@ import frc.robot.auto.actions.LookAtTarget;
 
 public class TestMode implements Mode {
 
+    private boolean running = false;
+
     AimAtTarget aimAtTarget = new AimAtTarget();
     LookAtTarget lookAtTarget = new LookAtTarget();
     GetInRange2 getInRange = new GetInRange2();
@@ -13,6 +15,7 @@ public class TestMode implements Mode {
     @Override
     public void start() {
         getInRange.start();
+        running = true;
     }
 
     private boolean sawTarget = false;
@@ -29,5 +32,11 @@ public class TestMode implements Mode {
     @Override
     public void stop() {
         getInRange.stop();
+        running = true;
+    }
+
+    @Override
+    public boolean isRunning() {
+        return running;
     }
 }

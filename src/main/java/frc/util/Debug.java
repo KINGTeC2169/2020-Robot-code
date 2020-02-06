@@ -54,6 +54,17 @@ public class Debug {
         }
     }
 
+    public static void visionEstimate(double p1ty, double p2ty, double cd1, double cd2, double d1d2c, Vector2 estimate) {
+        if(visionPositionEstimate) {
+            putNumber("p1ty", p1ty);
+            putNumber("p2ty", p2ty);
+            putNumber("cd1", cd1);
+            putNumber("cd2", cd2);
+            putNumber("d1d2c", d1d2c);
+            out("Vision estimate", estimate);
+        }
+    }
+
     public static void putNumber(String key, double x) {
         SmartDashboard.putNumber(key, Math.floor(x*10000)/10000);
     }
