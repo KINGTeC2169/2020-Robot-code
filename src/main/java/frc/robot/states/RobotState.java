@@ -13,17 +13,24 @@ public class RobotState {
     public RobotState() {
     }
 
+    private DriveState driveState = new DriveState();
+    private TelescopeState telescopeState = new TelescopeState();
+
     public void reset() {
         driveState.reset();
+        telescopeState.reset();
     }
 
     public void update() {
         driveState.update();
+        telescopeState.update();
     }
-
-    private DriveState driveState = new DriveState();
 
     public DriveState getDriveState() {
         return driveState;
+    }
+
+    public TelescopeState getTelescopeState() {
+        return telescopeState;
     }
 }
