@@ -78,6 +78,9 @@ public class Constants {
     public static final double quickStopWeight = 0.1;
     public static final double quickStopScalar = 5.0;
 
+    // Flywheel
+    public static final double flywheelDeadband = .1;
+
     // Predicting position
     public static final boolean encoderPositionPrediction = true;
     public static final boolean visionPositionPrediction = false;

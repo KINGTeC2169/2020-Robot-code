@@ -20,6 +20,7 @@ public class Superstructure {
     private Drive drive = Drive.getInstance();
     private Patrick patrick = Patrick.getInstance();
     private Intake intake = Intake.getInstance();
+    private Shooter shooter = Shooter.getInstance();
     private Telescope telescope = Telescope.getInstance();
 
     // Other systems
@@ -38,6 +39,7 @@ public class Superstructure {
         drive.update();
         intake.update();
         patrick.update();
+        shooter.update();
         telescope.update();
 
         Debug.debugAll();
@@ -46,6 +48,8 @@ public class Superstructure {
     public void reset() {
         drive.reset();
         intake.reset();
+        shooter.reset();
         patrick.reset();
+        telescope.reset();
     }
 }

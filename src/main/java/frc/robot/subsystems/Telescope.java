@@ -33,7 +33,7 @@ public class Telescope implements Subsystem {
         right = new DSolenoid(ActuatorMap.climberR);
         pawl = new DSolenoid(ActuatorMap.pawlRelease);
 
-        master.setName("Telescoping Master");
+        master.setName("Telescope");
         left.setName("Climber Piston");
         pawl.setName("Pawl");
     }

@@ -7,7 +7,7 @@ public class TelescopeState {
     private boolean up = false;
     private boolean extending = false;
     private boolean retracting = false;
-    private boolean pawl = false;
+    private boolean pawl = true;
 
     public TelescopeState() {
         controls = Controls.getInstance();
@@ -16,7 +16,7 @@ public class TelescopeState {
     public void update() {
         if(controls.xbox.getPOV() == 270) {
             up = true;
-        } else if(controls.xbox.getPOV() == 90 && !extending && !retracting) {
+        } else if(controls.xbox.getPOV() == 90 && !extending && !retracting && pawl) {
             up = false;
         }
         if(controls.xbox.getPOV() == 0 && up && pawl) {
