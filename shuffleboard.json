@@ -89,7 +89,7 @@
           },
           "0,1": {
             "size": [
-              1,
+              2,
               1
             ],
             "content": {
@@ -99,13 +99,13 @@
               "Range/Min": -1.0,
               "Range/Max": 1.0,
               "Range/Center": 0.0,
-              "Visuals/Num tick marks": 5.0,
+              "Visuals/Num tick marks": 5,
               "Visuals/Show text": true
             }
           },
-          "1,1": {
+          "2,1": {
             "size": [
-              1,
+              2,
               1
             ],
             "content": {
@@ -115,7 +115,7 @@
               "Range/Min": -1.0,
               "Range/Max": 1.0,
               "Range/Center": 0.0,
-              "Visuals/Num tick marks": 5.0,
+              "Visuals/Num tick marks": 5,
               "Visuals/Show text": true
             }
           },
@@ -133,7 +133,7 @@
               "Slider Settings/Block increment": 1.0
             }
           },
-          "0,3": {
+          "2,2": {
             "size": [
               2,
               1
@@ -147,7 +147,7 @@
               "Slider Settings/Block increment": 1.0
             }
           },
-          "2,2": {
+          "2,3": {
             "size": [
               2,
               1
@@ -175,7 +175,7 @@
               "Slider Settings/Block increment": 0.1
             }
           },
-          "4,3": {
+          "6,2": {
             "size": [
               2,
               1
@@ -189,7 +189,7 @@
               "Slider Settings/Block increment": 0.1
             }
           },
-          "2,3": {
+          "10,2": {
             "size": [
               2,
               1
@@ -200,7 +200,7 @@
               "_title": "Valid Target"
             }
           },
-          "6,2": {
+          "8,2": {
             "size": [
               2,
               1
@@ -214,9 +214,9 @@
               "Slider Settings/Block increment": 1.0
             }
           },
-          "2,1": {
+          "4,1": {
             "size": [
-              1,
+              2,
               1
             ],
             "content": {
@@ -226,13 +226,13 @@
               "Range/Min": -1.0,
               "Range/Max": 1.0,
               "Range/Center": 0.0,
-              "Visuals/Num tick marks": 5.0,
+              "Visuals/Num tick marks": 5,
               "Visuals/Show text": true
             }
           },
-          "3,1": {
+          "0,4": {
             "size": [
-              1,
+              2,
               1
             ],
             "content": {
@@ -243,9 +243,9 @@
               "Colors/Color when false": "#8B0000FF"
             }
           },
-          "4,1": {
+          "2,4": {
             "size": [
-              1,
+              2,
               1
             ],
             "content": {
@@ -254,6 +254,94 @@
               "_title": "High Gear",
               "Colors/Color when true": "#7CFC00FF",
               "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "6,4": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Climber Piston",
+              "_title": "Climber Piston",
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "6,1": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Number Bar",
+              "_source0": "network_table:///SmartDashboard/Telescope",
+              "_title": "Telescope",
+              "Range/Min": -1.0,
+              "Range/Max": 1.0,
+              "Range/Center": 0.0,
+              "Visuals/Num tick marks": 5,
+              "Visuals/Show text": true
+            }
+          },
+          "0,3": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Number Slider",
+              "_source0": "network_table:///SmartDashboard/Flywheel Hood encoder value",
+              "_title": "Flywheel Hood encoder value",
+              "Slider Settings/Min": -4096.0,
+              "Slider Settings/Max": 4096.0,
+              "Slider Settings/Block increment": 0.0625
+            }
+          },
+          "9,1": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Number Bar",
+              "_source0": "network_table:///SmartDashboard/Flywheel Hood",
+              "_title": "Flywheel Hood",
+              "Range/Min": -1.0,
+              "Range/Max": 1.0,
+              "Range/Center": 0.0,
+              "Visuals/Num tick marks": 5,
+              "Visuals/Show text": true
+            }
+          },
+          "4,4": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Pawl",
+              "_title": "Pawl",
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "8,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Number Bar",
+              "_source0": "network_table:///SmartDashboard/Flywheel",
+              "_title": "Flywheel",
+              "Range/Min": 0.0,
+              "Range/Max": 1.0,
+              "Range/Center": 0.0,
+              "Visuals/Num tick marks": 5,
+              "Visuals/Show text": true
             }
           }
         }
@@ -286,7 +374,8 @@
                   "_title": "navX-Sensor",
                   "Visuals/Major tick spacing": 45.0,
                   "Visuals/Starting angle": 180.0,
-                  "Visuals/Show tick mark ring": true
+                  "Visuals/Show tick mark ring": true,
+                  "Visuals/Counter clockwise": false
                 }
               ]
             }
@@ -296,9 +385,9 @@
     }
   ],
   "windowGeometry": {
-    "x": 1918.0,
-    "y": 230.0,
-    "width": 1924.0,
-    "height": 816.0
+    "x": -8.0,
+    "y": -8.0,
+    "width": 1936.0,
+    "height": 1056.0
   }
 }

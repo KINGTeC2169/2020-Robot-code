@@ -1,6 +1,10 @@
 package frc.util;
 
 public class ActuatorMap {
+    // Digital input
+    public static final int indexerSensorEnter = 0;
+    public static final int indexerSensorExit = 1;
+
     // PCM
     public static final int dog = 0;
     public static final int compressor = 1;
@@ -24,7 +28,7 @@ public class ActuatorMap {
     public static final int leftTop = 11;
     public static final int intake = 12;
     public static final int indexer = 13;
-    public static final int hangingActuator = 14;
+    public static final int funnel = 14;
     public static final int flywheelMaster = 15;
     public static final int pcm = 16;
 }

@@ -56,6 +56,10 @@ public class Constants {
     public static final double turnInPlaceAllowedError = 0;
     public static final double turnInPlaceD = 0;
 
+    // Hood actuation
+    public static final double hoodActuationP = 0.01;
+    public static final double hoodActuationD = 0;
+
     /* Other constants */
 
     public static final boolean usingTestBed = true;
@@ -80,6 +84,7 @@ public class Constants {
 
     // Flywheel
     public static final double flywheelDeadband = .1;
+    public static final double startingHoodAngle = 20;
 
     // Predicting position
     public static final boolean encoderPositionPrediction = true;

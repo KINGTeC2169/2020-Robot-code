@@ -15,6 +15,10 @@ public class Conversion {
         return ticks / Constants.ticksPerRotation;
     }
 
+    public static double encoderTicksToDegrees(double ticks) {
+        return 360 * ticks / Constants.ticksPerRotation;
+    }
+
     public static double rotationsToInches(double rotations, double diameter) {
         return rotations * diameter * Math.PI;
     }
@@ -23,5 +27,9 @@ public class Conversion {
         int x = Color.HSBtoRGB((float) h, (float) s, (float) v);
         int[] rgb = {(x>>16)&0xFF, (x>>8)&0xFF, x&0xFF};
         return rgb;
+    }
+
+    public static double getHoodAngle(boolean isValidTarget, double distance) {
+        return isValidTarget ? 90 - 180 * Math.atan(distance / 100) / Math.PI : 45;
     }
 }
