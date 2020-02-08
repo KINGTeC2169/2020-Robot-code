@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 import frc.robot.states.RobotState;
 import frc.robot.states.TelescopeState;
 import frc.util.ActuatorMap;
+import frc.util.Constants;
+import frc.util.Controls;
 import frc.util.drivers.ControllerFactory;
 import frc.util.drivers.DSolenoid;
 import frc.util.drivers.Talon;
@@ -19,6 +21,7 @@ public class Telescope implements Subsystem {
         }
     }
 
+    private Controls controls;
     private TelescopeState state;
     private Talon master;
     private DSolenoid left;
@@ -26,6 +29,7 @@ public class Telescope implements Subsystem {
     private DSolenoid pawl;
 
     public Telescope() {
+        controls = Controls.getInstance();
         state = RobotState.getInstance().getTelescopeState();
         master = ControllerFactory.masterTalon(ActuatorMap.telescopingMaster, false);
         ControllerFactory.slaveVictor(ActuatorMap.telescopingSlave, false, master);
@@ -50,8 +54,14 @@ public class Telescope implements Subsystem {
             master.setOutput(0);
         }
 
-        left.set(state.isUp());
-        right.set(state.isUp());
+        if(controls.xbox.getRawAxis(2) > Constants.trenchModeThreshold) {
+            // Ooh yeah it's trench time
+            left.set(false);
+            right.set(false);
+        } else {
+            left.set(state.isUp());
+            right.set(state.isUp());
+        }
     }
 
     @Override

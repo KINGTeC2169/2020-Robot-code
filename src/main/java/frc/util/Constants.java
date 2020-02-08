@@ -64,6 +64,7 @@ public class Constants {
 
     public static final boolean usingTestBed = true;
     public static final boolean usingControls = true;
+    public static final double trenchModeThreshold = .5;
 
     // Cheesy drive
     public static final double quickTurnThreshold = 0.5;
@@ -85,6 +86,7 @@ public class Constants {
     // Flywheel
     public static final double flywheelDeadband = .1;
     public static final double startingHoodAngle = 20;
+    public static final double trenchSafeHoodAngle = 25;
     public static final double minShootingRpm = 5000;
 
     // Indexer

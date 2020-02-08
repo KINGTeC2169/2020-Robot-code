@@ -48,7 +48,7 @@ public class Intake implements Subsystem {
         if(controls.right.getRawButton(1)) {
             state.setRunning(true);
             victor.setOutput(1);
-        } else if(controls.right.getRawButton(2)) {
+        } else if(controls.xbox.getStartButton()) {
             state.setRunning(false);
             victor.setOutput(-1);
         } else {

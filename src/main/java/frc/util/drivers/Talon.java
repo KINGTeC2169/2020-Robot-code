@@ -98,6 +98,22 @@ public class Talon {
         sensorTicks += ticks;
     }
 
+    public boolean isFwdLimit() {
+        if(testing) {
+            return Debug.getBoolean(name + " fwd limit");
+        } else {
+            return talon.isFwdLimitSwitchClosed() == 1;
+        }
+    }
+
+    public boolean isRevLimit() {
+        if(testing) {
+            return Debug.getBoolean(name + " rev limit");
+        } else {
+            return talon.isRevLimitSwitchClosed() == 1;
+        }
+    }
+
     public void setName(String name) {
         this.name = name;
     }

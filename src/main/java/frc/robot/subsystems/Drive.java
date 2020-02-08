@@ -58,7 +58,11 @@ public class Drive implements Subsystem {
     @Override
     public void update() {
         handleShifter();
-        cheesyDrive();
+        if(controls.right.getRawButton(2)) {
+            visionDrive();
+        } else {
+            cheesyDrive();
+        }
 
         driveState.updateAngle(getAngle());
         driveState.updateWheelPosition(getLeftRotations(), getRightRotations());
@@ -86,7 +90,7 @@ public class Drive implements Subsystem {
     }
 
     public void cheesyDrive() {
-        double throttle = handleDeadband(controls.left.getY(), Constants.throttleDeadband);
+        double throttle = handleDeadband(-controls.left.getY(), Constants.throttleDeadband);
         double wheel = handleDeadband(controls.right.getX(), Constants.wheelDeadband);
         boolean quickTurn = controls.right.getZ() > Constants.quickTurnThreshold;
 

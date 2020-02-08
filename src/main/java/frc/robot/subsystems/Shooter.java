@@ -20,6 +20,7 @@ public class Shooter implements Subsystem {
     private final PD hoodActuator;
 
     private boolean forceShoot = false;
+    private boolean hoodConfigured = false;
 
     public Shooter() {
         controls = Controls.getInstance();
@@ -58,13 +59,29 @@ public class Shooter implements Subsystem {
         }
 
         // Adjust hood
-        double wantedAngle = Conversion.getHoodAngle(limelight.isValidTarget(), limelight.getDistance());
-        double realAngle = Constants.startingHoodAngle + Conversion.encoderTicksToDegrees(hood.getSensor());
-        hood.setOutput(hoodActuator.getOutput(wantedAngle - realAngle));
+        if(!hoodConfigured) {
+          hood.setOutput(-.5);
+          if(hood.isRevLimit()) {
+              hood.zeroSensor();
+              hoodConfigured = true;
+          }
+        } else if(controls.xbox.getRawAxis(2) > Constants.trenchModeThreshold) {
+            // Ooh yeah it's trench time
+            if(Constants.startingHoodAngle + Conversion.encoderTicksToDegrees(hood.getSensor()) > Constants.trenchSafeHoodAngle) {
+                hood.setOutput(-1);
+            }
+        } else if(controls.right.getRawButton(2)) {
+            double wantedAngle = Conversion.getHoodAngle(limelight.isValidTarget(), limelight.getDistance());
+            double realAngle = Constants.startingHoodAngle + Conversion.encoderTicksToDegrees(hood.getSensor());
+            hood.setOutput(hoodActuator.getOutput(wantedAngle - realAngle));
+        } else {
+            hood.setOutput(0);
+        }
     }
 
     @Override
     public void reset() {
         master.setOutput(0);
+        hoodConfigured = false;
     }
 }
