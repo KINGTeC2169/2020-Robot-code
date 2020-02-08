@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import frc.robot.states.IntakeState;
+import frc.robot.states.RobotState;
 import frc.util.ActuatorMap;
 import frc.util.Controls;
 import frc.util.drivers.ControllerFactory;
@@ -16,6 +18,7 @@ public class Intake implements Subsystem {
         }
     }
 
+    private IntakeState state;
     private Controls controls;
     private DSolenoid lsol;
     private DSolenoid rsol;
@@ -23,6 +26,7 @@ public class Intake implements Subsystem {
     private boolean solenoidState = true;
 
     public Intake() {
+        state = RobotState.getInstance().getIntakeState();
         controls = new Controls();
         lsol = new DSolenoid(ActuatorMap.intakeL);
         rsol = new DSolenoid(ActuatorMap.intakeR);
@@ -42,10 +46,13 @@ public class Intake implements Subsystem {
         }
 
         if(controls.right.getRawButton(1)) {
+            state.setRunning(true);
             victor.setOutput(1);
         } else if(controls.right.getRawButton(2)) {
+            state.setRunning(false);
             victor.setOutput(-1);
         } else {
+            state.setRunning(false);
             victor.setOutput(0);
         }
     }

@@ -46,7 +46,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousPeriodic() {
-        superstructure.update();
+        superstructure.update(state);
         state.update();
         autoMode.run();
     }
@@ -65,7 +65,7 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         state.update();
-        superstructure.update();
+        superstructure.update(state);
     }
 
     @Override

@@ -86,6 +86,10 @@ public class Constants {
     public static final double flywheelDeadband = .1;
     public static final double startingHoodAngle = 20;
 
+    // Indexer
+    public static final double feederHalfway = 4000;
+    public static final double feederIntakeDelay = 2; // In seconds
+
     // Predicting position
     public static final boolean encoderPositionPrediction = true;
     public static final boolean visionPositionPrediction = false;

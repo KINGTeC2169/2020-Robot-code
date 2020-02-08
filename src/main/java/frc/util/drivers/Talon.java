@@ -10,6 +10,8 @@ public class Talon {
 
     private String name;
     private int id;
+    private int sensorTicks = Integer.MIN_VALUE;
+    private double output = 0;
     protected TalonSRX talon;
 
     public Talon(int id) {
@@ -42,7 +44,19 @@ public class Talon {
         }
     }
 
+    public void zeroSensor() {
+        if(!testing) {
+            talon.setSelectedSensorPosition(0);
+        } else {
+            if(sensorTicks != Integer.MIN_VALUE) {
+                sensorTicks = 0;
+            }
+            Debug.putNumber(name + " encoder value", 0);
+        }
+    }
+
     public void setOutput(double output) {
+        this.output = output;
         if(!testing) {
             talon.set(ControlMode.PercentOutput, output);
         } else if(name != null) {
@@ -50,13 +64,29 @@ public class Talon {
         }
     }
 
+    public double getOutput() {
+        return output;
+    }
+
     public double getSensor() {
         if(testing && name != null) {
-            return Debug.getNumber(name + " encoder value");
+            if(sensorTicks == Integer.MIN_VALUE) {
+                return Debug.getNumber(name + " encoder value");
+            } else {
+                Debug.putNumber(name + " encoder value", sensorTicks);
+                return sensorTicks;
+            }
         } else if(testing) {
             return 0;
         }
         return talon.getSelectedSensorPosition(0);
+    }
+
+    public void changeSensor(int ticks) {
+        if(sensorTicks == Integer.MIN_VALUE) {
+            sensorTicks = 0;
+        }
+        sensorTicks += ticks;
     }
 
     public void setName(String name) {
