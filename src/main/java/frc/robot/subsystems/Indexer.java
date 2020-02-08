@@ -8,6 +8,8 @@ import frc.util.drivers.DInput;
 import frc.util.drivers.Talon;
 import frc.util.drivers.Victor;
 
+import java.util.ArrayList;
+
 public class Indexer implements Subsystem {
     private static Indexer instance;
     public static Indexer getInstance() {
@@ -24,12 +26,16 @@ public class Indexer implements Subsystem {
     private final DInput indexerEnter;
     private final DInput indexerExit;
 
-    private boolean noBallsReceived = true;
-    private boolean feederRunning = false;
+    private boolean slowFlywheel = false;
+    private boolean funnelRunning = false;
     private boolean enterSensorActivated = false;
     private boolean exitSensorActivated = false;
-    private boolean reloading = false;
-    private int ballsInFeeder = 0;
+    private enum LoadMode {
+            halfLoad, fullLoad, shoot
+    }
+    private LoadMode loadMode = LoadMode.halfLoad;
+    private double lastSensor = 0;
+    private ArrayList<Double> balls = new ArrayList<>();
 
     public Indexer() {
         controls = Controls.getInstance();
@@ -42,57 +48,91 @@ public class Indexer implements Subsystem {
         indexerEnter.setName("Indexer Enter");
         indexerExit.setName("Indexer Exit");
 
+        funnel.setName("Funnel");
         feeder.setName("Feeder");
     }
 
-    public void setFeeder(boolean on) {
-        feederRunning = on;
+    public void setFunnel(boolean on) {
+        funnelRunning = on;
+    }
+
+    public void setSlowFlywheel(boolean slow) {
+        slowFlywheel = slow;
     }
 
     public int getBallsInFeeder() {
-        return ballsInFeeder;
+        return balls.size();
+    }
+
+    public boolean isShooting() {
+        return loadMode == LoadMode.shoot;
     }
 
     @Override
     public void update() {
         // Count balls
         boolean enterSensorTripped = false;
+        boolean exitSensorTripped = false;
         if(indexerEnter.get() && !enterSensorActivated) {
-            noBallsReceived = false;
             enterSensorTripped = true;
-            ballsInFeeder++;
+            balls.add(0.0);
         }
         if(indexerExit.get() && !exitSensorActivated) {
-            ballsInFeeder--;
+            balls.remove(0);
+            exitSensorTripped = true;
         }
         enterSensorActivated = indexerEnter.get();
         exitSensorActivated = indexerExit.get();
 
         // Law 1
-        if(ballsInFeeder < 3 && enterSensorTripped) {
-            feeder.zeroSensor();
-            reloading = true;
+        if(balls.size() == 1 && enterSensorTripped && loadMode != LoadMode.shoot) {
+            loadMode = LoadMode.halfLoad;
+        }
+        if(balls.size() == 2 && enterSensorTripped && loadMode != LoadMode.shoot) {
+            loadMode = LoadMode.fullLoad;
         }
 
         // Law 2
-        if(feederRunning) {
+        if(funnelRunning) {
             funnel.setOutput(1);
         } else {
             funnel.setOutput(0);
         }
 
         // Law 3
-        if(controls.xbox.getRawButton(6) && !reloading) {
-            feeder.zeroSensor();
-            reloading = true;
+        if(balls.size() != 0 && controls.xbox.getRawButton(6) && !slowFlywheel) {
+            loadMode = LoadMode.shoot;
+        }
+        if(exitSensorTripped && balls.size() == 1) {
+            loadMode = LoadMode.halfLoad;
+        } else if(exitSensorTripped) {
+            loadMode = LoadMode.fullLoad;
         }
 
+        // Update feeder
+        double dSensor = feeder.getSensor() - lastSensor;
+        for(int i = 0; i < balls.size(); i++) {
+            balls.set(i, balls.get(i) + dSensor);
+        }
+        lastSensor = feeder.getSensor();
+
         // Reload
-        if(feeder.getSensor() < Constants.feederHalfway && !noBallsReceived) {
+        if(loadMode == LoadMode.halfLoad) {
+            if(balls.size() != 0 && balls.get(0) < Constants.feederHalfway) {
+                feeder.setOutput(1);
+            } else {
+                feeder.setOutput(0);
+            }
+        }
+        if(loadMode == LoadMode.fullLoad) {
+            if(balls.size() != 0 && balls.get(0) < 2 * Constants.feederHalfway) {
+                feeder.setOutput(1);
+            } else {
+                feeder.setOutput(0);
+            }
+        }
+        if(loadMode == LoadMode.shoot) {
             feeder.setOutput(1);
-        } else {
-            feeder.setOutput(0);
-            reloading = false;
         }
 
         if(feeder.getOutput() > .5) {
@@ -102,12 +142,12 @@ public class Indexer implements Subsystem {
 
     @Override
     public void reset() {
-        noBallsReceived = true;
-        feederRunning = false;
+        funnelRunning = false;
         enterSensorActivated = false;
         exitSensorActivated = false;
-        reloading = false;
-        ballsInFeeder = 0;
+        loadMode = LoadMode.halfLoad;
+        lastSensor = 0;
+        balls = new ArrayList<>();
 
         feeder.zeroSensor();
         feeder.setOutput(0);

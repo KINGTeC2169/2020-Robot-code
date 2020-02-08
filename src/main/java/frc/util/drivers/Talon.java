@@ -82,6 +82,15 @@ public class Talon {
         return talon.getSelectedSensorPosition(0);
     }
 
+    public double getVelocity() {
+        if(testing && name != null) {
+            return Debug.getNumber(name + " encoder vel.");
+        } else if(testing) {
+            return 0;
+        }
+        return talon.getSelectedSensorVelocity(0);
+    }
+
     public void changeSensor(int ticks) {
         if(sensorTicks == Integer.MIN_VALUE) {
             sensorTicks = 0;

@@ -19,6 +19,8 @@ public class Shooter implements Subsystem {
     private final Talon hood;
     private final PD hoodActuator;
 
+    private boolean forceShoot = false;
+
     public Shooter() {
         controls = Controls.getInstance();
         limelight = Limelight.getInstance();
@@ -33,10 +35,21 @@ public class Shooter implements Subsystem {
         hoodActuator = new PD(Constants.hoodActuationP, Constants.hoodActuationD);
     }
 
+    public void forceShoot(boolean on) {
+        forceShoot = on;
+    }
+
+    public double getRpm() {
+        return Conversion.velocityToRpm(master.getVelocity());
+    }
+
     @Override
     public void update() {
         // Run flywheel
         double output = controls.xbox.getRawAxis(3);
+        if(forceShoot) {
+            output = 1;
+        }
         if(output > Constants.flywheelDeadband) {
             output = output > 1 - Constants.flywheelDeadband ? 1 : output;
             master.setOutput(output);

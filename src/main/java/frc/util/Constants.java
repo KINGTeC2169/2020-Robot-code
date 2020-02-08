@@ -85,6 +85,7 @@ public class Constants {
     // Flywheel
     public static final double flywheelDeadband = .1;
     public static final double startingHoodAngle = 20;
+    public static final double minShootingRpm = 5000;
 
     // Indexer
     public static final double feederHalfway = 4000;

@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import frc.robot.states.RobotState;
+import frc.util.Constants;
 import frc.util.drivers.ColorSensor;
 import frc.util.Debug;
 import frc.util.drivers.Limelight;
@@ -41,11 +42,18 @@ public class Superstructure {
 
         // Update subsystems
         drive.update();
+
         intake.update();
-        indexer.setFeeder(state.getIntakeState().wasRunning());
+
+        indexer.setSlowFlywheel(shooter.getRpm() < Constants.minShootingRpm);
+        indexer.setFunnel(state.getIntakeState().wasRunning());
         indexer.update();
+
         patrick.update();
+
+        shooter.forceShoot(indexer.isShooting());
         shooter.update();
+
         telescope.update();
 
         Debug.debugAll();
