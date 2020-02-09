@@ -63,6 +63,7 @@ public class Constants {
     /* Other constants */
 
     public static final boolean usingTestBed = true;
+    public static final boolean usingColorSensor = false;
     public static final boolean usingControls = true;
     public static final double trenchModeThreshold = .5;
 

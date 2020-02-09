@@ -1,5 +1,6 @@
 package frc.util;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.states.RobotState;
 import frc.robot.subsystems.Indexer;
@@ -95,6 +96,19 @@ public class Debug {
         } else {
             return SmartDashboard.getBoolean(key, false);
         }
+    }
+
+    public static String getString(String key) {
+        if(!SmartDashboard.containsKey(key)) {
+            SmartDashboard.putString(key, "");
+            return "";
+        } else {
+            return SmartDashboard.getString(key, "");
+        }
+    }
+
+    public static void warn(String warning) {
+        DriverStation.reportWarning(warning, true);
     }
 
     private static void out(String key, Object x) {

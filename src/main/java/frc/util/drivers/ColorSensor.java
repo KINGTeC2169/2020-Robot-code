@@ -30,8 +30,8 @@ public class ColorSensor {
     }
 
     public ColorSensor() {
-        testing = Constants.usingTestBed;
-        if(!Constants.usingTestBed) {
+        testing = !Constants.usingColorSensor;
+        if(!testing) {
             colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
         }
     }
