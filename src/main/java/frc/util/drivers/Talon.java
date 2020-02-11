@@ -39,9 +39,7 @@ public class Talon {
     }
 
     public void reset() {
-        if(!testing) {
-            talon.setSelectedSensorPosition(0);
-        }
+        setOutput(0);
     }
 
     public void zeroSensor() {

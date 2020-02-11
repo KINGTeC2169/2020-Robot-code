@@ -19,6 +19,7 @@ public class Shooter implements Subsystem {
     private final Talon hood;
     private final PD hoodActuator;
 
+    private double hoodError = Double.MAX_VALUE;
     private boolean forceShoot = false;
     private boolean hoodConfigured = false;
 
@@ -40,8 +41,38 @@ public class Shooter implements Subsystem {
         forceShoot = on;
     }
 
+    public void shoot() {
+        master.setOutput(1);
+    }
+
+    public void aimHood(boolean aim, boolean trenchMode) {
+        if(!hoodConfigured) {
+            hood.setOutput(-.5);
+            if(hood.isRevLimit()) {
+                hood.zeroSensor();
+                hoodConfigured = true;
+            }
+        } else if(trenchMode) {
+            // Ooh yeah it's trench time
+            if(Constants.startingHoodAngle + Conversion.encoderTicksToDegrees(hood.getSensor()) > Constants.trenchSafeHoodAngle) {
+                hood.setOutput(-1);
+            }
+        } else if(aim) {
+            double wantedAngle = Conversion.getHoodAngle(limelight.isValidTarget(), limelight.getDistance());
+            double realAngle = Constants.startingHoodAngle + Conversion.encoderTicksToDegrees(hood.getSensor());
+            hoodError = wantedAngle - realAngle;
+            hood.setOutput(hoodActuator.getOutput(hoodError));
+        } else {
+            hood.setOutput(0);
+        }
+    }
+
     public double getRpm() {
         return Conversion.velocityToRpm(master.getVelocity());
+    }
+
+    public boolean isHoodAimed() {
+        return hoodConfigured && Math.abs(hoodError) < Constants.hoodAllowedError;
     }
 
     @Override
@@ -59,24 +90,7 @@ public class Shooter implements Subsystem {
         }
 
         // Adjust hood
-        if(!hoodConfigured) {
-          hood.setOutput(-.5);
-          if(hood.isRevLimit()) {
-              hood.zeroSensor();
-              hoodConfigured = true;
-          }
-        } else if(controls.xbox.getRawAxis(2) > Constants.trenchModeThreshold) {
-            // Ooh yeah it's trench time
-            if(Constants.startingHoodAngle + Conversion.encoderTicksToDegrees(hood.getSensor()) > Constants.trenchSafeHoodAngle) {
-                hood.setOutput(-1);
-            }
-        } else if(controls.right.getRawButton(2)) {
-            double wantedAngle = Conversion.getHoodAngle(limelight.isValidTarget(), limelight.getDistance());
-            double realAngle = Constants.startingHoodAngle + Conversion.encoderTicksToDegrees(hood.getSensor());
-            hood.setOutput(hoodActuator.getOutput(wantedAngle - realAngle));
-        } else {
-            hood.setOutput(0);
-        }
+        aimHood(controls.right.getRawButton(2), controls.xbox.getRawAxis(2) > Constants.trenchModeThreshold);
     }
 
     @Override

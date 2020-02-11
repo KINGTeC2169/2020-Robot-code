@@ -59,7 +59,7 @@ public class Drive implements Subsystem {
     public void update() {
         handleShifter();
         if(controls.right.getRawButton(2)) {
-            visionDrive();
+            visionDrive(controls.left.getY());
         } else {
             cheesyDrive();
         }
@@ -180,11 +180,11 @@ public class Drive implements Subsystem {
     }
 
     // Aim at the target
-    public void visionDrive() {
+    public void visionDrive(double throttle) {
         if(limelight.isValidTarget()) {
             double output = visionDrive.getOutput(limelight.getCenter().x);
-            left.setOutput(controls.left.getY() - output);
-            right.setOutput(controls.left.getY() + output);
+            left.setOutput(throttle - output);
+            right.setOutput(throttle + output);
         } else {
             setOutput(0, 0);
         }

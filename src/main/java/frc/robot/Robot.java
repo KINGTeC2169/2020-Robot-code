@@ -4,6 +4,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.auto.modes.Mode;
+import frc.robot.auto.modes.Owen;
 import frc.robot.auto.modes.TestMode;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.states.RobotState;
@@ -20,7 +21,7 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         superstructure.start();
-        autoMode = new TestMode();
+        autoMode = new Owen();
     }
 
     @Override

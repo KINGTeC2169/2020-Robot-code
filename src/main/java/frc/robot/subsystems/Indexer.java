@@ -35,9 +35,14 @@ public class Indexer implements Subsystem {
     }
     private LoadMode loadMode = LoadMode.halfLoad;
     private double lastSensor = 0;
-    private ArrayList<Double> balls = new ArrayList<>();
+    private ArrayList<Double> balls;
 
     public Indexer() {
+        balls = new ArrayList<>();
+        balls.add(Constants.feederHalfway * 2);
+        balls.add(.0);
+        balls.add(.0);
+
         controls = Controls.getInstance();
 
         feeder = ControllerFactory.masterTalon(ActuatorMap.indexer, false);
@@ -140,6 +145,14 @@ public class Indexer implements Subsystem {
         }
     }
 
+    public void shoot(boolean shoot) {
+        if(!slowFlywheel && shoot) {
+            loadMode = LoadMode.shoot;
+        } else {
+            loadMode = LoadMode.fullLoad;
+        }
+    }
+
     @Override
     public void reset() {
         funnelRunning = false;
@@ -147,7 +160,11 @@ public class Indexer implements Subsystem {
         exitSensorActivated = false;
         loadMode = LoadMode.halfLoad;
         lastSensor = 0;
+
         balls = new ArrayList<>();
+        balls.add(Constants.feederHalfway * 2);
+        balls.add(.0);
+        balls.add(.0);
 
         feeder.zeroSensor();
         feeder.setOutput(0);

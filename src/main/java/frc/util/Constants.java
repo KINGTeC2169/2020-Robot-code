@@ -49,7 +49,8 @@ public class Constants {
 
     // Linear Drive
     public static final double linearDriveTurnP = 0;
-    public static final double linearDriveDriveP = 0.00018;
+    public static final double linearDriveTurnD = 0;
+    public static final double linearDriveDriveP = 0.02;
     public static final double linearDriveDriveD = 0.001;
 
     // Turn in place
@@ -67,7 +68,7 @@ public class Constants {
     public static final boolean usingTestBed = true;
     public static final boolean usingColorSensor = false;
     public static final boolean usingControls = true;
-    public static final boolean usingLimelight = true;
+    public static final boolean usingLimelight = false;
 
     public static final double trenchModeThreshold = .5;
 
@@ -93,6 +94,7 @@ public class Constants {
     public static final double startingHoodAngle = 20;
     public static final double trenchSafeHoodAngle = 25;
     public static final double minShootingRpm = 5000;
+    public static final double hoodAllowedError = 2;
 
     // Indexer
     public static final double feederHalfway = 4000;
