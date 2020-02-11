@@ -1,7 +1,5 @@
 package frc.robot.commands;
 
-import frc.util.Controls;
-
 public class CommandMachine {
     private static CommandMachine instance;
     public static CommandMachine getInstance() {
@@ -12,19 +10,20 @@ public class CommandMachine {
         }
     }
 
-    private Controls controls;
-    private DriveCommand dCommand;
-    private IndexerCommand idxCommand;
+    private final DriveCommand dCommand;
+    private final IndexerCommand idxCommand;
+    private final ShooterCommand sCommand;
 
     private CommandMachine() {
-        controls = Controls.getInstance();
         dCommand = DriveCommand.getInstance();
         idxCommand = IndexerCommand.getInstance();
+        sCommand = ShooterCommand.getInstance();
     }
 
     public void teleop() {
         dCommand.teleop();
         idxCommand.teleop();
+        sCommand.teleop();
     }
 
     public DriveCommand getDriveCommand() {
@@ -33,5 +32,9 @@ public class CommandMachine {
 
     public IndexerCommand getIndexerCommand() {
         return idxCommand;
+    }
+
+    public ShooterCommand getShooterCommand() {
+        return sCommand;
     }
 }

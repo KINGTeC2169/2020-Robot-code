@@ -19,7 +19,7 @@ public class Owen implements Mode {
 
     public Owen(Superstructure superstructure, CommandMachine commandMachine) {
         this.superstructure = superstructure;
-        shoot = new ShootBalls(superstructure, commandMachine.getDriveCommand(), commandMachine.getIndexerCommand());
+        shoot = new ShootBalls(superstructure, commandMachine.getDriveCommand(), commandMachine.getIndexerCommand(), commandMachine.getShooterCommand());
         linearDrive = new LinearDrive(commandMachine.getDriveCommand(), 48);
     }
 

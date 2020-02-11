@@ -1,19 +1,20 @@
 package frc.robot.subsystems;
 
+import frc.robot.commands.ShooterCommand;
 import frc.util.*;
 import frc.util.drivers.*;
 
 public class Shooter implements Subsystem {
     private static Shooter instance;
-    public static Shooter getInstance() {
+    public static Shooter getInstance(ShooterCommand sCommand) {
         if(instance == null) {
-            return instance = new Shooter();
+            return instance = new Shooter(sCommand);
         } else {
             return instance;
         }
     }
 
-    private final Controls controls;
+    private final ShooterCommand sCommand;
     private final Limelight limelight;
     private final Talon master;
     private final Talon hood;
@@ -23,8 +24,8 @@ public class Shooter implements Subsystem {
     private boolean forceShoot = false;
     private boolean hoodConfigured = false;
 
-    public Shooter() {
-        controls = Controls.getInstance();
+    public Shooter(ShooterCommand sCommand) {
+        this.sCommand = sCommand;
         limelight = Limelight.getInstance();
 
         master = ControllerFactory.masterTalon(ActuatorMap.flywheelMaster, false);
@@ -39,10 +40,6 @@ public class Shooter implements Subsystem {
 
     public void forceShoot(boolean on) {
         forceShoot = on;
-    }
-
-    public void shoot() {
-        master.setOutput(1);
     }
 
     public void aimHood(boolean aim, boolean trenchMode) {
@@ -78,7 +75,7 @@ public class Shooter implements Subsystem {
     @Override
     public void update() {
         // Run flywheel
-        double output = controls.xbox.getRawAxis(3);
+        double output = sCommand.getOutput();
         if(forceShoot) {
             output = 1;
         }
@@ -90,7 +87,7 @@ public class Shooter implements Subsystem {
         }
 
         // Adjust hood
-        aimHood(controls.right.getRawButton(2), controls.xbox.getRawAxis(2) > Constants.trenchModeThreshold);
+        aimHood(sCommand.isAimHood(), sCommand.isTrenchMode());
     }
 
     @Override

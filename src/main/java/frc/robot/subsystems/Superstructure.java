@@ -24,7 +24,7 @@ public class Superstructure {
         indexer = Indexer.getInstance(commandMachine.getIndexerCommand());
         intake = Intake.getInstance();
         patrick = Patrick.getInstance();
-        shooter = Shooter.getInstance();
+        shooter = Shooter.getInstance(commandMachine.getShooterCommand());
         telescope = Telescope.getInstance();
     }
 
@@ -89,5 +89,9 @@ public class Superstructure {
 
     public double getBallsInFeeder() {
         return indexer.getBallsInFeeder();
+    }
+
+    public boolean isHoodAimed() {
+        return shooter.isHoodAimed();
     }
 }
