@@ -1,5 +1,6 @@
 package frc.robot.auto.actions;
 
+import frc.robot.commands.DriveCommand;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Shooter;
 
@@ -8,8 +9,8 @@ public class ShootBalls implements Action {
     private Indexer indexer;
     private Shooter shooter;
 
-    public ShootBalls() {
-        aim = new AimAtTarget();
+    public ShootBalls(DriveCommand dCommand) {
+        aim = new AimAtTarget(dCommand);
         indexer = Indexer.getInstance();
         shooter = Shooter.getInstance();
     }
@@ -25,6 +26,8 @@ public class ShootBalls implements Action {
         shooter.aimHood(true, false);
         indexer.shoot(shooter.isHoodAimed());
         shooter.shoot();
+
+        if(isFinished()) stop();
     }
 
     @Override

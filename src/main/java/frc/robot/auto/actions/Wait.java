@@ -1,7 +1,5 @@
 package frc.robot.auto.actions;
 
-import edu.wpi.first.wpilibj.command.Command;
-
 public class Wait implements Action {
     private int loops = 0;
     private int seconds = 0;

@@ -1,4 +1,5 @@
 {
+  "dividerPosition": 0.0026288117770767614,
   "tabPane": [
     {
       "title": "SmartDashboard",
@@ -96,11 +97,11 @@
               "_type": "Number Bar",
               "_source0": "network_table:///SmartDashboard/Left Drive",
               "_title": "Left Drive",
-              "Range/Min": -1.0,
-              "Range/Max": 1.0,
-              "Range/Center": 0.0,
-              "Visuals/Num tick marks": 5,
-              "Visuals/Show text": true
+              "min": -1.0,
+              "max": 1.0,
+              "center": 0.0,
+              "numTickMarks": 5.0,
+              "showText": true
             }
           },
           "2,1": {
@@ -112,11 +113,11 @@
               "_type": "Number Bar",
               "_source0": "network_table:///SmartDashboard/Right Drive",
               "_title": "Right Drive",
-              "Range/Min": -1.0,
-              "Range/Max": 1.0,
-              "Range/Center": 0.0,
-              "Visuals/Num tick marks": 5,
-              "Visuals/Show text": true
+              "min": -1.0,
+              "max": 1.0,
+              "center": 0.0,
+              "numTickMarks": 5.0,
+              "showText": true
             }
           },
           "0,2": {
@@ -128,9 +129,9 @@
               "_type": "Number Slider",
               "_source0": "network_table:///SmartDashboard/Left Drive encoder value",
               "_title": "Left Drive encoder value",
-              "Slider Settings/Min": -4096.0,
-              "Slider Settings/Max": 4096.0,
-              "Slider Settings/Block increment": 1.0
+              "min": -4096.0,
+              "max": 100000.0,
+              "blockIncrement": 0.0625
             }
           },
           "2,2": {
@@ -142,9 +143,9 @@
               "_type": "Number Slider",
               "_source0": "network_table:///SmartDashboard/Right Drive encoder value",
               "_title": "Right Drive encoder value",
-              "Slider Settings/Min": -4096.0,
-              "Slider Settings/Max": 4096.0,
-              "Slider Settings/Block increment": 1.0
+              "min": -4096.0,
+              "max": 100000.0,
+              "blockIncrement": 0.0625
             }
           },
           "2,3": {
@@ -156,9 +157,9 @@
               "_type": "Number Slider",
               "_source0": "network_table:///SmartDashboard/navX angle",
               "_title": "navX angle",
-              "Slider Settings/Min": -180.0,
-              "Slider Settings/Max": 180.0,
-              "Slider Settings/Block increment": 0.0625
+              "min": -90.0,
+              "max": 90.0,
+              "blockIncrement": 0.0625
             }
           },
           "4,2": {
@@ -170,9 +171,9 @@
               "_type": "Number Slider",
               "_source0": "network_table:///SmartDashboard/tx",
               "_title": "tx",
-              "Slider Settings/Min": -30.0,
-              "Slider Settings/Max": 30.0,
-              "Slider Settings/Block increment": 0.1
+              "min": -30.0,
+              "max": 30.0,
+              "blockIncrement": 0.0625
             }
           },
           "6,2": {
@@ -184,9 +185,9 @@
               "_type": "Number Slider",
               "_source0": "network_table:///SmartDashboard/ty",
               "_title": "ty",
-              "Slider Settings/Min": -20.0,
-              "Slider Settings/Max": 20.0,
-              "Slider Settings/Block increment": 0.1
+              "min": -20.0,
+              "max": 20.0,
+              "blockIncrement": 0.0625
             }
           },
           "10,2": {
@@ -209,9 +210,9 @@
               "_type": "Number Slider",
               "_source0": "network_table:///SmartDashboard/Color Sensor Input",
               "_title": "Color Sensor Input",
-              "Slider Settings/Min": 0.0,
-              "Slider Settings/Max": 1.0,
-              "Slider Settings/Block increment": 1.0
+              "min": 0.0,
+              "max": 1.0,
+              "blockIncrement": 0.0625
             }
           },
           "4,1": {
@@ -223,11 +224,11 @@
               "_type": "Number Bar",
               "_source0": "network_table:///SmartDashboard/Intake",
               "_title": "Intake",
-              "Range/Min": -1.0,
-              "Range/Max": 1.0,
-              "Range/Center": 0.0,
-              "Visuals/Num tick marks": 5,
-              "Visuals/Show text": true
+              "min": -1.0,
+              "max": 1.0,
+              "center": 0.0,
+              "numTickMarks": 5.0,
+              "showText": true
             }
           },
           "0,4": {
@@ -239,8 +240,8 @@
               "_type": "Boolean Box",
               "_source0": "network_table:///SmartDashboard/Intake Sol",
               "_title": "Intake Sol",
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
+              "colorWhenTrue": "#7CFC00FF",
+              "colorWhenFalse": "#8B0000FF"
             }
           },
           "2,4": {
@@ -252,8 +253,8 @@
               "_type": "Boolean Box",
               "_source0": "network_table:///SmartDashboard/High Gear",
               "_title": "High Gear",
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
+              "colorWhenTrue": "#7CFC00FF",
+              "colorWhenFalse": "#8B0000FF"
             }
           },
           "6,4": {
@@ -265,8 +266,8 @@
               "_type": "Boolean Box",
               "_source0": "network_table:///SmartDashboard/Climber Piston",
               "_title": "Climber Piston",
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
+              "colorWhenTrue": "#7CFC00FF",
+              "colorWhenFalse": "#8B0000FF"
             }
           },
           "6,1": {
@@ -278,11 +279,11 @@
               "_type": "Number Bar",
               "_source0": "network_table:///SmartDashboard/Telescope",
               "_title": "Telescope",
-              "Range/Min": -1.0,
-              "Range/Max": 1.0,
-              "Range/Center": 0.0,
-              "Visuals/Num tick marks": 5,
-              "Visuals/Show text": true
+              "min": -1.0,
+              "max": 1.0,
+              "center": 0.0,
+              "numTickMarks": 5.0,
+              "showText": true
             }
           },
           "0,3": {
@@ -294,9 +295,9 @@
               "_type": "Number Slider",
               "_source0": "network_table:///SmartDashboard/Flywheel Hood encoder value",
               "_title": "Flywheel Hood encoder value",
-              "Slider Settings/Min": -4096.0,
-              "Slider Settings/Max": 4096.0,
-              "Slider Settings/Block increment": 0.0625
+              "min": 0.0,
+              "max": 2000.0,
+              "blockIncrement": 0.0625
             }
           },
           "9,1": {
@@ -308,11 +309,11 @@
               "_type": "Number Bar",
               "_source0": "network_table:///SmartDashboard/Flywheel Hood",
               "_title": "Flywheel Hood",
-              "Range/Min": -1.0,
-              "Range/Max": 1.0,
-              "Range/Center": 0.0,
-              "Visuals/Num tick marks": 5,
-              "Visuals/Show text": true
+              "min": -1.0,
+              "max": 1.0,
+              "center": 0.0,
+              "numTickMarks": 5.0,
+              "showText": true
             }
           },
           "4,4": {
@@ -324,8 +325,8 @@
               "_type": "Boolean Box",
               "_source0": "network_table:///SmartDashboard/Pawl",
               "_title": "Pawl",
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
+              "colorWhenTrue": "#7CFC00FF",
+              "colorWhenFalse": "#8B0000FF"
             }
           },
           "8,1": {
@@ -337,11 +338,150 @@
               "_type": "Number Bar",
               "_source0": "network_table:///SmartDashboard/Flywheel",
               "_title": "Flywheel",
-              "Range/Min": 0.0,
-              "Range/Max": 1.0,
-              "Range/Center": 0.0,
-              "Visuals/Num tick marks": 5,
-              "Visuals/Show text": true
+              "min": -1.0,
+              "max": 1.0,
+              "center": 0.0,
+              "numTickMarks": 5.0,
+              "showText": true
+            }
+          },
+          "8,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Toggle Switch",
+              "_source0": "network_table:///SmartDashboard/Indexer Enter",
+              "_title": "Indexer Enter"
+            }
+          },
+          "12,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Number Bar",
+              "_source0": "network_table:///SmartDashboard/Patrick",
+              "_title": "Patrick",
+              "min": -1.0,
+              "max": 1.0,
+              "center": 0.0,
+              "numTickMarks": 5.0,
+              "showText": true
+            }
+          },
+          "12,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Balls in feeder",
+              "_title": "Balls in feeder"
+            }
+          },
+          "6,3": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Feeder encoder value",
+              "_title": "Feeder encoder value"
+            }
+          },
+          "12,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Number Bar",
+              "_source0": "network_table:///SmartDashboard/Funnel",
+              "_title": "Funnel",
+              "min": 0.0,
+              "max": 1.0,
+              "center": 0.0,
+              "numTickMarks": 5.0,
+              "showText": true
+            }
+          },
+          "11,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Number Bar",
+              "_source0": "network_table:///SmartDashboard/Feeder",
+              "_title": "Feeder",
+              "min": 0.0,
+              "max": 1.0,
+              "center": 0.0,
+              "numTickMarks": 5.0,
+              "showText": true
+            }
+          },
+          "9,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Toggle Switch",
+              "_source0": "network_table:///SmartDashboard/Indexer Exit",
+              "_title": "Indexer Exit"
+            }
+          },
+          "4,3": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Number Slider",
+              "_source0": "network_table:///SmartDashboard/Flywheel encoder vel.",
+              "_title": "Flywheel encoder vel.",
+              "min": 0.0,
+              "max": 100000.0,
+              "blockIncrement": 0.0625
+            }
+          },
+          "10,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Toggle Switch",
+              "_source0": "network_table:///SmartDashboard/Flywheel Hood rev limit",
+              "_title": "Flywheel Hood rev limit"
+            }
+          },
+          "10,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Control Panel Slices",
+              "_title": "Control Panel Slices"
+            }
+          },
+          "11,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Game Message",
+              "_title": "Game Message"
             }
           }
         }
@@ -366,16 +506,28 @@
               "_type": "Subsystem Layout",
               "_source0": "network_table:///LiveWindow/Ungrouped",
               "_title": "Ungrouped",
-              "Layout/Label position": "BOTTOM",
               "_children": [
                 {
                   "_type": "Gyro",
                   "_source0": "network_table:///LiveWindow/Ungrouped/navX-Sensor",
                   "_title": "navX-Sensor",
-                  "Visuals/Major tick spacing": 45.0,
-                  "Visuals/Starting angle": 180.0,
-                  "Visuals/Show tick mark ring": true,
-                  "Visuals/Counter clockwise": false
+                  "majorTickSpace": 45.0,
+                  "startAngle": 180.0,
+                  "tickMarkRingVisible": true
+                },
+                {
+                  "_type": "Boolean Box",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/DigitalInput[0]/Value",
+                  "_title": "LiveWindow/Ungrouped/DigitalInput[0]/Value",
+                  "colorWhenTrue": "#7CFC00FF",
+                  "colorWhenFalse": "#8B0000FF"
+                },
+                {
+                  "_type": "Boolean Box",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/DigitalInput[1]/Value",
+                  "_title": "LiveWindow/Ungrouped/DigitalInput[1]/Value",
+                  "colorWhenTrue": "#7CFC00FF",
+                  "colorWhenFalse": "#8B0000FF"
                 }
               ]
             }
@@ -383,11 +535,5 @@
         }
       }
     }
-  ],
-  "windowGeometry": {
-    "x": -8.0,
-    "y": -8.0,
-    "width": 1936.0,
-    "height": 1056.0
-  }
+  ]
 }

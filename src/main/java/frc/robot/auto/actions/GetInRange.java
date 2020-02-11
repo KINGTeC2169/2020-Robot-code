@@ -1,19 +1,21 @@
 package frc.robot.auto.actions;
 
+import frc.robot.commands.DriveCommand;
 import frc.robot.states.DriveState;
 import frc.robot.states.RobotState;
-import frc.robot.subsystems.Drive;
 import frc.util.Constants;
 import frc.util.Debug;
 import frc.util.drivers.Limelight;
 import frc.util.PD;
 import frc.util.geometry.Vector2;
 
+// TODO: Fix this disgusting mess of a class
+
 public class GetInRange implements Action {
-    private LookAtTarget lookAtTarget;
+    private FindTarget lookAtTarget;
 
     private DriveState state;
-    private Drive drive;
+    private DriveCommand dCommand;
     private Limelight limelight;
 
     private double shootingMinY;
@@ -37,13 +39,13 @@ public class GetInRange implements Action {
     // Too close to make a shot
     private void tooClose() {
         double output = alignToTarget.getOutput(limelight.getCenter().x);
-        drive.setOutput(-Constants.tooCloseOutput - output, -Constants.tooCloseOutput + output);
+//        drive.setOutput(-Constants.tooCloseOutput - output, -Constants.tooCloseOutput + output);
     }
 
     // Too far to make a shot
     private void tooFar() {
         double output = alignToTarget.getOutput(limelight.getCenter().x);
-        drive.setOutput(Constants.tooFarOutput - output, Constants.tooFarOutput + output);
+//        drive.setOutput(Constants.tooFarOutput - output, Constants.tooFarOutput + output);
     }
 
     // Angle is too wide to make a shot
@@ -53,17 +55,17 @@ public class GetInRange implements Action {
             correctingWideAngle = true;
             double targetAngle = Constants.tooWideSteerAngle;
             if(state.getPos().translation.x > 0) targetAngle *= -1; // Turn opposite direction if on right side of power port
-            double output = alignToAngle.getOutput(drive.getAngle() - targetAngle);
-            drive.setOutput(-output - Constants.tooWideBackup, output - Constants.tooWideBackup);
+//            double output = alignToAngle.getOutput(drive.getAngle() - targetAngle);
+//            drive.setOutput(-output - Constants.tooWideBackup, output - Constants.tooWideBackup);
         } else {
             // We can't do anything if we lose sight of the target, so our only option is to back up
-            drive.setOutput(-Constants.tooWideBackup, -Constants.tooWideBackup);
+//            drive.setOutput(-Constants.tooWideBackup, -Constants.tooWideBackup);
         }
     }
 
     private void beginLookAtTarget() {
         if(lookAtTarget == null) {
-            lookAtTarget = new LookAtTarget();
+            lookAtTarget = new FindTarget(dCommand);
             lookAtTarget.start();
         }
         lookAtTarget.run();
@@ -72,7 +74,7 @@ public class GetInRange implements Action {
     @Override
     public void start() {
         state = RobotState.getInstance().getDriveState();
-        drive = Drive.getInstance();
+//        drive = Drive.getInstance();
         limelight = Limelight.getInstance();
         alignToTarget = new PD(Constants.turnTowardsTargetP, Constants.turnTowardsTargetD);
         alignToAngle = new PD(Constants.alignToGyroP, Constants.alignToGyroD);
@@ -125,7 +127,7 @@ public class GetInRange implements Action {
 
     @Override
     public void stop() {
-        drive.setOutput(0, 0);
+//        drive.setOutput(0, 0);
     }
 
     @Override

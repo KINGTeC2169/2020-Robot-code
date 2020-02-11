@@ -2,6 +2,8 @@ package frc.robot.auto.modes;
 
 import frc.robot.auto.actions.LinearDrive;
 import frc.robot.auto.actions.ShootBalls;
+import frc.robot.commands.CommandMachine;
+import frc.robot.subsystems.Superstructure;
 
 public class Owen implements Mode {
     /*
@@ -9,13 +11,16 @@ public class Owen implements Mode {
     * Drive past line
     * */
 
-    private ShootBalls shoot;
-    private LinearDrive linearDrive;
+    private final Superstructure superstructure;
+    private final ShootBalls shoot;
+    private final LinearDrive linearDrive;
+
     private boolean doneShooting = false;
 
-    public Owen() {
-        shoot = new ShootBalls();
-        linearDrive = new LinearDrive(48);
+    public Owen(Superstructure superstructure, CommandMachine commandMachine) {
+        this.superstructure = superstructure;
+        shoot = new ShootBalls(commandMachine.getDriveCommand());
+        linearDrive = new LinearDrive(commandMachine.getDriveCommand(), 48);
     }
 
     @Override
@@ -26,14 +31,15 @@ public class Owen implements Mode {
 
     @Override
     public void run() {
-        if(shoot.isFinished()) {
-            doneShooting = true;
-            shoot.stop();
-            linearDrive.start();
-        }
         if(!doneShooting) {
             shoot.run();
+            if(shoot.isFinished()) {
+                doneShooting = true;
+                shoot.stop();
+                linearDrive.start();
+            }
         } else if(!linearDrive.isFinished()) {
+            linearDrive.update(superstructure.getLinearDriveDistance());
             linearDrive.run();
         }
     }

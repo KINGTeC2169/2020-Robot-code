@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import frc.robot.commands.CommandMachine;
 import frc.robot.states.RobotState;
 import frc.util.Constants;
 import frc.util.drivers.ColorSensor;
@@ -10,23 +11,30 @@ public class Superstructure {
 
     private static Superstructure instance;
 
-    public static Superstructure getInstance() {
+    public static Superstructure getInstance(CommandMachine commandMachine) {
         if(instance == null) {
-            return instance = new Superstructure();
+            return instance = new Superstructure(commandMachine);
         } else {
             return instance;
         }
     }
 
-    private RobotState robotState;
+    private Superstructure(CommandMachine commandMachine) {
+        drive = Drive.getInstance(commandMachine.getDriveCommand());
+        indexer = Indexer.getInstance();
+        intake = Intake.getInstance();
+        patrick = Patrick.getInstance();
+        shooter = Shooter.getInstance();
+        telescope = Telescope.getInstance();
+    }
 
     // Subsystems
-    private Drive drive = Drive.getInstance();
-    private Patrick patrick = Patrick.getInstance();
-    private Indexer indexer = Indexer.getInstance();
-    private Intake intake = Intake.getInstance();
-    private Shooter shooter = Shooter.getInstance();
-    private Telescope telescope = Telescope.getInstance();
+    private Drive drive;
+    private Indexer indexer;
+    private Intake intake;
+    private Patrick patrick;
+    private Shooter shooter;
+    private Telescope telescope;
 
     // Other systems
     private Limelight limelight = Limelight.getInstance();
@@ -34,6 +42,12 @@ public class Superstructure {
 
     public void start() {
         drive.reset();
+        indexer.reset();
+        indexer.reset();
+        patrick.reset();
+        shooter.reset();
+        telescope.reset();
+
         limelight.start();
     }
 
@@ -66,5 +80,11 @@ public class Superstructure {
         shooter.reset();
         patrick.reset();
         telescope.reset();
+    }
+
+    /* For communicating */
+
+    public double getLinearDriveDistance() {
+        return drive.getLinearDriveDistance();
     }
 }

@@ -2,15 +2,18 @@ package frc.robot.auto.modes;
 
 import frc.robot.auto.actions.AimAtTarget;
 import frc.robot.auto.actions.GetInRange2;
-import frc.robot.auto.actions.LookAtTarget;
+import frc.robot.commands.CommandMachine;
 
 public class TestMode implements Mode {
 
+    private final AimAtTarget aimAtTarget;
+    private final GetInRange2 getInRange = new GetInRange2();
+
     private boolean running = false;
 
-    AimAtTarget aimAtTarget = new AimAtTarget();
-    LookAtTarget lookAtTarget = new LookAtTarget();
-    GetInRange2 getInRange = new GetInRange2();
+    public TestMode(CommandMachine commandMachine) {
+        aimAtTarget = new AimAtTarget(commandMachine.getDriveCommand());
+    }
 
     @Override
     public void start() {

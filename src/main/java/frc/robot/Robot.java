@@ -5,13 +5,14 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.auto.modes.Mode;
 import frc.robot.auto.modes.Owen;
-import frc.robot.auto.modes.TestMode;
+import frc.robot.commands.CommandMachine;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.states.RobotState;
 
 public class Robot extends TimedRobot {
 
-    private Superstructure superstructure = Superstructure.getInstance();
+    private CommandMachine commandMachine = CommandMachine.getInstance();
+    private Superstructure superstructure = Superstructure.getInstance(commandMachine);
     private RobotState state = RobotState.getInstance();
 
     // Auto stuff
@@ -21,7 +22,7 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         superstructure.start();
-        autoMode = new Owen();
+        autoMode = new Owen(superstructure, commandMachine);
     }
 
     @Override
@@ -39,6 +40,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
+        superstructure.reset();
         state.reset();
         if (autoMode != null) {
             autoMode.start();
@@ -54,7 +56,6 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
-        superstructure.reset();
         state.reset();
         if (autoMode != null && autoMode.isRunning()) {
             autoMode.stop();
@@ -65,6 +66,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
+        commandMachine.teleop();
         state.update();
         superstructure.update(state);
     }

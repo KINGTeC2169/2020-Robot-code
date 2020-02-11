@@ -73,7 +73,7 @@ public class Constants {
     public static final double trenchModeThreshold = .5;
 
     // Cheesy drive
-    public static final double quickTurnThreshold = 0.5;
+    public static final double quickTurnDeadband = 0.1;
     public static final double throttleDeadband = 0.02;
     public static final double wheelDeadband = 0.02;
     public static final double highWheelNonLinearity = .65;

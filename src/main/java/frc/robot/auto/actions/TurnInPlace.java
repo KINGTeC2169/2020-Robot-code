@@ -3,13 +3,15 @@ package frc.robot.auto.actions;
 import frc.robot.subsystems.Drive;
 import frc.util.Constants;
 
+// TODO: Fix this for Lake Superior
+
 public class TurnInPlace implements Action {
     private Drive drive;
     private double angle;
     private double targetAngle = 0;
 
     public TurnInPlace(double targetAngle) {
-        drive = Drive.getInstance();
+//        drive = Drive.getInstance();
         this.targetAngle = targetAngle;
     }
 
@@ -20,22 +22,25 @@ public class TurnInPlace implements Action {
 
     @Override
     public void run() {
-        double dAngle = drive.getAngle() - angle;
+        /*
+        double dAngle = getAngle() - angle;
         angle = drive.getAngle();
 
         double controller =
                 Constants.turnInPlaceP * (targetAngle - drive.getAngle()) +
                 Constants.turnInPlaceD * dAngle;
         drive.setOutput(-controller, controller);
+        */
     }
 
     @Override
     public void stop() {
-        drive.setOutput(0, 0);
+//        drive.setOutput(0, 0);
     }
 
     @Override
     public boolean isFinished() {
-        return Math.pow(targetAngle - drive.getAngle(), 2) > Constants.turnInPlaceAllowedError; // Squared error
+//        return Math.pow(targetAngle - drive.getAngle(), 2) > Constants.turnInPlaceAllowedError; // Squared error
+        return false;
     }
 }

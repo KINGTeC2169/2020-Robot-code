@@ -1,46 +1,41 @@
 package frc.robot.auto.actions;
 
-import frc.robot.subsystems.Drive;
+import frc.robot.commands.DriveCommand;
 import frc.util.Constants;
-import frc.util.PID;
 import frc.util.drivers.Limelight;
-import frc.util.PD;
 
 public class AimAtTarget implements Action {
-    private LookAtTarget lookAtTarget;
+    private FindTarget findTarget;
 
-    private Drive drive;
-    private Limelight limelight;
+    private final DriveCommand dCommand;
+    private final Limelight limelight;
 
-    private PID alignToTarget;
-
-    public AimAtTarget() {
+    public AimAtTarget(DriveCommand dCommand) {
+        this.dCommand = dCommand;
+        limelight = Limelight.getInstance();
     }
 
     private void lookAtTarget() {
-        if(lookAtTarget == null) {
-            lookAtTarget = new LookAtTarget();
-            lookAtTarget.start();
+        if(findTarget == null) {
+            findTarget = new FindTarget(dCommand);
+            findTarget.start();
         }
-        lookAtTarget.run();
+        findTarget.run();
     }
 
     @Override
     public void start() {
-        drive = Drive.getInstance();
-        limelight = Limelight.getInstance();
-        alignToTarget = new PID(Constants.turnTowardsTargetP, Constants.turnTowardsTargetI, Constants.turnTowardsTargetD);
+
     }
 
     @Override
     public void run() {
         if(limelight.isValidTarget()) {
-            if(lookAtTarget != null) {
-                lookAtTarget.stop();
-                lookAtTarget = null;
+            if(findTarget != null) {
+                findTarget.stop();
+                findTarget = null;
             }
-            double output = alignToTarget.getOutput(limelight.getCenter().x);
-            drive.setOutput(-output, output);
+            dCommand.setAutoVision(0);
         } else {
             lookAtTarget();
         }
@@ -48,7 +43,8 @@ public class AimAtTarget implements Action {
 
     @Override
     public void stop() {
-        drive.setOutput(0, 0);
+        if(findTarget != null) findTarget.stop();
+        dCommand.rest();
     }
 
     @Override

@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import frc.robot.commands.DriveCommand;
 import frc.robot.states.DriveState;
 import frc.robot.states.RobotState;
 import frc.util.*;
@@ -7,33 +8,43 @@ import frc.util.drivers.*;
 
 public class Drive implements Subsystem {
     private static Drive instance;
-    public static Drive getInstance() {
+    protected static Drive getInstance(DriveCommand dCommand) {
         if(instance == null) {
-            return instance = new Drive();
+            return instance = new Drive(dCommand);
         } else {
             return instance;
         }
     }
 
-    private Controls controls;
-    private Limelight limelight;
-    private DriveState driveState;
-    private NavX navX;
-    private PD visionDrive;
-
-    // Master talons
-    private Talon left;
-    private Talon right;
-
-    private DSolenoid dog;
+    private final DriveCommand dCommand;
+    private final Limelight limelight;
+    private final DriveState driveState;
+    private final NavX navX;
+    private final PD visionDrive;
+    private final PD turnControl;
+    private final PD driveControl;
+    private final PD turnTowardsZero;
+    private final Talon left;
+    private final Talon right;
+    private final DSolenoid dog;
 
     private boolean highGear = false;
     private double oldWheel = 0;
     private double quickStopAccumulator = 0.0;
     private double negInertiaAccumulator = 0;
 
-    public Drive() {
-        controls = Controls.getInstance();
+    private boolean linearDriveStarted = false;
+    private double linearDriveDistance;
+    private double linearDriveTargetAngle;
+    private double linearDriveTargetDistance;
+
+    private boolean findTargetStarted = false;
+    private boolean findTargetPassedZero;
+    private boolean findTargetTurned360;
+    private double findTargetStartingAngle;
+
+    private Drive(DriveCommand dCommand) {
+        this.dCommand = dCommand;
         limelight = Limelight.getInstance();
         driveState = RobotState.getInstance().getDriveState();
 
@@ -53,15 +64,35 @@ public class Drive implements Subsystem {
         navX = NavX.getInstance();
 
         visionDrive = new PD(Constants.visionDriveP, Constants.visionDriveD);
+        turnControl = new PD(Constants.linearDriveTurnP, Constants.linearDriveTurnD);
+        driveControl = new PD(Constants.linearDriveDriveP, Constants.linearDriveDriveD);
+        turnTowardsZero = new PD(Constants.alignToGyroP, Constants.alignToGyroD);
     }
 
     @Override
     public void update() {
-        handleShifter();
-        if(controls.right.getRawButton(2)) {
-            visionDrive(controls.left.getY());
+        dog.set(dCommand.isHighGear());
+
+        if(dCommand.isLinearDrive()) {
+            if(!linearDriveStarted) startLinearDrive(dCommand.getLinearDriveDistance());
+            updateLinearDrive();
         } else {
-            cheesyDrive();
+            linearDriveStarted = false;
+        }
+
+        if(dCommand.isFindTarget()) {
+            if(!findTargetStarted) startFindTarget();
+            findTarget();
+        } else {
+            findTargetStarted = false;
+        }
+
+        if(dCommand.isVision()) {
+            visionDrive(dCommand.getThrottle());
+        } else if(dCommand.isCheesy()) {
+            cheesyDrive(dCommand.getThrottle(), dCommand.getWheel(), dCommand.getQuickTurn());
+        } else if(dCommand.isResting()) {
+            setOutput(0, 0);
         }
 
         driveState.updateAngle(getAngle());
@@ -76,24 +107,53 @@ public class Drive implements Subsystem {
         highGear = false;
     }
 
-    public void handleShifter() {
-        if(controls.left.getRawButton(1)) {
-            highGear = true;
-        } else if(controls.left.getRawButton(2)) {
-            highGear = false;
+    private void startLinearDrive(double distance) {
+        linearDriveStarted = true;
+        linearDriveDistance = 0;
+        linearDriveTargetAngle = getAngle();
+        linearDriveTargetDistance = distance;
+    }
+
+    // Drive straight with gyro assistance
+    private void updateLinearDrive() {
+        double rotations = (getLeftRotations() + getRightRotations()) / 2;
+        linearDriveDistance = Conversion.rotationsToInches(rotations, Constants.driveWheelDiameter);
+        double angleController = turnControl.getOutput(linearDriveTargetAngle - navX.getAngle());
+        double driveController = driveControl.getOutput(linearDriveTargetDistance - linearDriveDistance);
+        setOutput(driveController + angleController, driveController - angleController);
+    }
+
+    private void startFindTarget() {
+        findTargetPassedZero = false;
+        findTargetTurned360 = false;
+        findTargetStartingAngle = getAngle();
+        findTargetStarted = true;
+    }
+
+    private void findTarget() {
+        if(!findTargetTurned360) {
+            // Turn towards zero angle at constant output
+            if(findTargetStartingAngle > 0) {
+                setOutput(Constants.turnTowardsTargetOutput, -Constants.turnTowardsTargetOutput);
+            } else {
+                setOutput(-Constants.turnTowardsTargetOutput, Constants.turnTowardsTargetOutput);
+            }
+
+            // Check if we've turned 360 degrees
+            if(findTargetStartingAngle > 0 != getAngle() > 0) findTargetPassedZero = true;
+            if(findTargetPassedZero && findTargetStartingAngle > 0 == getAngle() > 0 && getAngle() > 0 == findTargetStartingAngle < getAngle()) findTargetTurned360 = true;
+        } else if(Math.abs(getAngle()) > Constants.pointingTowardsTarget) {
+            // If we're not pointing towards the target, turn towards target
+            double output = turnTowardsZero.getOutput(getAngle());
+            setOutput(output, -output);
+        } else {
+            // Otherwise, drive back
+            double output = turnTowardsZero.getOutput(getAngle());
+            setOutput(output - Constants.backAwayFromTargetOutput, -output - Constants.backAwayFromTargetOutput);
         }
-        dog.set(highGear);
     }
 
-    private double handleDeadband(double val, double deadband) {
-        return (Math.abs(val) > Math.abs(deadband)) ? val : 0.0;
-    }
-
-    public void cheesyDrive() {
-        double throttle = handleDeadband(-controls.left.getY(), Constants.throttleDeadband);
-        double wheel = handleDeadband(controls.right.getX(), Constants.wheelDeadband);
-        boolean quickTurn = controls.right.getZ() > Constants.quickTurnThreshold;
-
+    private void cheesyDrive(double throttle, double wheel, double quickTurn) {
         double negInertia = wheel - oldWheel;
         oldWheel = wheel;
 
@@ -138,7 +198,7 @@ public class Drive implements Subsystem {
             negInertiaAccumulator = 0;
         }
 
-        if (quickTurn) {
+        if (quickTurn != 0) {
             if (Math.abs(throttle) < Constants.quickStopDeadband) {
                 double alpha = Constants.quickStopWeight;
                 quickStopAccumulator = (1 - alpha) * quickStopAccumulator + alpha * Math.min(1, Math.min(wheel, -1)) * Constants.quickStopScalar;
@@ -180,7 +240,7 @@ public class Drive implements Subsystem {
     }
 
     // Aim at the target
-    public void visionDrive(double throttle) {
+    private void visionDrive(double throttle) {
         if(limelight.isValidTarget()) {
             double output = visionDrive.getOutput(limelight.getCenter().x);
             left.setOutput(throttle - output);
@@ -190,24 +250,28 @@ public class Drive implements Subsystem {
         }
     }
 
-    public void setOutput(double l, double r) {
+    private void setOutput(double l, double r) {
         left.setOutput(l);
         right.setOutput(r);
     }
 
-    public double getLeftRotations() {
+    private double getLeftRotations() {
         return Conversion.encoderTicksToRotations(left.getSensor());
     }
 
-    public double getRightRotations() {
+    private double getRightRotations() {
         return Conversion.encoderTicksToRotations(right.getSensor());
     }
 
-    public double getAngle() {
+    private double getAngle() {
         if(Constants.usingTestBed) {
             return Debug.getNumber("navX angle");
         } else {
             return navX.getAngle();
         }
+    }
+
+    protected double getLinearDriveDistance() {
+        return linearDriveDistance;
     }
 }
