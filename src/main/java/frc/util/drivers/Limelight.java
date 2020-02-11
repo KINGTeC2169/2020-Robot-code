@@ -22,7 +22,7 @@ public class Limelight {
     private final boolean testing;
 
     public Limelight() {
-        testing = Constants.usingTestBed;
+        testing = !Constants.usingLimelight;
     }
 
     public void start() {
@@ -30,13 +30,26 @@ public class Limelight {
     }
 
     public Vector2 getCenter() {
-        double x = limelight.getEntry("tx").getDouble(0);
-        double y = limelight.getEntry("ty").getDouble(0);
+        // Distorted values
+        double xd = limelight.getEntry("tx").getDouble(0);
+        double yd = limelight.getEntry("ty").getDouble(0);
+        double r2 = xd * xd + yd * yd; // r squared
+
+        double k = Constants.limelightDistortion;
+        double x = xd / (1 + k * r2);
+        double y = yd / (1 + k * r2);
+
         if(testing) {
             x = Debug.getNumber("tx");
-            y = Debug.getNumber("ty");
+            y= Debug.getNumber("ty");
         }
         return new Vector2(x, y);
+    }
+
+    public static Vector2 undistort(Vector2 v) {
+        double r2 = v.x * v.x + v.y * v.y; // r squared
+        double k = Constants.limelightDistortion;
+        return new Vector2(v.x / (1 + k * r2), v.y / (1 + k * r2));
     }
 
     public double targetArea() {

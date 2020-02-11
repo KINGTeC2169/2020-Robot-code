@@ -6,6 +6,7 @@ public class Constants {
     public static final double cameraToPowerPort = 66.25;
     public static final double ticksPerRotation = 8192;
     public static final double driveWheelDiameter = 8;
+    public static final double limelightDistortion = 2.3964E-4;
 
     /* Autonomous */
 
@@ -62,9 +63,12 @@ public class Constants {
 
     /* Other constants */
 
+    // Testing
     public static final boolean usingTestBed = true;
     public static final boolean usingColorSensor = false;
     public static final boolean usingControls = true;
+    public static final boolean usingLimelight = true;
+
     public static final double trenchModeThreshold = .5;
 
     // Cheesy drive

@@ -55,8 +55,12 @@ public class DriveState {
 
         if(corners.length == 4) {
             // Calculate angles from pixel values
-            double p1ty = Conversion.degToRad((25/360.0) * (359.5 - corners[0].y));
-            double p2ty = Conversion.degToRad((25/360.0) * (359.5 - corners[1].y));
+            double p1tx = Conversion.degToRad((29.7/480.0) * (479.5 - corners[0].x));
+            double p1ty = Conversion.degToRad((22.85/360.0) * (359.5 - corners[0].y));
+            double p2tx = Conversion.degToRad((29.7/480.0) * (479.5 - corners[1].x));
+            double p2ty = Conversion.degToRad((22.85/360.0) * (359.5 - corners[1].y));
+            p1ty = Limelight.undistort(new Vector2(p1tx, p1ty)).y;
+            p2ty = Limelight.undistort(new Vector2(p2tx, p2ty)).y;
 
             // Calculate lengths between the camera and the points on the ground
             double cd1 = 66.25 / Math.tan(p1ty);
@@ -64,7 +68,7 @@ public class DriveState {
 
             // Calculate angle d1d2c
             double d1d2 = 20 * Math.sqrt(3);
-            double d1d2c = Math.acos((cd1*cd1 + d1d2*d1d2 - cd2*cd2) / (2*cd1*d1d2)); // Law of cosines
+            double d1d2c = Math.acos((cd2*cd2 + d1d2*d1d2 - cd1*cd1) / (2*cd2*d1d2)); // Law of cosines
 
             // Calculate x and y
             double robotY = cd2 * Math.sin(d1d2c > Math.PI / 2 ? d1d2c : Math.PI - d1d2c);
