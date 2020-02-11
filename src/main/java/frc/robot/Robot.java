@@ -12,7 +12,7 @@ import frc.robot.states.RobotState;
 public class Robot extends TimedRobot {
 
     private CommandMachine commandMachine = CommandMachine.getInstance();
-    private Superstructure superstructure = Superstructure.getInstance(commandMachine);
+    private Superstructure superstructure = Superstructure.getInstance();
     private RobotState state = RobotState.getInstance();
 
     // Auto stuff

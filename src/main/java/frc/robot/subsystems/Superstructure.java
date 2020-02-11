@@ -10,18 +10,18 @@ import frc.util.drivers.Limelight;
 public class Superstructure {
 
     private static Superstructure instance;
-
-    public static Superstructure getInstance(CommandMachine commandMachine) {
+    public static Superstructure getInstance() {
         if(instance == null) {
-            return instance = new Superstructure(commandMachine);
+            return instance = new Superstructure();
         } else {
             return instance;
         }
     }
 
-    private Superstructure(CommandMachine commandMachine) {
+    private Superstructure() {
+        CommandMachine commandMachine = CommandMachine.getInstance();
         drive = Drive.getInstance(commandMachine.getDriveCommand());
-        indexer = Indexer.getInstance();
+        indexer = Indexer.getInstance(commandMachine.getIndexerCommand());
         intake = Intake.getInstance();
         patrick = Patrick.getInstance();
         shooter = Shooter.getInstance();
@@ -60,7 +60,6 @@ public class Superstructure {
         intake.update();
 
         indexer.setSlowFlywheel(shooter.getRpm() < Constants.minShootingRpm);
-        indexer.setFunnel(state.getIntakeState().wasRunning());
         indexer.update();
 
         patrick.update();
@@ -86,5 +85,9 @@ public class Superstructure {
 
     public double getLinearDriveDistance() {
         return drive.getLinearDriveDistance();
+    }
+
+    public double getBallsInFeeder() {
+        return indexer.getBallsInFeeder();
     }
 }

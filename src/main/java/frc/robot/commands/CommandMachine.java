@@ -14,17 +14,24 @@ public class CommandMachine {
 
     private Controls controls;
     private DriveCommand dCommand;
+    private IndexerCommand idxCommand;
 
     private CommandMachine() {
         controls = Controls.getInstance();
         dCommand = DriveCommand.getInstance();
+        idxCommand = IndexerCommand.getInstance();
     }
 
     public void teleop() {
         dCommand.teleop();
+        idxCommand.teleop();
     }
 
     public DriveCommand getDriveCommand() {
         return dCommand;
+    }
+
+    public IndexerCommand getIndexerCommand() {
+        return idxCommand;
     }
 }

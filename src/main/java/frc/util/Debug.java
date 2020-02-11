@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.states.RobotState;
 import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.Superstructure;
 import frc.util.drivers.ColorSensor;
 import frc.util.drivers.Limelight;
 import frc.util.geometry.Vector2;
@@ -24,7 +25,7 @@ public class Debug {
         vision(Limelight.getInstance());
         colorSensor(ColorSensor.getInstance());
         state(RobotState.getInstance());
-        out("Balls in feeder", Indexer.getInstance().getBallsInFeeder());
+        out("Balls in feeder", Superstructure.getInstance().getBallsInFeeder());
     }
 
     public static void vision(Limelight limelight) {
