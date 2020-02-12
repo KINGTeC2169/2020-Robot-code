@@ -1,20 +1,17 @@
 package frc.robot.auto.actions;
 
 import frc.robot.commands.DriveCommand;
+import frc.robot.subsystems.Superstructure;
 
 public class LinearDrive implements Action {
+    private final Superstructure superstructure;
     private final DriveCommand dCommand;
     private final double targetDistance;
 
-    private double distance;
-
-    public LinearDrive(DriveCommand dCommand, double distance) {
+    public LinearDrive(Superstructure superstructure, DriveCommand dCommand, double distance) {
+        this.superstructure = superstructure;
         this.dCommand = dCommand;
         targetDistance = distance;
-    }
-
-    public void update(double distance) {
-        this.distance = distance;
     }
 
     @Override
@@ -34,6 +31,6 @@ public class LinearDrive implements Action {
 
     @Override
     public boolean isFinished() {
-        return distance >= targetDistance;
+        return superstructure.getLinearDriveDistance() >= targetDistance;
     }
 }

@@ -3,8 +3,6 @@ package frc.robot.auto.actions;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.IndexerCommand;
 import frc.robot.commands.ShooterCommand;
-import frc.robot.subsystems.Indexer;
-import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Superstructure;
 
 public class ShootBalls implements Action {
@@ -12,6 +10,8 @@ public class ShootBalls implements Action {
     private final IndexerCommand idxCommand;
     private final ShooterCommand sCommand;
     private final AimAtTarget aim;
+
+    private boolean aimed;
 
     public ShootBalls(Superstructure superstructure, DriveCommand dCommand, IndexerCommand idxCommand, ShooterCommand sCommand) {
         this.superstructure = superstructure;
@@ -23,14 +23,22 @@ public class ShootBalls implements Action {
     @Override
     public void start() {
         aim.start();
+        aimed = false;
     }
 
     @Override
     public void run() {
-        aim.run();
         sCommand.aimHood(true);
-        if(superstructure.isHoodAimed()) {
+        if(!aimed && aim.isFinished()) {
+            aim.stop();
+            aimed = true;
+        } else if(!aimed) {
+            aim.run();
+        }
+        if(superstructure.isHoodAimed() && aimed) {
             idxCommand.shoot();
+        } else {
+            idxCommand.rest();
         }
         sCommand.shoot(true);
 

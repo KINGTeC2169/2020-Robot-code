@@ -1,41 +1,41 @@
 package frc.robot.auto.modes;
 
 import frc.robot.auto.actions.AimAtTarget;
-import frc.robot.auto.actions.GetInRange2;
+import frc.robot.auto.actions.FindTarget;
+import frc.robot.auto.actions.ShootBalls;
 import frc.robot.commands.CommandMachine;
+import frc.robot.subsystems.Superstructure;
 
 public class TestMode implements Mode {
 
-    private final AimAtTarget aimAtTarget;
-    private final GetInRange2 getInRange = new GetInRange2();
+    private final Superstructure superstructure;
+    private final FindTarget find;
+    private final AimAtTarget aim;
+    private final ShootBalls shoot;
 
     private boolean running = false;
 
-    public TestMode(CommandMachine commandMachine) {
-        aimAtTarget = new AimAtTarget(commandMachine.getDriveCommand());
+    public TestMode(Superstructure superstructure, CommandMachine commandMachine) {
+        this.superstructure = superstructure;
+        find = new FindTarget(commandMachine.getDriveCommand());
+        aim = new AimAtTarget(commandMachine.getDriveCommand());
+        shoot = new ShootBalls(superstructure, commandMachine.getDriveCommand(), commandMachine.getIndexerCommand(), commandMachine.getShooterCommand());
     }
 
     @Override
     public void start() {
-        getInRange.start();
+        shoot.start();
         running = true;
     }
 
-    private boolean sawTarget = false;
-
     @Override
     public void run() {
-        if(getInRange.isFinished()) {
-            getInRange.stop();
-        } else {
-            getInRange.run();
-        }
+        shoot.run();
     }
 
     @Override
     public void stop() {
-        getInRange.stop();
-        running = true;
+        shoot.stop();
     }
 
     @Override

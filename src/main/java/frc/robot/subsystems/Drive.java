@@ -141,7 +141,7 @@ public class Drive implements Subsystem {
 
             // Check if we've turned 360 degrees
             if(findTargetStartingAngle > 0 != getAngle() > 0) findTargetPassedZero = true;
-            if(findTargetPassedZero && findTargetStartingAngle > 0 == getAngle() > 0 && getAngle() > 0 == findTargetStartingAngle < getAngle()) findTargetTurned360 = true;
+            if(findTargetPassedZero && findTargetStartingAngle > 0 == getAngle() > 0 && getAngle() > 0 == findTargetStartingAngle > getAngle()) findTargetTurned360 = true;
         } else if(Math.abs(getAngle()) > Constants.pointingTowardsTarget) {
             // If we're not pointing towards the target, turn towards target
             double output = turnTowardsZero.getOutput(getAngle());

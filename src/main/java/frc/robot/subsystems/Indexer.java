@@ -114,23 +114,25 @@ public class Indexer implements Subsystem {
         }
         lastSensor = feeder.getSensor();
 
-        // Reload
+        // Set outputs
         if(idxCommand.isLoad() && loadMode == LoadMode.halfLoad) {
             if(balls.size() != 0 && balls.get(0) < Constants.feederHalfway) {
                 feeder.setOutput(1);
             } else {
                 feeder.setOutput(0);
             }
-        }
-        if(idxCommand.isLoad() && loadMode == LoadMode.fullLoad) {
+        } else if(idxCommand.isLoad() && loadMode == LoadMode.fullLoad) {
             if(balls.size() != 0 && balls.get(0) < 2 * Constants.feederHalfway) {
                 feeder.setOutput(1);
             } else {
                 feeder.setOutput(0);
             }
-        }
-        if(isShooting()) {
+        } else if(idxCommand.isShoot() && isShooting()) {
             feeder.setOutput(1);
+        } else if(idxCommand.isShoot()) {
+            feeder.setOutput(0);
+        } else {
+            feeder.setOutput(0);
         }
 
         // For testing
