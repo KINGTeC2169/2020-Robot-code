@@ -22,7 +22,7 @@ public class Superstructure {
         CommandMachine commandMachine = CommandMachine.getInstance();
         drive = Drive.getInstance(commandMachine.getDriveCommand());
         indexer = Indexer.getInstance(commandMachine.getIndexerCommand());
-        intake = Intake.getInstance();
+        intake = Intake.getInstance(commandMachine.getIntakeCommand());
         patrick = Patrick.getInstance();
         shooter = Shooter.getInstance(commandMachine.getShooterCommand());
         telescope = Telescope.getInstance();

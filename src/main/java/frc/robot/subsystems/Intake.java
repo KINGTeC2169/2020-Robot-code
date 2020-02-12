@@ -1,33 +1,33 @@
 package frc.robot.subsystems;
 
+import frc.robot.commands.IntakeCommand;
 import frc.robot.states.IntakeState;
 import frc.robot.states.RobotState;
 import frc.util.ActuatorMap;
-import frc.util.Controls;
 import frc.util.drivers.ControllerFactory;
 import frc.util.drivers.DSolenoid;
 import frc.util.drivers.Victor;
 
 public class Intake implements Subsystem {
     private static Intake instance;
-    public static Intake getInstance() {
+    public static Intake getInstance(IntakeCommand iCommand) {
         if(instance == null) {
-            return instance = new Intake();
+            return instance = new Intake(iCommand);
         } else {
             return instance;
         }
     }
 
+    private IntakeCommand iCommand;
     private IntakeState state;
-    private Controls controls;
     private DSolenoid lsol;
     private DSolenoid rsol;
     private Victor victor;
     private boolean solenoidState = true;
 
-    public Intake() {
+    public Intake(IntakeCommand iCommand) {
+        this.iCommand = iCommand;
         state = RobotState.getInstance().getIntakeState();
-        controls = new Controls();
         lsol = new DSolenoid(ActuatorMap.intakeL);
         rsol = new DSolenoid(ActuatorMap.intakeR);
         lsol.setName("Intake Sol");
@@ -39,16 +39,13 @@ public class Intake implements Subsystem {
 
     @Override
     public void update() {
-        if(controls.yButton()) {
-            solenoidState = !solenoidState;
-            lsol.set(solenoidState);
-            rsol.set(solenoidState); // It's toggle time
-        }
+        lsol.set(iCommand.piston());
+        rsol.set(iCommand.piston());
 
-        if(controls.right.getRawButton(1)) {
+        if(iCommand.intake()) {
             state.setRunning(true);
             victor.setOutput(1);
-        } else if(controls.xbox.getStartButton()) {
+        } else if(iCommand.exhaust()) {
             state.setRunning(false);
             victor.setOutput(-1);
         } else {
