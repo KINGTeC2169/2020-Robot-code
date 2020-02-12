@@ -198,13 +198,13 @@ public class Drive implements Subsystem {
             negInertiaAccumulator = 0;
         }
 
-        if (quickTurn != 0) {
+        if (Math.abs(quickTurn) > Constants.quickTurnDeadband) {
             if (Math.abs(throttle) < Constants.quickStopDeadband) {
                 double alpha = Constants.quickStopWeight;
-                quickStopAccumulator = (1 - alpha) * quickStopAccumulator + alpha * Math.min(1, Math.min(wheel, -1)) * Constants.quickStopScalar;
+                quickStopAccumulator = (1 - alpha) * quickStopAccumulator + alpha * Math.min(1, Math.min(quickTurn, -1)) * Constants.quickStopScalar;
             }
             overPower = 1;
-            angularPower = wheel;
+            angularPower = quickTurn;
         } else {
             overPower = 0;
             angularPower = Math.abs(throttle) * wheel * sensitivity - quickStopAccumulator;

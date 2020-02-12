@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
-import frc.robot.states.RobotState;
-import frc.robot.states.TelescopeState;
+import frc.robot.commands.TelescopeCommand;
 import frc.util.ActuatorMap;
 import frc.util.Constants;
 import frc.util.Controls;
@@ -9,28 +8,27 @@ import frc.util.drivers.ControllerFactory;
 import frc.util.drivers.DSolenoid;
 import frc.util.drivers.Talon;
 
-// TODO: Make this class actually work
-
 public class Telescope implements Subsystem {
     private static Telescope instance;
-    public static Telescope getInstance() {
+    public static Telescope getInstance(TelescopeCommand tCommand) {
         if(instance == null) {
-            return instance = new Telescope();
+            return instance = new Telescope(tCommand);
         } else {
             return instance;
         }
     }
 
-    private Controls controls;
-    private TelescopeState state;
+    private final Controls controls;
+    private final TelescopeCommand tCommand;
+
     private Talon master;
     private DSolenoid left;
     private DSolenoid right;
     private DSolenoid pawl;
 
-    public Telescope() {
+    private Telescope(TelescopeCommand tCommand) {
         controls = Controls.getInstance();
-        state = RobotState.getInstance().getTelescopeState();
+        this.tCommand = tCommand;
         master = ControllerFactory.masterTalon(ActuatorMap.telescopingMaster, false);
         ControllerFactory.slaveVictor(ActuatorMap.telescopingSlave, false, master);
         left = new DSolenoid(ActuatorMap.climberL);
@@ -45,22 +43,22 @@ public class Telescope implements Subsystem {
 
     @Override
     public void update() {
-        pawl.set(state.isPawl());
-        if(state.isExtending()) {
+        pawl.set(tCommand.isPawl());
+        if(tCommand.isExtending()) {
             master.setOutput(1);
-        } else if(state.isRetracting()) {
+        } else if(tCommand.isRetracting()) {
             master.setOutput(-1);
         } else {
             master.setOutput(0);
         }
 
-        if(controls.xbox.getRawAxis(2) > Constants.trenchModeThreshold) {
+        if(tCommand.isTrenchMode()) {
             // Ooh yeah it's trench time
             left.set(false);
             right.set(false);
         } else {
-            left.set(state.isUp());
-            right.set(state.isUp());
+            left.set(tCommand.isUp());
+            right.set(tCommand.isUp());
         }
     }
 

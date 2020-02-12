@@ -42,12 +42,12 @@ public class Intake implements Subsystem {
         lsol.set(iCommand.piston());
         rsol.set(iCommand.piston());
 
-        if(iCommand.intake()) {
-            state.setRunning(true);
-            victor.setOutput(1);
-        } else if(iCommand.exhaust()) {
+        if(iCommand.exhaust()) {
             state.setRunning(false);
             victor.setOutput(-1);
+        } else if(iCommand.intake()) {
+            state.setRunning(true);
+            victor.setOutput(1);
         } else {
             state.setRunning(false);
             victor.setOutput(0);

@@ -25,7 +25,7 @@ public class Superstructure {
         intake = Intake.getInstance(commandMachine.getIntakeCommand());
         patrick = Patrick.getInstance();
         shooter = Shooter.getInstance(commandMachine.getShooterCommand());
-        telescope = Telescope.getInstance();
+        telescope = Telescope.getInstance(commandMachine.getTelescopeCommand());
     }
 
     // Subsystems

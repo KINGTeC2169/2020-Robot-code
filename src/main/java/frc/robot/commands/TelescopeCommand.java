@@ -1,19 +1,30 @@
-package frc.robot.states;
+package frc.robot.commands;
 
+import frc.util.Constants;
 import frc.util.Controls;
 
-public class TelescopeState {
-    private Controls controls;
+public class TelescopeCommand {
+    private static TelescopeCommand instance;
+    protected static TelescopeCommand getInstance() {
+        if(instance == null) {
+            return instance = new TelescopeCommand();
+        } else {
+            return instance;
+        }
+    }
+
+    private final Controls controls;
+
     private boolean up = false;
     private boolean extending = false;
     private boolean retracting = false;
     private boolean pawl = true;
 
-    public TelescopeState() {
+    private TelescopeCommand() {
         controls = Controls.getInstance();
     }
 
-    public void update() {
+    public void teleop() {
         if(controls.xbox.getPOV() == 270) {
             up = true;
         } else if(controls.xbox.getPOV() == 90 && !extending && !retracting && pawl) {
@@ -31,11 +42,10 @@ public class TelescopeState {
         }
     }
 
-    public void reset() {
-        extending = false;
-        retracting = false;
-        pawl = true;
-        up = false;
+    /* Getters */
+
+    public boolean isTrenchMode() {
+        return controls.xbox.getRawAxis(2) > Constants.trenchModeThreshold;
     }
 
     public boolean isExtending() {

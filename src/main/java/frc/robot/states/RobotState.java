@@ -16,18 +16,15 @@ public class RobotState {
 
     private DriveState driveState = new DriveState();
     private IntakeState intakeState = new IntakeState();
-    private TelescopeState telescopeState = new TelescopeState();
 
     public void reset() {
         driveState.reset();
         intakeState.reset();
-        telescopeState.reset();
     }
 
     public void update() {
         driveState.update();
         intakeState.update();
-        telescopeState.update();
     }
 
     public DriveState getDriveState() {
@@ -36,9 +33,5 @@ public class RobotState {
 
     public IntakeState getIntakeState() {
         return intakeState;
-    }
-
-    public TelescopeState getTelescopeState() {
-        return telescopeState;
     }
 }

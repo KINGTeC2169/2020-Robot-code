@@ -17,7 +17,7 @@ public class IndexerCommand {
 
     private final Controls controls;
 
-    private int cyclesSinceIntake = Integer.MAX_VALUE;
+    private int cyclesSinceIntake = Integer.MAX_VALUE/2; // We have to do this to avoid overflow
     private LoadMode loadMode = LoadMode.REST;
 
     private IndexerCommand() {
@@ -31,7 +31,7 @@ public class IndexerCommand {
             loadMode = LoadMode.LOAD;
         }
 
-        if(controls.left.getRawButton(1)) {
+        if(controls.right.getRawButton(1) && !controls.xbox.getStartButton()) {
             cyclesSinceIntake = 0;
         } else {
             cyclesSinceIntake++;

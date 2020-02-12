@@ -14,12 +14,14 @@ public class CommandMachine {
     private final IndexerCommand idxCommand;
     private final IntakeCommand iCommand;
     private final ShooterCommand sCommand;
+    private final TelescopeCommand tCommand;
 
     private CommandMachine() {
         dCommand = DriveCommand.getInstance();
         idxCommand = IndexerCommand.getInstance();
         iCommand = IntakeCommand.getInstance();
         sCommand = ShooterCommand.getInstance();
+        tCommand = TelescopeCommand.getInstance();
     }
 
     public void teleop() {
@@ -27,6 +29,7 @@ public class CommandMachine {
         idxCommand.teleop();
         iCommand.teleop();
         sCommand.teleop();
+        tCommand.teleop();
     }
 
     public DriveCommand getDriveCommand() {
@@ -43,5 +46,9 @@ public class CommandMachine {
 
     public IntakeCommand getIntakeCommand() {
         return iCommand;
+    }
+
+    public TelescopeCommand getTelescopeCommand() {
+        return tCommand;
     }
 }
