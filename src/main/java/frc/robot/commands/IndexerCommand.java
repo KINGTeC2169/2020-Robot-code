@@ -17,7 +17,7 @@ public class IndexerCommand {
 
     private final Controls controls;
 
-    private int cyclesSinceIntake = Integer.MAX_VALUE/2; // We have to do this to avoid overflow
+    private int cyclesSinceIntake = Integer.MAX_VALUE/2; // We have to do the /2 to avoid overflow
     private LoadMode loadMode = LoadMode.REST;
 
     private IndexerCommand() {

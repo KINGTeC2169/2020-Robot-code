@@ -1,8 +1,7 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.commands.PatrickCommand;
 import frc.util.ActuatorMap;
-import frc.util.Controls;
 import frc.util.Debug;
 import frc.util.drivers.ColorSensor;
 import frc.util.drivers.ControllerFactory;
@@ -11,26 +10,26 @@ import frc.util.drivers.Talon;
 
 public class Patrick implements Subsystem {
     private static Patrick instance;
-    public static Patrick getInstance() {
+    public static Patrick getInstance(PatrickCommand pCommand) {
         if(instance == null) {
-            return instance = new Patrick();
+            return instance = new Patrick(pCommand);
         } else {
             return instance;
         }
     }
 
-    ColorSensor colorSensor;
+    private final PatrickCommand pCommand;
+    private final ColorSensor colorSensor;
     private Talon talon;
-    private Controls controls;
     private int slices = 0;
     private ColorSensor.CpColor prevColor;
     private ColorSensor.CpColor desiredColor;
     private final ColorSensor.CpColor colorVal [] = {ColorSensor.CpColor.CYAN, ColorSensor.CpColor.YELLOW, ColorSensor.CpColor.RED, ColorSensor.CpColor.GREEN};
 
-    public Patrick ()
+    public Patrick (PatrickCommand pCommand)
     {
+        this.pCommand = pCommand;
         colorSensor = ColorSensor.getInstance();
-        controls = Controls.getInstance();
         talon = ControllerFactory.masterTalon(ActuatorMap.patrick, false);
         talon.setName("Patrick");
     }
@@ -67,21 +66,19 @@ public class Patrick implements Subsystem {
     }
 
     public void positionalControl(ColorSensor.CpColor detectedColor) {
-        if(desiredColor == null) {
-            String gameData = DStation.getInstance().getMessage();
-            switch(gameData.length() > 0 ? gameData.charAt(0) : ' ') {
-                case 'B':
-                    desiredColor = ColorSensor.CpColor.CYAN;
-                    break;
-                case 'G':
-                    desiredColor = ColorSensor.CpColor.GREEN;
-                    break;
-                case 'Y':
-                    desiredColor = ColorSensor.CpColor.YELLOW;
-                    break;
-                default:
-                    desiredColor = ColorSensor.CpColor.RED;
-            }
+        String gameData = DStation.getInstance().getMessage();
+        switch(gameData.length() > 0 ? gameData.charAt(0) : ' ') {
+            case 'B':
+                desiredColor = ColorSensor.CpColor.CYAN;
+                break;
+            case 'G':
+                desiredColor = ColorSensor.CpColor.GREEN;
+                break;
+            case 'Y':
+                desiredColor = ColorSensor.CpColor.YELLOW;
+                break;
+            default:
+                desiredColor = ColorSensor.CpColor.RED;
         }
 
         int detectedIndex = Integer.MIN_VALUE;
@@ -112,9 +109,9 @@ public class Patrick implements Subsystem {
     public void update() {
         ColorSensor.CpColor detectedColor = colorSensor.getColor();
 
-        if(controls.xbox.getXButton()) {
+        if(pCommand.isRotationalControl()) {
             rotationalControl(detectedColor);
-        } else if(controls.xbox.getBButton()) {
+        } else if(pCommand.isPositionalControl()) {
             positionalControl(detectedColor);
         } else {
             talon.setOutput(0);

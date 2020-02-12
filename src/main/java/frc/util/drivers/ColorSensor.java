@@ -39,9 +39,16 @@ public class ColorSensor {
     // Runs at 50hz
     public void update() {
         if(testing) {
-            detected = Color.kWhite;
-            int rgb[] = Conversion.hsvToRgb(Debug.getNumber("Color Sensor Input"), .7, .5);
-            detected = new Color(new Color8Bit(rgb[0], rgb[1], rgb[2]));
+            double num = Debug.getNumber("Color Sensor Input");
+            if(num < .25) {
+                detected = new Color(new Color8Bit((int)(255*.16), (int)(255*.46), (int)(255*.38)));
+            } else if(num < .5) {
+                detected = new Color(new Color8Bit((int)(255*.31), (int)(255*.55), (int)(255*.13)));
+            } else if(num < .75) {
+                detected = new Color(new Color8Bit((int)(255*.60), (int)(255*.31), (int)(255*.07)));
+            } else {
+                detected = new Color(new Color8Bit((int)(255*.20), (int)(255*.58), (int)(255*.22)));
+            }
         } else {
             detected = colorSensor.getColor();
         }
@@ -55,7 +62,7 @@ public class ColorSensor {
         // Get distance between detected color and each color on the control panel
         double dg = distance(r, g, b, .20, .58, .22);
         double dr = distance(r, g, b, .60, .31, .07);
-        double dy = distance(r, g, b, .31, .55, 0.13);
+        double dy = distance(r, g, b, .31, .55, .13);
         double dc = distance(r, g, b, .16, .46, .38);
 
         // Return smallest of four distances

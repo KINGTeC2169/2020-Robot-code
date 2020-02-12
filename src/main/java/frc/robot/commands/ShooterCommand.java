@@ -59,7 +59,7 @@ public class ShooterCommand {
         if(aimHood) {
             return true;
         } else {
-            return controls.xbox.getRawButton(2);
+            return controls.right.getRawButton(2);
         }
     }
 }

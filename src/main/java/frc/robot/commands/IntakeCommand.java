@@ -20,7 +20,7 @@ public class IntakeCommand {
         controls = Controls.getInstance();
     }
 
-    public void teleop() {
+    protected void teleop() {
         if(controls.yButton()) {
             piston = !piston;
         }

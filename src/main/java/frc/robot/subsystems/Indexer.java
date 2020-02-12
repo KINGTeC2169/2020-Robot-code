@@ -30,6 +30,7 @@ public class Indexer implements Subsystem {
     private boolean slowFlywheel = false;
     private boolean enterSensorActivated = false;
     private boolean exitSensorActivated = false;
+    private boolean shooting = false;
     private enum LoadMode {
             halfLoad, fullLoad
     }
@@ -66,7 +67,11 @@ public class Indexer implements Subsystem {
     }
 
     public boolean isShooting() {
-        return balls.size() != 0 && idxCommand.isShoot() && !slowFlywheel;
+        if(balls.size() != 0 && idxCommand.isShoot() && !slowFlywheel) {
+            return shooting = true;
+        } else {
+            return shooting;
+        }
     }
 
     @Override
@@ -79,6 +84,7 @@ public class Indexer implements Subsystem {
             balls.add(0.0);
         }
         if(indexerExit.get() && !exitSensorActivated) {
+            shooting = false;
             balls.remove(0);
             exitSensorTripped = true;
         }
@@ -115,7 +121,9 @@ public class Indexer implements Subsystem {
         lastSensor = feeder.getSensor();
 
         // Set outputs
-        if(idxCommand.isLoad() && loadMode == LoadMode.halfLoad) {
+        if(isShooting()) {
+            feeder.setOutput(1);
+        } else if(idxCommand.isLoad() && loadMode == LoadMode.halfLoad) {
             if(balls.size() != 0 && balls.get(0) < Constants.feederHalfway) {
                 feeder.setOutput(1);
             } else {
@@ -127,10 +135,6 @@ public class Indexer implements Subsystem {
             } else {
                 feeder.setOutput(0);
             }
-        } else if(idxCommand.isShoot() && isShooting()) {
-            feeder.setOutput(1);
-        } else if(idxCommand.isShoot()) {
-            feeder.setOutput(0);
         } else {
             feeder.setOutput(0);
         }

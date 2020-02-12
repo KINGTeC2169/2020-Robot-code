@@ -13,6 +13,7 @@ public class CommandMachine {
     private final DriveCommand dCommand;
     private final IndexerCommand idxCommand;
     private final IntakeCommand iCommand;
+    private final PatrickCommand pCommand;
     private final ShooterCommand sCommand;
     private final TelescopeCommand tCommand;
 
@@ -20,6 +21,7 @@ public class CommandMachine {
         dCommand = DriveCommand.getInstance();
         idxCommand = IndexerCommand.getInstance();
         iCommand = IntakeCommand.getInstance();
+        pCommand = PatrickCommand.getInstance();
         sCommand = ShooterCommand.getInstance();
         tCommand = TelescopeCommand.getInstance();
     }
@@ -28,6 +30,7 @@ public class CommandMachine {
         dCommand.teleop();
         idxCommand.teleop();
         iCommand.teleop();
+        pCommand.teleop();
         sCommand.teleop();
         tCommand.teleop();
     }
@@ -38,6 +41,10 @@ public class CommandMachine {
 
     public IndexerCommand getIndexerCommand() {
         return idxCommand;
+    }
+
+    public PatrickCommand getPatrickCommand() {
+        return pCommand;
     }
 
     public ShooterCommand getShooterCommand() {
