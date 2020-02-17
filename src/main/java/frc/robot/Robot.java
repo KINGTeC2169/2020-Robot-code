@@ -9,6 +9,7 @@ import frc.robot.auto.modes.TestMode;
 import frc.robot.commands.CommandMachine;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.states.RobotState;
+import frc.util.Debug;
 
 public class Robot extends TimedRobot {
 
@@ -22,6 +23,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotInit() {
+        Debug.start();
         superstructure.start();
         autoMode = new Owen(superstructure, commandMachine);
     }
@@ -41,6 +43,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
+        Debug.init();
         superstructure.reset();
         state.reset();
         if (autoMode != null) {
