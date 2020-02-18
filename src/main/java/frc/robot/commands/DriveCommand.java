@@ -13,12 +13,14 @@ public class DriveCommand {
         }
     }
 
-    private enum DriveCommandState {RESTING, CHEESY, AUTO_VISION, ARCADE_VISION, FIND_TARGET, LINEAR_DRIVE}
+    private enum DriveCommandState {RESTING, CHEESY, AUTO_VISION, ARCADE_VISION, ROTATE_DRIVE, FIND_TARGET, LINEAR_DRIVE}
 
     private final Controls controls;
 
     private DriveCommandState state;
     private double autoVisionThrottle;
+    private double rotateDriveThrottle;
+    private double rotateDriveError;
     private double linearDriveDistance;
     private boolean highGear;
 
@@ -65,6 +67,12 @@ public class DriveCommand {
         state = DriveCommandState.FIND_TARGET;
     }
 
+    public void setRotateDrive(double throttle, double error) {
+        state = DriveCommandState.ROTATE_DRIVE;
+        rotateDriveThrottle = throttle;
+        rotateDriveError = error;
+    }
+
     /* Getters */
 
     public double getLinearDriveDistance() {
@@ -76,10 +84,20 @@ public class DriveCommand {
     }
 
     public double getThrottle() {
-        if(state == DriveCommandState.CHEESY || state == DriveCommandState.ARCADE_VISION) {
+        if(state == DriveCommandState.ROTATE_DRIVE) {
+            return rotateDriveThrottle;
+        } else if(state == DriveCommandState.CHEESY || state == DriveCommandState.ARCADE_VISION) {
             return handleDeadband(-controls.left.getY(), Constants.throttleDeadband);
         } else if(state == DriveCommandState.AUTO_VISION) {
             return autoVisionThrottle;
+        } else {
+            return 0;
+        }
+    }
+
+    public double getRotateDriveError() {
+        if(state == DriveCommandState.ROTATE_DRIVE) {
+            return rotateDriveError;
         } else {
             return 0;
         }
@@ -111,6 +129,10 @@ public class DriveCommand {
 
     public boolean isVision() {
         return state == DriveCommandState.ARCADE_VISION || state == DriveCommandState.AUTO_VISION;
+    }
+
+    public boolean isRotate() {
+        return state == DriveCommandState.ROTATE_DRIVE;
     }
 
     public boolean isFindTarget() {

@@ -91,6 +91,8 @@ public class Drive implements Subsystem {
             visionDrive(dCommand.getThrottle());
         } else if(dCommand.isCheesy()) {
             cheesyDrive(dCommand.getThrottle(), dCommand.getWheel(), dCommand.getQuickTurn());
+        } else if(dCommand.isRotate()) {
+            rotateDrive(dCommand.getThrottle(), dCommand.getRotateDriveError());
         } else if(dCommand.isResting()) {
             setOutput(0, 0);
         }
@@ -248,6 +250,13 @@ public class Drive implements Subsystem {
         } else {
             setOutput(0, 0);
         }
+    }
+
+    // Rotates the robot to drive some error to zero
+    private void rotateDrive(double throttle, double error) {
+        double output = visionDrive.getOutput(error);
+        left.setOutput(throttle - output);
+        right.setOutput(throttle + output);
     }
 
     private void setOutput(double l, double r) {

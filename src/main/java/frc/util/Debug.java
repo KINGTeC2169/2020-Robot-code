@@ -13,9 +13,6 @@ import frc.util.geometry.Vector2;
 import java.util.ArrayList;
 
 public class Debug {
-    // Serial communication
-    private static SerialPort serialPort = null;
-
     // Vision
     private static final boolean targetInformation = true;
     private static final boolean targetCorners = true;
@@ -27,19 +24,10 @@ public class Debug {
     // Robot state
     private static final boolean positionEstimate = true;
 
-    public static void start() {
-        serialPort = new SerialPort(9600, SerialPort.Port.kMXP);
-    }
-
-    public static void init() {
-        serialPort.readString();
-    }
-
     public static void debugAll() {
         vision(Limelight.getInstance());
         colorSensor(ColorSensor.getInstance());
         state(RobotState.getInstance());
-        readSerial();
         out("Balls in feeder", Superstructure.getInstance().getBallsInFeeder());
     }
 
@@ -71,40 +59,6 @@ public class Debug {
         if(positionEstimate) {
             out("Position Estimate", state.getDriveState().getPos());
         }
-    }
-
-    public static void readSerial() {
-        // Read next packet
-        int n = serialPort.read(1)[0];
-        byte[] packet = serialPort.read(5*n+1);
-
-        String toPrint = "";
-        for(int i = 0; i < packet.length; i++) {
-            toPrint += (packet[i] & 0xff)+",";
-        }
-        out("Packet", toPrint);
-
-        int[] balls = new int[3*n];
-        for(int i = 0; i < n; i++) {
-            int radius = packet[5*i] & 0xff;
-            int x2 = packet[5*i+1] & 0xff;
-            int x1 = packet[5*i+2] & 0xff;
-            int y2 = packet[5*i+3] & 0xff;
-            int y1 = packet[5*i+4] & 0xff;
-            out("x2", x2);
-            out("x1", x1);
-            int x = x2 * 256 + x1;
-            int y = y2 * 256 + y1;
-            balls[3*i] = radius;
-            balls[3*i+1] = x;
-            balls[3*i+2] = y;
-        }
-
-        StringBuilder readableOutput = new StringBuilder();
-        for(int b : balls) {
-            readableOutput.append(b).append(",");
-        }
-        out("Serial Output", readableOutput.toString());
     }
 
     public static void visionEstimate(double p1ty, double p2ty, double cd1, double cd2, double d1d2c, Vector2 estimate) {

@@ -15,6 +15,7 @@ public class IntakeCommand {
     private final Controls controls;
 
     private boolean piston = true;
+    private boolean forceIntake = false;
 
     private IntakeCommand() {
         controls = Controls.getInstance();
@@ -26,6 +27,16 @@ public class IntakeCommand {
         }
     }
 
+    /* Auto stuff */
+
+    public void setIntake() {
+        forceIntake = true;
+    }
+
+    public void rest() {
+        forceIntake = false;
+    }
+
     /* Getters */
 
     public boolean piston() {
@@ -33,7 +44,7 @@ public class IntakeCommand {
     }
 
     public boolean intake() {
-        return controls.right.getRawButton(1);
+        return controls.right.getRawButton(1) || forceIntake;
     }
 
     public boolean exhaust() {

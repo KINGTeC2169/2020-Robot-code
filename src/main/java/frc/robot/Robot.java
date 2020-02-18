@@ -9,13 +9,15 @@ import frc.robot.auto.modes.TestMode;
 import frc.robot.commands.CommandMachine;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.states.RobotState;
+import frc.util.BallTracker;
 import frc.util.Debug;
 
 public class Robot extends TimedRobot {
 
-    private CommandMachine commandMachine = CommandMachine.getInstance();
-    private Superstructure superstructure = Superstructure.getInstance();
-    private RobotState state = RobotState.getInstance();
+    private final CommandMachine commandMachine = CommandMachine.getInstance();
+    private final Superstructure superstructure = Superstructure.getInstance();
+    private final RobotState state = RobotState.getInstance();
+    private final BallTracker ballTracker = BallTracker.getInstance();
 
     // Auto stuff
     private Mode autoMode;
@@ -23,9 +25,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotInit() {
-        Debug.start();
         superstructure.start();
-        autoMode = new Owen(superstructure, commandMachine);
+        autoMode = new TestMode(superstructure, commandMachine);
     }
 
     @Override
@@ -43,8 +44,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-        Debug.init();
         superstructure.reset();
+        ballTracker.enable();
         state.reset();
         if (autoMode != null) {
             autoMode.start();
