@@ -1,9 +1,6 @@
 package frc.robot.auto.modes;
 
-import frc.robot.auto.actions.AimAtTarget;
-import frc.robot.auto.actions.ChaseBall;
-import frc.robot.auto.actions.FindTarget;
-import frc.robot.auto.actions.ShootBalls;
+import frc.robot.auto.actions.*;
 import frc.robot.commands.CommandMachine;
 import frc.robot.subsystems.Superstructure;
 
@@ -22,7 +19,7 @@ public class TestMode implements Mode {
         find = new FindTarget(commandMachine.getDriveCommand());
         aim = new AimAtTarget(commandMachine.getDriveCommand());
         shoot = new ShootBalls(superstructure, commandMachine.getDriveCommand(), commandMachine.getIndexerCommand(), commandMachine.getShooterCommand());
-        chase = new ChaseBall(commandMachine.getDriveCommand(), commandMachine.getIntakeCommand());
+        chase = new ChaseBall(commandMachine.getDriveCommand(), commandMachine.getIntakeCommand(), -90, 7);
     }
 
     @Override

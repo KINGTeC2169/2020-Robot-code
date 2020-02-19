@@ -3,6 +3,8 @@ package frc.util;
 import edu.wpi.first.wpilibj.SerialPort;
 import frc.util.geometry.Vector2;
 
+import java.text.DecimalFormat;
+
 public class BallTracker {
     private static BallTracker instance;
     public static BallTracker getInstance() {
@@ -46,8 +48,9 @@ public class BallTracker {
             }
 
             String print = "";
+            DecimalFormat f = new DecimalFormat("#00.0");
             for(Ball ball : balls) {
-                print += ball.radius + " " + ball.position.x + " " + ball.position.y + ";";
+                print += f.format(ball.radius) + " " + f.format(ball.position.x) + " " + f.format(ball.position.y) + ";";
             }
             Debug.putString("Serial", print);
 
@@ -68,8 +71,8 @@ public class BallTracker {
         public final Vector2 position;
 
         public Ball(int radius, int x, int y) {
-            this.radius = radius;
-            position = new Vector2(x - 240, y - 180);
+            this.radius = radius * 61 / 640.;
+            position = new Vector2((x - 320) * 61 / 640., (y - 240) * 61 / 640.);
         }
     }
 
@@ -78,10 +81,31 @@ public class BallTracker {
     }
 
     public Ball getLargestBall() {
-        Ball largest = new Ball(0, 240, 240);
-        for(Ball ball : balls) {
-            if(ball.radius > largest.radius) {
-                largest = ball;
+        if(balls.length < 1) {
+            return null;
+        }
+
+        Ball largest = balls[0];
+        for(int i = 1; i < balls.length; i++) {
+            if(balls[i].radius > largest.radius) {
+                largest = balls[i];
+            }
+        }
+
+        return largest;
+    }
+
+    public Ball[] getLargestTwo() {
+        if(balls.length < 2) {
+            return null;
+        }
+
+        Ball[] largest = {balls[0], balls[1]};
+        for(int i = 2; i < balls.length; i++) {
+            if(balls[i].radius > largest[0].radius) {
+                largest[0] = balls[i];
+            } else if(balls[i].radius > largest[1].radius) {
+                largest[1] = balls[i];
             }
         }
 
