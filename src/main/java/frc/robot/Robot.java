@@ -3,9 +3,8 @@ package frc.robot;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import frc.robot.auto.modes.Mode;
-import frc.robot.auto.modes.TestMode;
-import frc.robot.auto.modes.Verdun;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.auto.modes.*;
 import frc.robot.commands.CommandMachine;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.states.RobotState;
@@ -25,7 +24,15 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         superstructure.start();
-        autoMode = new Verdun();
+
+        SmartDashboard.putData("Auto Chooser", chooser);
+        chooser.addOption("Owen", new Owen());
+        chooser.addOption("Test", new TestMode(() -> {
+            return (int) SmartDashboard.getNumber("Test Mode", 0);
+        }));
+        chooser.addOption("Verdun", new Verdun());
+
+        SmartDashboard.putNumber("Test Mode", 0);
     }
 
     @Override

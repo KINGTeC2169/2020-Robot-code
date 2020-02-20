@@ -9,7 +9,9 @@ import frc.util.drivers.*;
 public class Drive implements Subsystem {
     private static Drive instance;
     protected static Drive getInstance(DriveCommand dCommand) {
-        if(instance == null) {
+        if(!Constants.driveEnabled) {
+            return null;
+        } else if(instance == null) {
             return instance = new Drive(dCommand);
         } else {
             return instance;
@@ -20,7 +22,7 @@ public class Drive implements Subsystem {
     private final Limelight limelight;
     private final DriveState driveState;
     private final NavX navX;
-    private final PD visionDrive;
+    private final PID visionDrive;
     private final PD turnControl;
     private final PD driveControl;
     private final PD turnTowardsZero;
@@ -37,6 +39,7 @@ public class Drive implements Subsystem {
     private double linearDriveDistance;
     private double linearDriveTargetAngle;
     private double linearDriveTargetDistance;
+    private double linearDriveMultiplier;
 
     private boolean findTargetStarted = false;
     private boolean findTargetPassedZero;
@@ -63,7 +66,7 @@ public class Drive implements Subsystem {
 
         navX = NavX.getInstance();
 
-        visionDrive = new PD(Constants.visionDriveP, Constants.visionDriveD);
+        visionDrive = new PID(Constants.visionDriveP, Constants.visionDriveI, Constants.visionDriveD);
         turnControl = new PD(Constants.linearDriveTurnP, Constants.linearDriveTurnD);
         driveControl = new PD(Constants.linearDriveDriveP, Constants.linearDriveDriveD);
         turnTowardsZero = new PD(Constants.alignToGyroP, Constants.alignToGyroD);
@@ -74,7 +77,7 @@ public class Drive implements Subsystem {
         dog.set(dCommand.isHighGear());
 
         if(dCommand.isLinearDrive()) {
-            if(!linearDriveStarted) startLinearDrive(dCommand.getLinearDriveDistance(), dCommand.getLinearDriveAngle());
+            if(!linearDriveStarted) startLinearDrive(dCommand.getLinearDriveDistance(), dCommand.getLinearDriveAngle(), dCommand.getLinearDriveMultiplier());
             updateLinearDrive();
         } else {
             linearDriveStarted = false;
@@ -109,18 +112,19 @@ public class Drive implements Subsystem {
         highGear = false;
     }
 
-    private void startLinearDrive(double distance, double angle) {
+    private void startLinearDrive(double distance, double angle, double multiplier) {
         linearDriveStarted = true;
         linearDriveDistance = 0;
         linearDriveTargetAngle = angle;
         linearDriveTargetDistance = distance;
+        linearDriveMultiplier = multiplier;
     }
 
     // Drive straight with gyro assistance
     private void updateLinearDrive() {
         double rotations = (getLeftRotations() + getRightRotations()) / 2;
         linearDriveDistance = Conversion.rotationsToInches(rotations, Constants.driveWheelDiameter);
-        double angleController = turnControl.getOutput(navX.getAngle() - linearDriveTargetAngle);
+        double angleController = turnControl.getOutput(linearDriveMultiplier * (navX.getAngle() - linearDriveTargetAngle));
         double driveController = driveControl.getOutput(linearDriveTargetDistance - linearDriveDistance);
         setOutput(driveController + angleController, driveController - angleController);
     }

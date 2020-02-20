@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import frc.robot.commands.PatrickCommand;
 import frc.util.ActuatorMap;
+import frc.util.Constants;
 import frc.util.Debug;
 import frc.util.drivers.ColorSensor;
 import frc.util.drivers.ControllerFactory;
@@ -11,7 +12,9 @@ import frc.util.drivers.Talon;
 public class Patrick implements Subsystem {
     private static Patrick instance;
     public static Patrick getInstance(PatrickCommand pCommand) {
-        if(instance == null) {
+        if(!Constants.patrickEnabled) {
+            return null;
+        } else if(instance == null) {
             return instance = new Patrick(pCommand);
         } else {
             return instance;

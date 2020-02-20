@@ -4,6 +4,7 @@ import frc.robot.commands.IntakeCommand;
 import frc.robot.states.IntakeState;
 import frc.robot.states.RobotState;
 import frc.util.ActuatorMap;
+import frc.util.Constants;
 import frc.util.drivers.ControllerFactory;
 import frc.util.drivers.DSolenoid;
 import frc.util.drivers.Victor;
@@ -11,7 +12,9 @@ import frc.util.drivers.Victor;
 public class Intake implements Subsystem {
     private static Intake instance;
     public static Intake getInstance(IntakeCommand iCommand) {
-        if(instance == null) {
+        if(!Constants.intakeEnabled) {
+            return null;
+        } else if(instance == null) {
             return instance = new Intake(iCommand);
         } else {
             return instance;

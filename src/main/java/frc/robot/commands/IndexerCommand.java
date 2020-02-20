@@ -38,10 +38,6 @@ public class IndexerCommand {
         }
     }
 
-    public void rest() {
-        loadMode = LoadMode.REST;
-    }
-
     public void load() {
         loadMode = LoadMode.LOAD;
     }
@@ -51,10 +47,6 @@ public class IndexerCommand {
     }
 
     /* Getters */
-
-    public boolean isRest() {
-        return loadMode == LoadMode.REST;
-    }
 
     public boolean isLoad() {
         return loadMode == LoadMode.LOAD;

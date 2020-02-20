@@ -4,6 +4,7 @@ import frc.robot.commands.CommandMachine;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.util.BallTracker;
+import frc.util.Constants;
 import frc.util.Conversion;
 import frc.util.Debug;
 import frc.util.drivers.NavX;
@@ -36,25 +37,25 @@ public class ChaseBall implements Action {
     private final NavX navX;
     private final double maxD;
     private final double gamma;
-
     private final double beta;
     private final double k;
 
+    private boolean foundBall = false;
     private int loopsWithoutBalls = 0;
 
     public ChaseBall() {
-        this(0, 0, 0, Double.MAX_VALUE);
+        this(0, Double.MAX_VALUE, 0, 0);
     }
 
-    public ChaseBall(double beta, double k) {
-        this(beta, k, 0, Double.MAX_VALUE);
+    public ChaseBall(double maxD) {
+        this(maxD, Double.MAX_VALUE, 0, 0);
     }
 
-    public ChaseBall(double beta, double k, double maxD) {
-        this(beta, k, maxD, Double.MAX_VALUE);
+    public ChaseBall(double maxD, double gamma) {
+        this(maxD, gamma, 0, 0);
     }
 
-    public ChaseBall(double beta, double k, double maxD, double gamma) {
+    public ChaseBall(double maxD, double gamma, double beta, double k) {
         ballTracker = BallTracker.getInstance();
         CommandMachine commandMachine = CommandMachine.getInstance();
         dCommand = commandMachine.getDriveCommand();
@@ -77,12 +78,13 @@ public class ChaseBall implements Action {
             loopsWithoutBalls++;
             linearDrive();
         } else if(beta != 0) {
-            loopsWithoutBalls = 0;
-
             double d = 3.5 / Math.tan(Conversion.degToRad(ball.radius));
             DecimalFormat f = new DecimalFormat("#00.0");
             Debug.putString("dist", f.format(d));
             if(d < maxD) {
+                loopsWithoutBalls = 0;
+                foundBall = true;
+
                 double alpha = navX.getAngle() - ball.position.x;
                 double theta = Conversion.degToRad(-beta - alpha);
                 double rt = Math.sqrt(d*d + k*k - 2*d*k*Math.cos(theta));
@@ -112,6 +114,6 @@ public class ChaseBall implements Action {
 
     @Override
     public boolean isFinished() {
-        return loopsWithoutBalls >= 30;
+        return foundBall && loopsWithoutBalls >= Constants.chaseBallLoops;
     }
 }

@@ -31,11 +31,16 @@ public class Constants {
     public static final double shootingMaxD3 = 216;
     public static final double shootingMaxSlope3 = 0.8;
 
+    // Ball tracking
+    public static final double chaseBallLoops = 30;
+    public static final double chaseMidpointLoops = 30;
+
     /* PID */
 
-    // Aiming
-    public static final double visionDriveP = .1;
-    public static final double visionDriveD = 0;
+    // Aiming to vision target
+    public static final double visionDriveP = .03;
+    public static final double visionDriveI = 0;
+    public static final double visionDriveD = .005;
     public static final double acceptedAimError = 1;
 
     // Getting in range of target
@@ -64,6 +69,14 @@ public class Constants {
 
     /* Other constants */
 
+    // Subsystem control
+    public static final boolean driveEnabled = true;
+    public static final boolean indexerEnabled = true;
+    public static final boolean intakeEnabled = true;
+    public static final boolean patrickEnabled = true;
+    public static final boolean shooterEnabled = true;
+    public static final boolean telescopeEnabled = true;
+
     // Testing
     public static final boolean usingTestBed = true;
     public static final boolean usingColorSensor = false;
@@ -91,7 +104,7 @@ public class Constants {
 
     // Flywheel
     public static final double flywheelDeadband = .1;
-    public static final double startingHoodAngle = 20;
+    public static final double startingHoodAngle = 70;
     public static final double trenchSafeHoodAngle = 25;
     public static final double minShootingRpm = 5000;
     public static final double hoodAllowedError = 2;

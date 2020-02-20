@@ -12,17 +12,17 @@ public class Verdun implements Mode {
                 new Parallel(
                         new RunIntake(),
                         new Series(
-                                new ChaseBall(-90, 7, 72, 30),
-                                new ChaseBall(-90, 3, 48, 10),
-                                new ChaseBall(0, 0, 48, 5),
-                                new ChaseMidpoint(72, 0)
+                                new ChaseBall(72, 30, -90, 7),
+                                new ChaseBall(48, 10, -90, 3),
+                                new ChaseBall(48, 5),
+                                new ChaseMidpoint(72)
                         )
                 ),
                 new Parallel(
                         new RunFlywheel(),
                         new Series(
                                 new Parallel(
-                                        new LinearDrive(0, -96),
+                                        new LinearDrive(-96, 0),
                                         new FindTarget()
                                 ),
                                 new GetInRange3()

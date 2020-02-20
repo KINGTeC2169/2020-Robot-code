@@ -10,21 +10,27 @@ public class LinearDrive implements Action {
     private final DriveCommand dCommand;
     private final double targetAngle;
     private final double targetDistance;
+    private final double turnMultiplier;
 
     public LinearDrive(double distance) {
-        this(NavX.getInstance().getAngle(), distance);
+        this(distance, NavX.getInstance().getAngle(), 1);
     }
 
-    public LinearDrive(double direction, double distance) {
+    public LinearDrive(double distance, double direction) {
+        this(distance, direction, 1);
+    }
+
+    public LinearDrive(double distance, double direction, double turnMultiplier) {
         superstructure = Superstructure.getInstance();
         dCommand = CommandMachine.getInstance().getDriveCommand();
         targetAngle = direction;
         targetDistance = distance;
+        this.turnMultiplier = turnMultiplier;
     }
 
     @Override
     public void start() {
-        dCommand.setLinearDrive(targetDistance, targetAngle);
+        dCommand.setLinearDrive(targetDistance, targetAngle, turnMultiplier);
     }
 
     @Override

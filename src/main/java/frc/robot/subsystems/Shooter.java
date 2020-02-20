@@ -7,7 +7,9 @@ import frc.util.drivers.*;
 public class Shooter implements Subsystem {
     private static Shooter instance;
     public static Shooter getInstance(ShooterCommand sCommand) {
-        if(instance == null) {
+        if(!Constants.shooterEnabled) {
+            return null;
+        } else if(instance == null) {
             return instance = new Shooter(sCommand);
         } else {
             return instance;
@@ -57,7 +59,7 @@ public class Shooter implements Subsystem {
         } else if(aim) {
             double wantedAngle = Conversion.getHoodAngle(limelight.isValidTarget(), limelight.getDistance());
             double realAngle = Constants.startingHoodAngle + Conversion.encoderTicksToDegrees(hood.getSensor());
-            hoodError = wantedAngle - realAngle;
+            hoodError = realAngle - wantedAngle;
             hood.setOutput(hoodActuator.getOutput(hoodError));
         } else {
             hood.setOutput(0);

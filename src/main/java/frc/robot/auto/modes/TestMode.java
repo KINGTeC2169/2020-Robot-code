@@ -6,42 +6,73 @@ import frc.robot.subsystems.Superstructure;
 
 public class TestMode implements Mode {
 
-    private final SearchTarget find;
-    private final AimAtTarget aim;
-    private final ShootBalls shoot;
-    private final LinearDrive drive;
-    private final RunFlywheel flywheel;
-    private final ChaseBall chase;
-    private final Parallel parallel;
-    private final Series series;
+    private final Action action;
 
     private boolean running = false;
 
-    public TestMode() {
-        find = new SearchTarget();
-        aim = new AimAtTarget();
-        shoot = new ShootBalls();
-        drive = new LinearDrive(45, -48);
-        flywheel = new RunFlywheel();
-        chase = new ChaseBall();
-        parallel = new Parallel(true, flywheel, drive);
-        series = new Series(drive, flywheel);
+    public interface Function {
+        int get();
+    }
+
+    public TestMode(Function getType) {
+
+        Action[] actions = {
+                new AimAtTarget(),                                          // 0
+                new ChaseBall(),
+                new ChaseBall(60, 45),
+                new ChaseBall(60, 45, 90, 7),
+                new ChaseMidpoint(),
+                new ChaseMidpoint(60, 30, .2),           // 5
+                new GetInRange2(),
+                new GetInRange3(),
+                new LinearDrive(96),
+                new LinearDrive(-96, 45),
+                new RunFlywheel(),                                          // 10
+                new RunIntake(),
+                new SearchTarget(),
+                new ShootBalls(),
+                new TurnInPlace(0),
+                new Parallel(                                               // 15
+                        new Wait(3),
+                        new RunIntake()
+                ),
+                new Series(
+                        new Wait(3),
+                        new RunIntake()
+                ),
+                new Series(
+                        new FindBall(),
+                        new Parallel(
+                                new Wait(3),
+                                new RunIntake()
+                        )
+                ),
+                new Series(
+                        new FindTarget(),
+                        new Parallel(
+                                new Wait(3),
+                                new RunIntake()
+                        )
+                ),
+        };
+        action = actions[getType.get()];
     }
 
     @Override
     public void start() {
-        chase.start();
+        action.start();
         running = true;
     }
 
     @Override
     public void run() {
-        chase.run();
+        action.run();
     }
 
     @Override
     public void stop() {
-        chase.stop();
+        action.stop();
+        running = false;
     }
 
     @Override

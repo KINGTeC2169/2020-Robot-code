@@ -14,7 +14,9 @@ import java.util.ArrayList;
 public class Indexer implements Subsystem {
     private static Indexer instance;
     protected static Indexer getInstance(IndexerCommand idxCommand) {
-        if(instance == null) {
+        if(!Constants.indexerEnabled) {
+            return null;
+        } else if(instance == null) {
             return instance = new Indexer(idxCommand);
         } else {
             return instance;

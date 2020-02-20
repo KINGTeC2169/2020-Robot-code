@@ -40,7 +40,7 @@ public class ShootBalls implements Action {
         if(superstructure.isHoodAimed() && aimed) {
             idxCommand.shoot();
         } else {
-            idxCommand.rest();
+            idxCommand.load();
         }
         sCommand.shoot(true);
 
@@ -50,7 +50,7 @@ public class ShootBalls implements Action {
     @Override
     public void stop() {
         sCommand.rest();
-        idxCommand.rest();
+        idxCommand.load();
         aim.stop();
     }
 

@@ -42,13 +42,7 @@ public class Superstructure {
     private ColorSensor colorSensor = ColorSensor.getInstance();
 
     public void start() {
-        drive.reset();
-        indexer.reset();
-        indexer.reset();
-        patrick.reset();
-        shooter.reset();
-        telescope.reset();
-
+        reset();
         limelight.start();
     }
 
@@ -56,43 +50,59 @@ public class Superstructure {
         colorSensor.update();
 
         // Update subsystems
-        drive.update();
+        if(drive != null) drive.update();
 
-        intake.update();
+        if(indexer != null) {
+            if(shooter != null) indexer.setSlowFlywheel(shooter.getRpm() < Constants.minShootingRpm);
+            indexer.update();
+        }
 
-        indexer.setSlowFlywheel(shooter.getRpm() < Constants.minShootingRpm);
-        indexer.update();
+        if(intake != null) intake.update();
 
-        patrick.update();
+        if(patrick != null) patrick.update();
 
-        shooter.forceShoot(indexer.isShooting());
-        shooter.update();
+        if(shooter != null) {
+            if(indexer != null) shooter.forceShoot(indexer.isShooting());
+            shooter.update();
+        }
 
-        telescope.update();
+        if(telescope != null) telescope.update();
 
         Debug.debugAll();
     }
 
     public void reset() {
-        drive.reset();
-        intake.reset();
-        indexer.reset();
-        shooter.reset();
-        patrick.reset();
-        telescope.reset();
+        if(drive != null) drive.reset();
+        if(indexer != null) indexer.reset();
+        if(intake != null) intake.reset();
+        if(patrick != null) patrick.reset();
+        if(shooter != null) shooter.reset();
+        if(telescope != null) telescope.reset();
     }
 
     /* For communicating */
 
     public double getLinearDriveDistance() {
-        return drive.getLinearDriveDistance();
+        if(drive == null) {
+            return 0;
+        } else {
+            return drive.getLinearDriveDistance();
+        }
     }
 
     public double getBallsInFeeder() {
-        return indexer.getBallsInFeeder();
+        if(indexer == null) {
+            return 0;
+        } else {
+            return indexer.getBallsInFeeder();
+        }
     }
 
     public boolean isHoodAimed() {
-        return shooter.isHoodAimed();
+        if(shooter == null) {
+            return false;
+        } else {
+            return shooter.isHoodAimed();
+        }
     }
 }

@@ -11,7 +11,9 @@ import frc.util.drivers.Talon;
 public class Telescope implements Subsystem {
     private static Telescope instance;
     public static Telescope getInstance(TelescopeCommand tCommand) {
-        if(instance == null) {
+        if(!Constants.telescopeEnabled) {
+            return null;
+        } else if(instance == null) {
             return instance = new Telescope(tCommand);
         } else {
             return instance;

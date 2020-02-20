@@ -17,7 +17,7 @@ public class Owen implements Mode {
     public Owen() {
         series = new Series(
                 new ShootBalls(),
-                new LinearDrive(48)
+                new LinearDrive(48, 0)
         );
     }
 
