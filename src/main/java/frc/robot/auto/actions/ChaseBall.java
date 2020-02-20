@@ -1,10 +1,14 @@
 package frc.robot.auto.actions;
 
+import frc.robot.commands.CommandMachine;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.util.BallTracker;
 import frc.util.Conversion;
+import frc.util.Debug;
 import frc.util.drivers.NavX;
+
+import java.text.DecimalFormat;
 
 public class ChaseBall implements Action {
 
@@ -29,7 +33,6 @@ public class ChaseBall implements Action {
 
     private final BallTracker ballTracker;
     private final DriveCommand dCommand;
-    private final IntakeCommand iCommand;
     private final NavX navX;
     private final double maxD;
     private final double gamma;
@@ -39,18 +42,22 @@ public class ChaseBall implements Action {
 
     private int loopsWithoutBalls = 0;
 
-    public ChaseBall(DriveCommand dCommand, IntakeCommand iCommand, double beta, double k) {
-        this(dCommand, iCommand, beta, k, 0, Double.MAX_VALUE);
+    public ChaseBall() {
+        this(0, 0, 0, Double.MAX_VALUE);
     }
 
-    public ChaseBall(DriveCommand dCommand, IntakeCommand iCommand, double beta, double k, double maxD) {
-        this(dCommand, iCommand, beta, k, maxD, Double.MAX_VALUE);
+    public ChaseBall(double beta, double k) {
+        this(beta, k, 0, Double.MAX_VALUE);
     }
 
-    public ChaseBall(DriveCommand dCommand, IntakeCommand iCommand, double beta, double k, double maxD, double gamma) {
+    public ChaseBall(double beta, double k, double maxD) {
+        this(beta, k, maxD, Double.MAX_VALUE);
+    }
+
+    public ChaseBall(double beta, double k, double maxD, double gamma) {
         ballTracker = BallTracker.getInstance();
-        this.dCommand = dCommand;
-        this.iCommand = iCommand;
+        CommandMachine commandMachine = CommandMachine.getInstance();
+        dCommand = commandMachine.getDriveCommand();
         this.navX = NavX.getInstance();
         this.beta = beta;
         this.k = k;
@@ -60,7 +67,7 @@ public class ChaseBall implements Action {
 
     @Override
     public void start() {
-        iCommand.setIntake();
+
     }
 
     @Override
@@ -73,6 +80,8 @@ public class ChaseBall implements Action {
             loopsWithoutBalls = 0;
 
             double d = 3.5 / Math.tan(Conversion.degToRad(ball.radius));
+            DecimalFormat f = new DecimalFormat("#00.0");
+            Debug.putString("dist", f.format(d));
             if(d < maxD) {
                 double alpha = navX.getAngle() - ball.position.x;
                 double theta = Conversion.degToRad(-beta - alpha);
@@ -98,7 +107,7 @@ public class ChaseBall implements Action {
 
     @Override
     public void stop() {
-        iCommand.rest();
+
     }
 
     @Override

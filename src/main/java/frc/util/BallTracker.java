@@ -31,7 +31,10 @@ public class BallTracker {
 
             // Read next packet
             byte[] next = serialPort.read(1);
-            if(next.length < 1) continue;
+            if(next.length < 1) {
+                Debug.putString("Serial", "Disconnected");
+                continue;
+            }
             int n = next[0];
             byte[] packet = serialPort.read(5*n+1);
 
@@ -52,7 +55,11 @@ public class BallTracker {
             for(Ball ball : balls) {
                 print += f.format(ball.radius) + " " + f.format(ball.position.x) + " " + f.format(ball.position.y) + ";";
             }
-            Debug.putString("Serial", print);
+            if(n != 0) {
+                Debug.putString("Serial", print);
+            } else {
+                Debug.putString("Serial", "Empty");
+            }
 
             BallTracker.balls = balls;
         }

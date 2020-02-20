@@ -23,12 +23,12 @@ public class Constants {
 
     // Getting in range for 2 pointers
     public static final double shootingMinY2 = 36;
-    public static final double shootingMaxY2 = 240;
+    public static final double shootingMaxD2 = 240;
     public static final double shootingMaxSlope2 = 1.2;
 
     // Getting in range for 3 pointers
     public static final double shootingMinY3 = 48;
-    public static final double shootingMaxY3 = 216;
+    public static final double shootingMaxD3 = 216;
     public static final double shootingMaxSlope3 = 0.8;
 
     /* PID */

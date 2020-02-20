@@ -1,5 +1,6 @@
 package frc.robot.auto.actions;
 
+import frc.robot.commands.CommandMachine;
 import frc.robot.commands.DriveCommand;
 import frc.util.drivers.Limelight;
 
@@ -12,8 +13,8 @@ public class SearchTarget implements Action {
     private final DriveCommand dCommand;
     private Limelight limelight;
 
-    public SearchTarget(DriveCommand dCommand) {
-        this.dCommand = dCommand;
+    public SearchTarget() {
+        dCommand = CommandMachine.getInstance().getDriveCommand();
     }
 
     @Override

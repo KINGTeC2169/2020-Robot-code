@@ -1,5 +1,6 @@
 package frc.robot.auto.actions;
 
+import frc.robot.commands.CommandMachine;
 import frc.robot.commands.DriveCommand;
 import frc.robot.subsystems.Superstructure;
 import frc.util.drivers.NavX;
@@ -10,13 +11,13 @@ public class LinearDrive implements Action {
     private final double targetAngle;
     private final double targetDistance;
 
-    public LinearDrive(Superstructure superstructure, DriveCommand dCommand, double distance) {
-        this(superstructure, dCommand, NavX.getInstance().getAngle(), distance);
+    public LinearDrive(double distance) {
+        this(NavX.getInstance().getAngle(), distance);
     }
 
-    public LinearDrive(Superstructure superstructure, DriveCommand dCommand, double direction, double distance) {
-        this.superstructure = superstructure;
-        this.dCommand = dCommand;
+    public LinearDrive(double direction, double distance) {
+        superstructure = Superstructure.getInstance();
+        dCommand = CommandMachine.getInstance().getDriveCommand();
         targetAngle = direction;
         targetDistance = distance;
     }

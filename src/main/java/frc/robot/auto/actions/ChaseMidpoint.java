@@ -1,5 +1,6 @@
 package frc.robot.auto.actions;
 
+import frc.robot.commands.CommandMachine;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.util.BallTracker;
@@ -17,14 +18,15 @@ public class ChaseMidpoint implements Action {
 
     private int loopsWithoutBalls = 0;
 
-    public ChaseMidpoint(DriveCommand dCommand, IntakeCommand iCommand) {
-        this(dCommand, iCommand, 0, Double.MAX_VALUE);
+    public ChaseMidpoint() {
+        this(0, Double.MAX_VALUE);
     }
 
-    public ChaseMidpoint(DriveCommand dCommand, IntakeCommand iCommand, double maxD, double gamma) {
+    public ChaseMidpoint(double maxD, double gamma) {
         ballTracker = BallTracker.getInstance();
-        this.dCommand = dCommand;
-        this.iCommand = iCommand;
+        CommandMachine commandMachine = CommandMachine.getInstance();
+        dCommand = commandMachine.getDriveCommand();
+        iCommand = commandMachine.getIntakeCommand();
         this.navX = NavX.getInstance();
         this.maxD = maxD;
         this.gamma = gamma;

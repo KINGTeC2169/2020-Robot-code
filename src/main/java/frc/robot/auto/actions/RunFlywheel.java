@@ -1,13 +1,14 @@
 package frc.robot.auto.actions;
 
+import frc.robot.commands.CommandMachine;
 import frc.robot.commands.ShooterCommand;
 
 public class RunFlywheel implements Action {
 
     private final ShooterCommand sCommand;
 
-    public RunFlywheel(ShooterCommand sCommand) {
-        this.sCommand = sCommand;
+    public RunFlywheel() {
+        sCommand = CommandMachine.getInstance().getShooterCommand();
     }
 
     @Override

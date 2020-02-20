@@ -14,10 +14,10 @@ public class Owen implements Mode {
 
     private final Series series;
 
-    public Owen(Superstructure superstructure, CommandMachine commandMachine) {
+    public Owen() {
         series = new Series(
-                new ShootBalls(superstructure, commandMachine.getDriveCommand(), commandMachine.getIndexerCommand(), commandMachine.getShooterCommand()),
-                new LinearDrive(superstructure, commandMachine.getDriveCommand(), 48)
+                new ShootBalls(),
+                new LinearDrive(48)
         );
     }
 

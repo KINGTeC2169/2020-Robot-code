@@ -3,7 +3,7 @@ package frc.robot.auto.actions;
 import frc.util.Constants;
 
 public class GetInRange2 implements Action {
-    GetInRange getInRange = new GetInRange(Constants.shootingMinY2, Constants.shootingMaxY2, Constants.shootingMaxSlope2);
+    GetInRange getInRange = new GetInRange(Constants.shootingMaxD2);
 
     @Override
     public void start() {

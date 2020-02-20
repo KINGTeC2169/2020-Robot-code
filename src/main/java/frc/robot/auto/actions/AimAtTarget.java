@@ -1,5 +1,6 @@
 package frc.robot.auto.actions;
 
+import frc.robot.commands.CommandMachine;
 import frc.robot.commands.DriveCommand;
 import frc.util.Constants;
 import frc.util.drivers.Limelight;
@@ -10,14 +11,14 @@ public class AimAtTarget implements Action {
     private final DriveCommand dCommand;
     private final Limelight limelight;
 
-    public AimAtTarget(DriveCommand dCommand) {
-        this.dCommand = dCommand;
+    public AimAtTarget() {
+        dCommand = CommandMachine.getInstance().getDriveCommand();
         limelight = Limelight.getInstance();
     }
 
     private void lookAtTarget() {
         if(searchTarget == null) {
-            searchTarget = new SearchTarget(dCommand);
+            searchTarget = new SearchTarget();
             searchTarget.start();
         }
         searchTarget.run();

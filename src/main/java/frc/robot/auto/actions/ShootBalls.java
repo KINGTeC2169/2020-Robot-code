@@ -1,5 +1,6 @@
 package frc.robot.auto.actions;
 
+import frc.robot.commands.CommandMachine;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.IndexerCommand;
 import frc.robot.commands.ShooterCommand;
@@ -13,11 +14,12 @@ public class ShootBalls implements Action {
 
     private boolean aimed;
 
-    public ShootBalls(Superstructure superstructure, DriveCommand dCommand, IndexerCommand idxCommand, ShooterCommand sCommand) {
-        this.superstructure = superstructure;
-        this.idxCommand = idxCommand;
-        this.sCommand = sCommand;
-        aim = new AimAtTarget(dCommand);
+    public ShootBalls() {
+        superstructure = Superstructure.getInstance();
+        CommandMachine commandMachine = CommandMachine.getInstance();
+        idxCommand = commandMachine.getIndexerCommand();
+        sCommand = commandMachine.getShooterCommand();
+        aim = new AimAtTarget();
     }
 
     @Override
