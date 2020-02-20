@@ -5,7 +5,7 @@ import frc.util.Constants;
 import frc.util.drivers.Limelight;
 
 public class AimAtTarget implements Action {
-    private FindTarget findTarget;
+    private SearchTarget searchTarget;
 
     private final DriveCommand dCommand;
     private final Limelight limelight;
@@ -16,11 +16,11 @@ public class AimAtTarget implements Action {
     }
 
     private void lookAtTarget() {
-        if(findTarget == null) {
-            findTarget = new FindTarget(dCommand);
-            findTarget.start();
+        if(searchTarget == null) {
+            searchTarget = new SearchTarget(dCommand);
+            searchTarget.start();
         }
-        findTarget.run();
+        searchTarget.run();
     }
 
     @Override
@@ -31,9 +31,9 @@ public class AimAtTarget implements Action {
     @Override
     public void run() {
         if(limelight.isValidTarget()) {
-            if(findTarget != null) {
-                findTarget.stop();
-                findTarget = null;
+            if(searchTarget != null) {
+                searchTarget.stop();
+                searchTarget = null;
             }
             dCommand.setAutoVision(0);
         } else {
@@ -43,7 +43,7 @@ public class AimAtTarget implements Action {
 
     @Override
     public void stop() {
-        if(findTarget != null) findTarget.stop();
+        if(searchTarget != null) searchTarget.stop();
         dCommand.rest();
     }
 

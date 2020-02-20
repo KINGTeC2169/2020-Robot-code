@@ -80,8 +80,12 @@ public class BallTracker {
         return balls;
     }
 
+    public boolean canSeeBall() {
+        return balls != null && balls.length >= 1;
+    }
+
     public Ball getLargestBall() {
-        if(balls.length < 1) {
+        if(balls == null || balls.length < 1) {
             return null;
         }
 
@@ -96,7 +100,7 @@ public class BallTracker {
     }
 
     public Ball[] getLargestTwo() {
-        if(balls.length < 2) {
+        if(balls == null || balls.length < 2) {
             return null;
         }
 

@@ -74,7 +74,7 @@ public class Drive implements Subsystem {
         dog.set(dCommand.isHighGear());
 
         if(dCommand.isLinearDrive()) {
-            if(!linearDriveStarted) startLinearDrive(dCommand.getLinearDriveDistance());
+            if(!linearDriveStarted) startLinearDrive(dCommand.getLinearDriveDistance(), dCommand.getLinearDriveAngle());
             updateLinearDrive();
         } else {
             linearDriveStarted = false;
@@ -109,10 +109,10 @@ public class Drive implements Subsystem {
         highGear = false;
     }
 
-    private void startLinearDrive(double distance) {
+    private void startLinearDrive(double distance, double angle) {
         linearDriveStarted = true;
         linearDriveDistance = 0;
-        linearDriveTargetAngle = getAngle();
+        linearDriveTargetAngle = angle;
         linearDriveTargetDistance = distance;
     }
 
@@ -120,7 +120,7 @@ public class Drive implements Subsystem {
     private void updateLinearDrive() {
         double rotations = (getLeftRotations() + getRightRotations()) / 2;
         linearDriveDistance = Conversion.rotationsToInches(rotations, Constants.driveWheelDiameter);
-        double angleController = turnControl.getOutput(linearDriveTargetAngle - navX.getAngle());
+        double angleController = turnControl.getOutput(navX.getAngle() - linearDriveTargetAngle);
         double driveController = driveControl.getOutput(linearDriveTargetDistance - linearDriveDistance);
         setOutput(driveController + angleController, driveController - angleController);
     }

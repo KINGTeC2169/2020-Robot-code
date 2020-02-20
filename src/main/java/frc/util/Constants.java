@@ -48,7 +48,7 @@ public class Constants {
     public static final double alignToGyroD = 0.05;
 
     // Linear Drive
-    public static final double linearDriveTurnP = 0;
+    public static final double linearDriveTurnP = 0.005;
     public static final double linearDriveTurnD = 0;
     public static final double linearDriveDriveP = 0.02;
     public static final double linearDriveDriveD = 0.001;

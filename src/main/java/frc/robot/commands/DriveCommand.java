@@ -22,6 +22,7 @@ public class DriveCommand {
     private double rotateDriveThrottle;
     private double rotateDriveError;
     private double linearDriveDistance;
+    private double linearDriveAngle;
     private boolean highGear;
 
     private DriveCommand() {
@@ -58,9 +59,10 @@ public class DriveCommand {
         autoVisionThrottle = throttle;
     }
 
-    public void setLinearDrive(double distance) {
+    public void setLinearDrive(double distance, double angle) {
         state = DriveCommandState.LINEAR_DRIVE;
         linearDriveDistance = distance;
+        linearDriveAngle = angle;
     }
 
     public void setFindTarget() {
@@ -78,6 +80,14 @@ public class DriveCommand {
     public double getLinearDriveDistance() {
         if(state == DriveCommandState.LINEAR_DRIVE) {
             return linearDriveDistance;
+        } else {
+            return 0;
+        }
+    }
+
+    public double getLinearDriveAngle() {
+        if(state == DriveCommandState.LINEAR_DRIVE) {
+            return linearDriveAngle;
         } else {
             return 0;
         }

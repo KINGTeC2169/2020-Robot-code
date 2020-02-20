@@ -12,7 +12,7 @@ import frc.util.geometry.Vector2;
 // TODO: Fix this disgusting mess of a class
 
 public class GetInRange implements Action {
-    private FindTarget lookAtTarget;
+    private SearchTarget lookAtTarget;
 
     private DriveState state;
     private DriveCommand dCommand;
@@ -65,7 +65,7 @@ public class GetInRange implements Action {
 
     private void beginLookAtTarget() {
         if(lookAtTarget == null) {
-            lookAtTarget = new FindTarget(dCommand);
+            lookAtTarget = new SearchTarget(dCommand);
             lookAtTarget.start();
         }
         lookAtTarget.run();

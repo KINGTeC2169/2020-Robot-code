@@ -1,56 +1,67 @@
 package frc.robot.auto.actions;
 
 public class Parallel implements Action {
-    private final Action a;
-    private final Action b;
-
-    private boolean aFinished;
-    private boolean bFinished;
+    private final Action[] actions;
+    private boolean[] finished;
     private boolean stopped;
+    private boolean and; // If true, task finishes once all sub-tasks finish. Otherwise, task finishes once any sub-task finishes
 
-    public Parallel(Action a, Action b) {
-        this.a = a;
-        this.b = b;
+    public Parallel(Action... actions) {
+        this(false, actions);
+    }
+
+    public Parallel(boolean and, Action... actions) {
+        this.actions = actions;
+        this.and = and;
+        finished = new boolean[actions.length];
     }
 
     @Override
     public void start() {
-        a.start();
-        b.start();
-        aFinished = false;
-        bFinished = false;
+        for(int i = 0; i < actions.length; i++) {
+            actions[i].start();
+            finished[i] = false;
+        }
         stopped = false;
     }
 
     @Override
     public void run() {
-        if(!aFinished && a.isFinished()) {
-            a.stop();
-            aFinished = true;
-        } else if(!aFinished) {
-            a.run();
+        if(stopped) return;
+        for(int i = 0; i < actions.length; i++) {
+            if(!finished[i] && actions[i].isFinished()) {
+                actions[i].stop();
+                finished[i] = true;
+            } else if(!finished[i]) {
+                actions[i].run();
+            }
         }
 
-        if(!bFinished && b.isFinished()) {
-            b.stop();
-            bFinished = true;
-        } else if(!bFinished) {
-            b.run();
-        }
+        if(isFinished()) stop();
     }
 
     @Override
     public void stop() {
-        if(!aFinished) {
-            a.stop();
-        }
-        if(!bFinished){
-            b.stop();
+        for(int i = 0; i < actions.length; i++) {
+            if(!finished[i]) {
+                actions[i].stop();
+            }
         }
     }
 
     @Override
     public boolean isFinished() {
-        return aFinished && bFinished;
+        boolean taskFinished = and;
+        for(boolean f : finished) {
+            if(and) {
+                taskFinished &= f; // Imagine using the &= operator two years in a row
+            } else {
+                taskFinished |= f;
+            }
+        }
+        if(taskFinished) {
+            stopped = true;
+        }
+        return taskFinished;
     }
 }
