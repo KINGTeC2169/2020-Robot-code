@@ -23,9 +23,9 @@ public class ActuatorMap {
     public static final int rightFront = 6;
     public static final int rightBack = 7;
     public static final int rightTop = 8;
-    public static final int leftFront = 9;
+    public static final int leftTop = 9;
     public static final int leftBack = 10;
-    public static final int leftTop = 11;
+    public static final int leftFront = 11;
     public static final int intake = 12;
     public static final int indexer = 13;
     public static final int funnel = 14;

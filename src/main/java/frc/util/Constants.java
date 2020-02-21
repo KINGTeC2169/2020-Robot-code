@@ -40,7 +40,7 @@ public class Constants {
     // Aiming to vision target
     public static final double visionDriveP = .03;
     public static final double visionDriveI = 0;
-    public static final double visionDriveD = .005;
+    public static final double visionDriveD = .000;
     public static final double acceptedAimError = 1;
 
     // Getting in range of target

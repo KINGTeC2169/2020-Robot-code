@@ -77,7 +77,7 @@ public class ChaseBall implements Action {
         if(ball == null) {
             loopsWithoutBalls++;
             linearDrive();
-        } else if(beta != 0) {
+        } else if(k != 0) {
             double d = 3.5 / Math.tan(Conversion.degToRad(ball.radius));
             DecimalFormat f = new DecimalFormat("#00.0");
             Debug.putString("dist", f.format(d));
@@ -95,6 +95,9 @@ public class ChaseBall implements Action {
                 linearDrive();
             }
         } else {
+            loopsWithoutBalls = 0;
+            foundBall = true;
+
             dCommand.setRotateDrive(1, ball.position.x);
         }
     }
@@ -109,7 +112,7 @@ public class ChaseBall implements Action {
 
     @Override
     public void stop() {
-
+        dCommand.rest();
     }
 
     @Override

@@ -1,7 +1,6 @@
 package frc.robot.auto.actions;
 
 import frc.robot.commands.CommandMachine;
-import frc.robot.commands.DriveCommand;
 import frc.robot.commands.IndexerCommand;
 import frc.robot.commands.ShooterCommand;
 import frc.robot.subsystems.Superstructure;

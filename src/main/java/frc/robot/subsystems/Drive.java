@@ -28,7 +28,7 @@ public class Drive implements Subsystem {
     private final PD turnTowardsZero;
     private final Talon left;
     private final Talon right;
-    private final DSolenoid dog;
+    //private final DSolenoid dog;
 
     private boolean highGear = false;
     private double oldWheel = 0;
@@ -51,15 +51,15 @@ public class Drive implements Subsystem {
         limelight = Limelight.getInstance();
         driveState = RobotState.getInstance().getDriveState();
 
-        dog = new DSolenoid(ActuatorMap.dog);
-        dog.setName("High Gear");
+        //dog = new DSolenoid(ActuatorMap.dog);
+        //dog.setName("High Gear");
 
-        left = ControllerFactory.masterTalon(ActuatorMap.leftFront, false);
-        right = ControllerFactory.masterTalon(ActuatorMap.rightFront, true);
-        ControllerFactory.slaveTalon(ActuatorMap.leftTop, false, left);
-        ControllerFactory.slaveTalon(ActuatorMap.leftBack, false, left);
-        ControllerFactory.slaveTalon(ActuatorMap.rightTop, true, right);
-        ControllerFactory.slaveTalon(ActuatorMap.rightBack, false, right);
+        left = ControllerFactory.masterTalon(ActuatorMap.leftTop, true);
+        right = ControllerFactory.masterTalon(ActuatorMap.rightTop, false);
+        ControllerFactory.slaveVictor(ActuatorMap.leftFront, false, left);
+        ControllerFactory.slaveVictor(ActuatorMap.leftBack, false, left);
+        ControllerFactory.slaveVictor(ActuatorMap.rightFront, true, right);
+        ControllerFactory.slaveVictor(ActuatorMap.rightBack, true, right);
 
         left.setName("Left Drive");
         right.setName("Right Drive");
@@ -74,7 +74,7 @@ public class Drive implements Subsystem {
 
     @Override
     public void update() {
-        dog.set(dCommand.isHighGear());
+        //dog.set(dCommand.isHighGear());
 
         if(dCommand.isLinearDrive()) {
             if(!linearDriveStarted) startLinearDrive(dCommand.getLinearDriveDistance(), dCommand.getLinearDriveAngle(), dCommand.getLinearDriveMultiplier());
@@ -108,7 +108,7 @@ public class Drive implements Subsystem {
     public void reset() {
         left.reset();
         right.reset();
-        dog.set(false);
+        //dog.set(false);
         highGear = false;
     }
 
@@ -207,10 +207,10 @@ public class Drive implements Subsystem {
         if (Math.abs(quickTurn) > Constants.quickTurnDeadband) {
             if (Math.abs(throttle) < Constants.quickStopDeadband) {
                 double alpha = Constants.quickStopWeight;
-                quickStopAccumulator = (1 - alpha) * quickStopAccumulator + alpha * Math.min(1, Math.min(quickTurn, -1)) * Constants.quickStopScalar;
+                quickStopAccumulator = (1 - alpha) * quickStopAccumulator + alpha * Math.min(1, Math.min(-quickTurn, -1)) * Constants.quickStopScalar;
             }
             overPower = 1;
-            angularPower = quickTurn;
+            angularPower = -quickTurn;
         } else {
             overPower = 0;
             angularPower = Math.abs(throttle) * wheel * sensitivity - quickStopAccumulator;

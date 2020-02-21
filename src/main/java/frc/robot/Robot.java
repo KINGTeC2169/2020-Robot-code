@@ -27,9 +27,7 @@ public class Robot extends TimedRobot {
 
         SmartDashboard.putData("Auto Chooser", chooser);
         chooser.addOption("Owen", new Owen());
-        chooser.addOption("Test", new TestMode(() -> {
-            return (int) SmartDashboard.getNumber("Test Mode", 0);
-        }));
+        chooser.addOption("Test", new TestMode(0));
         chooser.addOption("Verdun", new Verdun());
 
         SmartDashboard.putNumber("Test Mode", 0);
@@ -56,7 +54,11 @@ public class Robot extends TimedRobot {
         superstructure.reset();
         ballTracker.enable();
         state.reset();
+        autoMode = chooser.getSelected();
         if (autoMode != null) {
+            if(autoMode instanceof TestMode) {
+                autoMode = new TestMode((int) SmartDashboard.getNumber("Test Mode", 0));
+            }
             autoMode.start();
         }
     }

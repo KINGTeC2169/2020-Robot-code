@@ -56,6 +56,9 @@ public class Talon {
     public void setOutput(double output) {
         this.output = output;
         if(!testing) {
+            if(name != null) {
+                Debug.putNumber(name, output);
+            }
             talon.set(ControlMode.PercentOutput, output);
         } else if(name != null) {
             Debug.putNumber(name, output);

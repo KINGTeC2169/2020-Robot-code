@@ -1,8 +1,6 @@
 package frc.robot.auto.modes;
 
 import frc.robot.auto.actions.*;
-import frc.robot.commands.CommandMachine;
-import frc.robot.subsystems.Superstructure;
 
 public class TestMode implements Mode {
 
@@ -10,16 +8,12 @@ public class TestMode implements Mode {
 
     private boolean running = false;
 
-    public interface Function {
-        int get();
-    }
-
-    public TestMode(Function getType) {
+    public TestMode(int type) {
 
         Action[] actions = {
                 new AimAtTarget(),                                          // 0
                 new ChaseBall(),
-                new ChaseBall(60, 45),
+                new Parallel(new ChaseBall(60, 45)),
                 new ChaseBall(60, 45, 90, 7),
                 new ChaseMidpoint(),
                 new ChaseMidpoint(60, 30, .2),           // 5
@@ -53,9 +47,9 @@ public class TestMode implements Mode {
                                 new Wait(3),
                                 new RunIntake()
                         )
-                ),
+                )
         };
-        action = actions[getType.get()];
+        action = actions[type];
     }
 
     @Override
