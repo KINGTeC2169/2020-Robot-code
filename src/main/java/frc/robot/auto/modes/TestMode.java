@@ -11,22 +11,27 @@ public class TestMode implements Mode {
     public TestMode(int type) {
 
         Action[] actions = {
-                new AimAtTarget(),                                          // 0
+                // 0
+                new AimAtTarget(),
                 new ChaseBall(),
-                new Parallel(new ChaseBall(60, 45)),
+                new ChaseBall(60, 45),
                 new ChaseBall(60, 45, 90, 7),
                 new ChaseMidpoint(),
-                new ChaseMidpoint(60, 30, .2),           // 5
+                // 5
+                new ChaseMidpoint(60, 30, .2),
+                new CurveToAngle(45, 5, .5, -.3),
                 new GetInRange2(),
                 new GetInRange3(),
                 new LinearDrive(96),
+                // 10
                 new LinearDrive(-96, 45),
-                new RunFlywheel(),                                          // 10
+                new RunFlywheel(),
                 new RunIntake(),
                 new SearchTarget(),
                 new ShootBalls(),
+                // 15
                 new TurnInPlace(0),
-                new Parallel(                                               // 15
+                new Parallel(
                         new Wait(3),
                         new RunIntake()
                 ),
@@ -48,6 +53,7 @@ public class TestMode implements Mode {
                                 new RunIntake()
                         )
                 )
+                // 20
         };
         action = actions[type];
     }

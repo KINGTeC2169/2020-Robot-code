@@ -13,12 +13,12 @@ public class RunIntake implements Action {
 
     @Override
     public void start() {
-        iCommand.intake();
+        iCommand.setIntake();
     }
 
     @Override
     public void run() {
-        iCommand.intake();
+        iCommand.setIntake();
     }
 
     @Override

@@ -58,7 +58,7 @@ public class Shooter implements Subsystem {
             }
         } else if(aim) {
             double wantedAngle = Conversion.getHoodAngle(limelight.isValidTarget(), limelight.getDistance());
-            double realAngle = Constants.startingHoodAngle - Conversion.encoderTicksToDegrees(hood.getSensor());
+            double realAngle = Constants.startingHoodAngle - hood.getSensor() / Constants.ticksPerHoodDegree;
             hoodError = realAngle - wantedAngle;
             hood.setOutput(hoodActuator.getOutput(hoodError));
         } else {

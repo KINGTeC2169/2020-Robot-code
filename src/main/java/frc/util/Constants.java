@@ -5,10 +5,16 @@ public class Constants {
 
     public static final double cameraToPowerPort = 66.25;
     public static final double ticksPerRotation = 8192;
+    public static final double ticksPerHoodDegree = 20;
     public static final double driveWheelDiameter = 8;
     public static final double limelightDistortion = 2.3964E-4;
 
     /* Autonomous */
+
+    // Ball indexing
+    public static final double maxRadiusChange = 5;
+    public static final double maxPosChange = 5;
+    public static final double maxOutOfSightFrames = 30;
 
     // Finding target
     public static final double turnTowardsTargetOutput = .25;

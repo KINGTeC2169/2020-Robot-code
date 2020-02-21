@@ -28,7 +28,7 @@ public class Drive implements Subsystem {
     private final PD turnTowardsZero;
     private final Talon left;
     private final Talon right;
-    //private final DSolenoid dog;
+    private final DSolenoid dog;
 
     private boolean highGear = false;
     private double oldWheel = 0;
@@ -51,8 +51,8 @@ public class Drive implements Subsystem {
         limelight = Limelight.getInstance();
         driveState = RobotState.getInstance().getDriveState();
 
-        //dog = new DSolenoid(ActuatorMap.dog);
-        //dog.setName("High Gear");
+        dog = new DSolenoid(ActuatorMap.dog);
+        dog.setName("High Gear");
 
         left = ControllerFactory.masterTalon(ActuatorMap.leftTop, true);
         right = ControllerFactory.masterTalon(ActuatorMap.rightTop, false);
@@ -74,7 +74,7 @@ public class Drive implements Subsystem {
 
     @Override
     public void update() {
-        //dog.set(dCommand.isHighGear());
+        dog.set(dCommand.isHighGear());
 
         if(dCommand.isLinearDrive()) {
             if(!linearDriveStarted) startLinearDrive(dCommand.getLinearDriveDistance(), dCommand.getLinearDriveAngle(), dCommand.getLinearDriveMultiplier());
@@ -108,7 +108,7 @@ public class Drive implements Subsystem {
     public void reset() {
         left.reset();
         right.reset();
-        //dog.set(false);
+        dog.set(false);
         highGear = false;
     }
 

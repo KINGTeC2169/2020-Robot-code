@@ -18,6 +18,8 @@ public class DriveCommand {
     private final Controls controls;
 
     private DriveCommandState state;
+    private double cheesyThrottle;
+    private double cheesyWheel;
     private double autoVisionThrottle;
     private double rotateDriveThrottle;
     private double rotateDriveError;
@@ -35,6 +37,9 @@ public class DriveCommand {
     }
 
     protected void teleop() {
+        cheesyThrottle = handleDeadband(-controls.left.getY(), Constants.throttleDeadband);
+        cheesyWheel = handleDeadband(controls.right.getX(), Constants.wheelDeadband);
+
         if(controls.right.getRawButton(2)) {
             state = DriveCommandState.ARCADE_VISION;
         } else {
@@ -69,6 +74,12 @@ public class DriveCommand {
 
     public void setFindTarget() {
         state = DriveCommandState.FIND_TARGET;
+    }
+
+    public void setCheesy(double throttle, double wheel) {
+        state = DriveCommandState.CHEESY;
+        cheesyThrottle = throttle;
+        cheesyWheel = wheel;
     }
 
     public void setRotateDrive(double throttle, double error) {
@@ -107,7 +118,7 @@ public class DriveCommand {
         if(state == DriveCommandState.ROTATE_DRIVE) {
             return rotateDriveThrottle;
         } else if(state == DriveCommandState.CHEESY || state == DriveCommandState.ARCADE_VISION) {
-            return handleDeadband(-controls.left.getY(), Constants.throttleDeadband);
+            return cheesyThrottle;
         } else if(state == DriveCommandState.AUTO_VISION) {
             return autoVisionThrottle;
         } else {
@@ -125,7 +136,7 @@ public class DriveCommand {
 
     public double getWheel() {
         if(state == DriveCommandState.CHEESY) {
-            return handleDeadband(controls.right.getX(), Constants.wheelDeadband);
+            return cheesyWheel;
         } else {
             return 0;
         }
