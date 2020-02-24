@@ -67,7 +67,9 @@ public class Robot extends TimedRobot {
     public void autonomousPeriodic() {
         superstructure.update(state);
         state.update();
-        autoMode.run();
+        if(autoMode != null) {
+            autoMode.run();
+        }
     }
 
     @Override

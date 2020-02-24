@@ -43,11 +43,11 @@ public class ShooterCommand {
 
     /* Getters */
 
-    public double getOutput() {
+    public boolean isShooting() {
         if(shoot) {
-            return 1;
+            return true;
         } else {
-            return controls.xbox.getRawAxis(3);
+            return controls.xbox.getRawAxis(3) > Constants.flywheelDeadband;
         }
     }
 

@@ -73,6 +73,11 @@ public class Constants {
     public static final double hoodActuationP = 0.01;
     public static final double hoodActuationD = 0;
 
+    // Flywheel
+    public static final double flywheelP = 0.001;
+    public static final double flywheelD = 0.001;
+    public static final double flywheelBase = .7;
+
     /* Other constants */
 
     // Subsystem control
@@ -112,7 +117,8 @@ public class Constants {
     public static final double flywheelDeadband = .1;
     public static final double startingHoodAngle = 70;
     public static final double trenchSafeHoodAngle = 25;
-    public static final double minShootingRpm = 5000;
+    public static final double minShootingRpm = 7000;
+    public static final double desiredShootingRpm = 7200;
     public static final double hoodAllowedError = 2;
 
     // Indexer
