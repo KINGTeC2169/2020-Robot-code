@@ -21,6 +21,7 @@ public class Shooter implements Subsystem {
     private final Talon master;
     private final Talon hood;
     private final PD hoodActuator;
+    private final PD flywheelController;
 
     private double hoodError = Double.MAX_VALUE;
     private boolean forceShoot = false;
@@ -38,6 +39,7 @@ public class Shooter implements Subsystem {
         hood.setName("Flywheel Hood");
 
         hoodActuator = new PD(Constants.hoodActuationP, Constants.hoodActuationD);
+        flywheelController = new PD(Constants.flywheelP, Constants.flywheelD);
     }
 
     public void forceShoot(boolean on) {
@@ -77,12 +79,8 @@ public class Shooter implements Subsystem {
     @Override
     public void update() {
         // Run flywheel
-        double output = sCommand.getOutput();
-        if(forceShoot) {
-            output = 1;
-        }
-        if(output > Constants.flywheelDeadband) {
-            output = output > 1 - Constants.flywheelDeadband ? 1 : output;
+        if(sCommand.isShooting() || forceShoot) {
+            double output = flywheelController.getOutput(Constants.desiredShootingRpm - getRpm());
             master.setOutput(output);
         } else {
             master.setOutput(0);

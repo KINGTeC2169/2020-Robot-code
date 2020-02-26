@@ -17,7 +17,8 @@ public class PD {
         if(lastError == null) {
             lastError = error;
         }
-        double output = P * error + D * (lastError - error) * .02;
+        double output = P * error + D * (lastError - error) * 50;
+        System.out.println(lastError - error);
         lastError = error;
         return output;
     }
