@@ -55,7 +55,7 @@ public class TestMode implements Mode {
                 )
                 // 20
         };
-        action = actions[type];
+        action = new Series(actions[type]);
     }
 
     @Override

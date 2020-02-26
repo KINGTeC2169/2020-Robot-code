@@ -90,6 +90,14 @@ public class Superstructure {
         }
     }
 
+    public double getDriveDistance() {
+        if(drive == null) {
+            return 0;
+        } else {
+            return drive.getDriveDistance();
+        }
+    }
+
     public double getBallsInFeeder() {
         if(indexer == null) {
             return 0;

@@ -10,6 +10,10 @@ public class FindBall extends Ghost {
     }
 
     @Override
+    public void start() {
+    }
+
+    @Override
     public boolean isFinished() {
         return ballTracker.canSeeBall();
     }

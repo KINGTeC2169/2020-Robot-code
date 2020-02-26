@@ -10,6 +10,10 @@ public class FindTarget extends Ghost {
     }
 
     @Override
+    public void start() {
+    }
+
+    @Override
     public boolean isFinished() {
         return limelight.isValidTarget();
     }

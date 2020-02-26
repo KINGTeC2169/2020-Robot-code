@@ -287,4 +287,9 @@ public class Drive implements Subsystem {
     protected double getLinearDriveDistance() {
         return linearDriveDistance;
     }
+
+    protected double getDriveDistance() {
+        double rotations = (getLeftRotations() + getRightRotations()) / 2;
+        return Conversion.rotationsToInches(rotations, Constants.driveWheelDiameter);
+    }
 }

@@ -2,7 +2,7 @@ package frc.robot.auto.actions;
 
 import frc.robot.commands.CommandMachine;
 import frc.robot.commands.DriveCommand;
-import frc.robot.commands.IntakeCommand;
+import frc.robot.subsystems.Superstructure;
 import frc.util.BallTracker;
 import frc.util.Constants;
 import frc.util.Conversion;
@@ -32,6 +32,8 @@ public class ChaseBall implements Action {
     * BT = k
     * */
 
+    private final GhostDrive ghostDrive;
+    private final Superstructure superstructure;
     private final BallTracker ballTracker;
     private final DriveCommand dCommand;
     private final NavX navX;
@@ -40,22 +42,28 @@ public class ChaseBall implements Action {
     private final double beta;
     private final double k;
 
-    private boolean foundBall = false;
+    private BallTracker.Ball ball = null;
     private int loopsWithoutBalls = 0;
 
     public ChaseBall() {
-        this(0, Double.MAX_VALUE, 0, 0);
+        this(0, Double.MAX_VALUE, 0, 0, 96);
     }
 
     public ChaseBall(double maxD) {
-        this(maxD, Double.MAX_VALUE, 0, 0);
+        this(maxD, Double.MAX_VALUE, 0, 0, 96);
     }
 
     public ChaseBall(double maxD, double gamma) {
-        this(maxD, gamma, 0, 0);
+        this(maxD, gamma, 0, 0, 96);
     }
 
     public ChaseBall(double maxD, double gamma, double beta, double k) {
+        this(maxD, gamma, beta, k, 96);
+    }
+
+    public ChaseBall(double maxD, double gamma, double beta, double k, double linearDriveDistance) {
+        ghostDrive = new GhostDrive(linearDriveDistance);
+        superstructure = Superstructure.getInstance();
         ballTracker = BallTracker.getInstance();
         CommandMachine commandMachine = CommandMachine.getInstance();
         dCommand = commandMachine.getDriveCommand();
@@ -68,22 +76,27 @@ public class ChaseBall implements Action {
 
     @Override
     public void start() {
-
+        ghostDrive.start();
     }
 
     @Override
     public void run() {
         BallTracker.Ball ball = ballTracker.getLargestBall();
         if(ball == null) {
-            loopsWithoutBalls++;
+            // If we can't see a ball, drive straight
+            if(this.ball != null) loopsWithoutBalls++;
             linearDrive();
         } else if(k != 0) {
-            double d = 3.5 / Math.tan(Conversion.degToRad(ball.radius));
+            double d = 3.5 / Math.tan(Conversion.degToRad(ball.radius)); // Distance to ball
             DecimalFormat f = new DecimalFormat("#00.0");
             Debug.putString("dist", f.format(d));
-            if(d < maxD) {
+
+            // If we want to track this ball
+            if(d < maxD && (this.ball == null || this.ball.idx.equals(ball.idx))) {
                 loopsWithoutBalls = 0;
-                foundBall = true;
+                if(this.ball == null) {
+                    this.ball = ball; // Lock onto that boi
+                }
 
                 double alpha = navX.getAngle() - ball.position.x;
                 double theta = Conversion.degToRad(-beta - alpha);
@@ -96,7 +109,7 @@ public class ChaseBall implements Action {
             }
         } else {
             loopsWithoutBalls = 0;
-            foundBall = true;
+            this.ball = ball;
 
             dCommand.setRotateDrive(1, ball.position.x);
         }
@@ -117,6 +130,6 @@ public class ChaseBall implements Action {
 
     @Override
     public boolean isFinished() {
-        return foundBall && loopsWithoutBalls >= Constants.chaseBallLoops;
+        return loopsWithoutBalls >= Constants.chaseBallLoops || ghostDrive.isFinished();
     }
 }

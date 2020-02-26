@@ -10,34 +10,38 @@ import frc.util.drivers.NavX;
 
 public class ChaseMidpoint implements Action {
 
+    private final GhostDrive ghostDrive;
     private final BallTracker ballTracker;
     private final DriveCommand dCommand;
-    private final IntakeCommand iCommand;
     private final NavX navX;
     private final double maxD;
     private final double gamma;
     private final double hs; // Horizontal shift
 
+    private BallTracker.Ball[] balls = null;
     private int loopsWithoutBalls = 0;
-    private boolean foundBalls = false;
 
     public ChaseMidpoint() {
-        this(0, Double.MAX_VALUE, .5);
+        this(0, Double.MAX_VALUE, .5, 96);
     }
 
     public ChaseMidpoint(double maxD) {
-        this(maxD, Double.MAX_VALUE, .5);
+        this(maxD, Double.MAX_VALUE, .5, 96);
     }
 
     public ChaseMidpoint(double maxD, double gamma) {
-        this(maxD, gamma, .5);
+        this(maxD, gamma, .5, 96);
     }
 
     public ChaseMidpoint(double maxD, double gamma, double hs) {
+        this(maxD, gamma, hs, 96);
+    }
+
+    public ChaseMidpoint(double maxD, double gamma, double hs, double linearDriveDistance) {
+        ghostDrive = new GhostDrive(linearDriveDistance);
         ballTracker = BallTracker.getInstance();
         CommandMachine commandMachine = CommandMachine.getInstance();
         dCommand = commandMachine.getDriveCommand();
-        iCommand = commandMachine.getIntakeCommand();
         this.navX = NavX.getInstance();
         this.maxD = maxD;
         this.gamma = gamma;
@@ -46,22 +50,24 @@ public class ChaseMidpoint implements Action {
 
     @Override
     public void start() {
-        iCommand.setIntake();
+        ghostDrive.start();
     }
 
     @Override
     public void run() {
         BallTracker.Ball[] balls = ballTracker.getLargestTwo();
         if(balls == null) {
-            loopsWithoutBalls++;
+            if(this.balls != null) loopsWithoutBalls++;
             linearDrive();
         } else {
             double d1 = 3.5 / Math.tan(Conversion.degToRad(balls[0].radius));
             double d2 = 3.5 / Math.tan(Conversion.degToRad(balls[1].radius));
 
-            if(d1 < maxD && d2 < maxD) {
+            if(d1 < maxD && d2 < maxD && (this.balls == null || this.balls[0].idx.equals(balls[0].idx) && this.balls[1].idx.equals(balls[1].idx))) {
                 loopsWithoutBalls = 0;
-                foundBalls = true;
+                if(this.balls == null) {
+                    this.balls = balls;
+                }
 
                 double lesserX = Math.min(balls[0].position.x,balls[1].position.x);
                 double greaterX = Math.max(balls[0].position.x,balls[1].position.x);
@@ -83,11 +89,11 @@ public class ChaseMidpoint implements Action {
 
     @Override
     public void stop() {
-        iCommand.rest();
+        dCommand.rest();
     }
 
     @Override
     public boolean isFinished() {
-        return foundBalls && loopsWithoutBalls >= Constants.chaseMidpointLoops;
+        return loopsWithoutBalls >= Constants.chaseMidpointLoops || ghostDrive.isFinished();
     }
 }

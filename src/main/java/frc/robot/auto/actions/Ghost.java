@@ -8,10 +8,6 @@ public abstract class Ghost implements Action {
     * */
 
     @Override
-    public void start() {
-    }
-
-    @Override
     public void run() {
     }
 
