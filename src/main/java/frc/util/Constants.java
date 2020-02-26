@@ -8,6 +8,7 @@ public class Constants {
     public static final double ticksPerHoodDegree = 20;
     public static final double driveWheelDiameter = 8;
     public static final double limelightDistortion = 2.3964E-4;
+    public static final double limelightYOffset = 31;
 
     /* Autonomous */
 

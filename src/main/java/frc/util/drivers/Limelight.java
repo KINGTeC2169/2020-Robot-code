@@ -43,7 +43,7 @@ public class Limelight {
             x = Debug.getNumber("tx");
             y= Debug.getNumber("ty");
         }
-        return new Vector2(x, y);
+        return new Vector2(x, y + Constants.limelightYOffset);
     }
 
     public static Vector2 undistort(Vector2 v) {
@@ -83,6 +83,7 @@ public class Limelight {
     }
 
     public double getDistance() {
+        Debug.putNumber("dist", Constants.cameraToPowerPort / Math.tan(Conversion.degToRad(getCenter().y)));
         return Constants.cameraToPowerPort / Math.tan(Conversion.degToRad(getCenter().y));
     }
 
