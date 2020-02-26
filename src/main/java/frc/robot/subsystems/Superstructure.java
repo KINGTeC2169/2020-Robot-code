@@ -42,12 +42,15 @@ public class Superstructure {
     private Limelight limelight = Limelight.getInstance();
     private ColorSensor colorSensor = ColorSensor.getInstance();
 
-    private Compressor compressor = new Compressor(ActuatorMap.pcm);
+    private Compressor compressor;
 
     public void start() {
         reset();
         limelight.start();
-        compressor.start();
+        if(!Constants.usingTestBed) {
+            compressor = new Compressor(ActuatorMap.pcm);
+            compressor.start();
+        }
     }
 
     public void update(RobotState state) {

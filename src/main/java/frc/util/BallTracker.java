@@ -5,6 +5,7 @@ import frc.util.geometry.Vector2;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,6 +21,7 @@ public class BallTracker {
 
     private static SerialPort serialPort;
     private static Map<Integer, Ball> balls = new HashMap<Integer, Ball>();
+    private static long time = System.currentTimeMillis();
 
     public static void spawnThread() {
         serialPort = new SerialPort(9600, SerialPort.Port.kMXP);
@@ -31,6 +33,9 @@ public class BallTracker {
                 e.printStackTrace();
                 continue;
             }
+
+            long dt = System.currentTimeMillis() - time;
+            time = System.currentTimeMillis();
 
             // Read next packet
             byte[] next = serialPort.read(1);
@@ -55,7 +60,7 @@ public class BallTracker {
 
             for(Ball ball : getActiveBalls()) {
                 if(balls.indexOf(ball) == -1) {
-                    ball.outOfSight();
+                    ball.outOfSight(dt);
                 }
             }
 
@@ -85,7 +90,7 @@ public class BallTracker {
         public final double radius;
         public final Vector2 position;
 
-        private double outOfSight = 0; // Frames the ball was out of sight
+        private long outOfSight = 0; // Frames the ball was out of sight
         private boolean active = true;
 
         public Ball(int radius, int x, int y) {
@@ -94,23 +99,28 @@ public class BallTracker {
 
             ArrayList<Ball> activeBalls = getActiveBalls();
             Integer i = -1;
+            // Search for a ball that only moves a little
             for(Ball b : activeBalls) {
-                if(b.position.sub(position).norm() < Constants.maxPosChange && Math.abs(b.radius - radius) < Constants.maxRadiusChange) {
-                    i = b.idx;
+                if(b.position.sub(position).norm() < Constants.maxPosChange && Math.abs(b.radius - this.radius) < Constants.maxRadiusChange) {
+                    i = b.idx; // That's our ball
                     break;
                 }
             }
+
             if(i == -1) {
+                // It's a new ball
                 idx = getNewIndex();
                 balls.put(idx, this);
             } else {
+                // It's an old ball
                 idx = i;
                 balls.replace(idx, this);
             }
         }
 
-        public void outOfSight() {
-            if(outOfSight++ >= Constants.maxOutOfSightFrames) {
+        public void outOfSight(long dt) {
+            if((outOfSight += dt) >= Constants.maxOutOfSightTime) {
+                // Balls been out of sight for too long, deactivate it
                 active = false;
             }
         }

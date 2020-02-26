@@ -14,8 +14,8 @@ public class Constants {
 
     // Ball indexing
     public static final double maxRadiusChange = 5;
-    public static final double maxPosChange = 5;
-    public static final double maxOutOfSightFrames = 30;
+    public static final double maxPosChange = 8;
+    public static final double maxOutOfSightTime = 800;
 
     // Finding target
     public static final double turnTowardsTargetOutput = .25;
