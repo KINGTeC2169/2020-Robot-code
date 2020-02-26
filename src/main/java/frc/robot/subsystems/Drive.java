@@ -51,7 +51,7 @@ public class Drive implements Subsystem {
         limelight = Limelight.getInstance();
         driveState = RobotState.getInstance().getDriveState();
 
-        dog = new DSolenoid(ActuatorMap.dog);
+        dog = new DSolenoid(ActuatorMap.dogLow, ActuatorMap.dogHigh);
         dog.setName("High Gear");
 
         left = ControllerFactory.masterTalon(ActuatorMap.leftTop, true);

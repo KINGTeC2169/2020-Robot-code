@@ -25,7 +25,7 @@ public class Indexer implements Subsystem {
 
     private final IndexerCommand idxCommand;
     private final Talon feeder;
-    private final Victor funnel;
+    private final Talon funnel;
     private final DInput indexerEnter;
     private final DInput indexerExit;
 
@@ -48,8 +48,8 @@ public class Indexer implements Subsystem {
         balls.add(.0);
         balls.add(.0);
 
-        feeder = ControllerFactory.masterTalon(ActuatorMap.indexer, false);
-        funnel = ControllerFactory.victor(ActuatorMap.funnel, false);
+        feeder = ControllerFactory.masterTalon(ActuatorMap.indexer, true);
+        funnel = ControllerFactory.masterTalon(ActuatorMap.funnel, false);
 
         indexerEnter = new DInput(ActuatorMap.indexerSensorEnter);
         indexerExit = new DInput(ActuatorMap.indexerSensorExit);

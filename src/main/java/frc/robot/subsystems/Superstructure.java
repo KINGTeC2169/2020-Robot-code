@@ -1,8 +1,9 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.Compressor;
 import frc.robot.commands.CommandMachine;
 import frc.robot.states.RobotState;
-import frc.util.BallTracker;
+import frc.util.ActuatorMap;
 import frc.util.Constants;
 import frc.util.drivers.ColorSensor;
 import frc.util.Debug;
@@ -41,9 +42,12 @@ public class Superstructure {
     private Limelight limelight = Limelight.getInstance();
     private ColorSensor colorSensor = ColorSensor.getInstance();
 
+    private Compressor compressor = new Compressor(ActuatorMap.pcm);
+
     public void start() {
         reset();
         limelight.start();
+        compressor.start();
     }
 
     public void update(RobotState state) {

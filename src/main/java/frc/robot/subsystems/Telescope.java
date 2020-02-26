@@ -24,8 +24,7 @@ public class Telescope implements Subsystem {
     private final TelescopeCommand tCommand;
 
     private Talon master;
-    private DSolenoid left;
-    private DSolenoid right;
+    private DSolenoid piston;
     private DSolenoid pawl;
 
     private Telescope(TelescopeCommand tCommand) {
@@ -33,12 +32,11 @@ public class Telescope implements Subsystem {
         this.tCommand = tCommand;
         master = ControllerFactory.masterTalon(ActuatorMap.telescopingMaster, false);
         ControllerFactory.slaveVictor(ActuatorMap.telescopingSlave, false, master);
-        left = new DSolenoid(ActuatorMap.climberL);
-        right = new DSolenoid(ActuatorMap.climberR);
-        pawl = new DSolenoid(ActuatorMap.pawlRelease);
+        piston = new DSolenoid(ActuatorMap.climberRetract, ActuatorMap.climberExtend);
+        pawl = new DSolenoid(ActuatorMap.pawlRetract, ActuatorMap.pawlExtend);
 
         master.setName("Telescope");
-        left.setName("Climber Piston");
+        piston.setName("Climber Piston");
         pawl.setName("Pawl");
     }
 
@@ -56,18 +54,15 @@ public class Telescope implements Subsystem {
 
         if(tCommand.isTrenchMode()) {
             // Ooh yeah it's trench time
-            left.set(false);
-            right.set(false);
+            piston.set(false);
         } else {
-            left.set(tCommand.isUp());
-            right.set(tCommand.isUp());
+            piston.set(tCommand.isUp());
         }
     }
 
     @Override
     public void reset() {
         master.setOutput(0);
-        left.set(false);
-        right.set(false);
+        piston.set(false);
     }
 }

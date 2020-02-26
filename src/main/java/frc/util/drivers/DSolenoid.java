@@ -10,10 +10,10 @@ public class DSolenoid {
     private String name;
     private final boolean testing;
 
-    public DSolenoid(int id) {
+    public DSolenoid(int retract, int extend) {
         testing = Constants.usingTestBed;
         if(!testing) {
-            solenoid = new DoubleSolenoid(ActuatorMap.pcm, id);
+            solenoid = new DoubleSolenoid(ActuatorMap.pcm, extend, retract);
         }
     }
 

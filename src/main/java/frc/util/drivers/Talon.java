@@ -6,19 +6,20 @@ import frc.util.Constants;
 import frc.util.Debug;
 
 public class Talon {
-    final boolean testing;
+    protected TalonSRX talon;
 
+    private final boolean testing;
     private String name;
     private int id;
     private int sensorTicks = Integer.MIN_VALUE;
     private double output = 0;
-    protected TalonSRX talon;
 
     public Talon(int id) {
         this.id = id;
         testing = Constants.usingTestBed;
         if(!testing) {
             talon = new TalonSRX(id);
+            configTalon();
         }
     }
 
@@ -117,5 +118,10 @@ public class Talon {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    private void configTalon() {
+        talon.configContinuousCurrentLimit(40);
+        talon.enableCurrentLimit(true);
     }
 }

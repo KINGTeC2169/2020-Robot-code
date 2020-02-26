@@ -31,7 +31,7 @@ public class Shooter implements Subsystem {
         this.sCommand = sCommand;
         limelight = Limelight.getInstance();
 
-        master = ControllerFactory.masterTalon(ActuatorMap.flywheelMaster, false);
+        master = ControllerFactory.masterTalon(ActuatorMap.flywheelMaster, true);
         ControllerFactory.slaveTalon(ActuatorMap.flywheelSlave, false, master);
         hood = ControllerFactory.masterTalon(ActuatorMap.flywheelHood, false);
 

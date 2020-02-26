@@ -23,27 +23,22 @@ public class Intake implements Subsystem {
 
     private IntakeCommand iCommand;
     private IntakeState state;
-    private DSolenoid lsol;
-    private DSolenoid rsol;
+    private DSolenoid piston;
     private Victor victor;
-    private boolean solenoidState = true;
 
     public Intake(IntakeCommand iCommand) {
         this.iCommand = iCommand;
         state = RobotState.getInstance().getIntakeState();
-        lsol = new DSolenoid(ActuatorMap.intakeL);
-        rsol = new DSolenoid(ActuatorMap.intakeR);
-        lsol.setName("Intake Sol");
-        lsol.set(true);
-        rsol.set(true);
-        victor = ControllerFactory.victor(ActuatorMap.intake, false);
+        piston = new DSolenoid(ActuatorMap.intakeRetract, ActuatorMap.intakeExtend);
+        piston.setName("Intake Sol");
+        piston.set(false);
+        victor = ControllerFactory.victor(ActuatorMap.intake, true);
         victor.setName("Intake");
     }
 
     @Override
     public void update() {
-        lsol.set(iCommand.piston());
-        rsol.set(iCommand.piston());
+        piston.set(iCommand.piston());
 
         if(iCommand.exhaust()) {
             state.setRunning(false);
@@ -59,7 +54,6 @@ public class Intake implements Subsystem {
 
     @Override
     public void reset() {
-        lsol.set(true);
-        rsol.set(true);
+        piston.set(false);
     }
 }

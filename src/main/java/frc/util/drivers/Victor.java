@@ -33,7 +33,7 @@ public class Victor {
 
     protected void makeFollower(Talon master) {
         if(!testing) {
-            victor.set(ControlMode.Follower, master.getId());
+            victor.follow(master.talon);
         }
     }
 
