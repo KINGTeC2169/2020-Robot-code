@@ -16,25 +16,29 @@ public class TestMode implements Mode {
                 new ChaseBall(),
                 new ChaseBall(60, 45),
                 new ChaseBall(60, 45, 90, 7),
-                new ChaseMidpoint(),
+                new ChaseBall(60, 45, 90, 7, 60),
                 // 5
+                new ChaseMidpoint(),
+                new ChaseMidpoint(60, 30),
                 new ChaseMidpoint(60, 30, .2),
+                new ChaseMidpoint(60, 30, .2, 60),
                 new CurveToAngle(45, 5, .5, -.3),
+                // 10
                 new GetInRange2(),
                 new GetInRange3(),
                 new LinearDrive(96),
-                // 10
                 new LinearDrive(-96, 45),
                 new RunFlywheel(),
+                // 15
                 new RunIntake(),
                 new SearchTarget(),
                 new ShootBalls(),
-                // 15
                 new TurnInPlace(0),
                 new Parallel(
                         new Wait(3),
                         new RunIntake()
                 ),
+                // 20
                 new Series(
                         new Wait(3),
                         new RunIntake()
@@ -53,7 +57,6 @@ public class TestMode implements Mode {
                                 new RunIntake()
                         )
                 )
-                // 20
         };
         action = new Series(actions[type]);
     }
