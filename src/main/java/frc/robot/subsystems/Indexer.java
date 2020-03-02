@@ -44,9 +44,6 @@ public class Indexer implements Subsystem {
         this.idxCommand = idxCommand;
 
         balls = new ArrayList<>();
-        balls.add(Constants.feederHalfway * 2);
-        balls.add(.0);
-        balls.add(.0);
 
         feeder = ControllerFactory.masterTalon(ActuatorMap.indexer, true);
         funnel = ControllerFactory.masterTalon(ActuatorMap.funnel, false);
@@ -72,7 +69,7 @@ public class Indexer implements Subsystem {
     }
 
     public boolean isShooting() {
-        if(/*balls.size() != 0 && */idxCommand.isShoot() && !slowFlywheel) {
+        if(balls.size() != 0 && idxCommand.isShoot() && !slowFlywheel) {
             return shooting = true;
         } else {
             return shooting;
@@ -82,80 +79,71 @@ public class Indexer implements Subsystem {
     @Override
     public void update() {
         // Count balls
-        boolean enterSensorTripped = false;
-        boolean exitSensorTripped = false;
-        if(!indexerEnter.get() && enterSensorActivated) {
-            enterSensorTripped = true;
+        boolean enterSensorReleased = false;
+        boolean exitSensorReleased = false;
+        if(indexerEnter.get() && !enterSensorActivated) {
+            enterSensorReleased = true;
             balls.add(0.0);
         }
-        if(indexerExit.get() && !exitSensorActivated) {
+        if(indexerExit.get() && !exitSensorActivated || balls.size() > 0 && balls.get(0) >= Constants.feederToFlywheelLength) {
             shooting = false;
             if(balls.size() > 0) balls.remove(0);
-            exitSensorTripped = true;
+            exitSensorReleased = true;
         }
         enterSensorActivated = indexerEnter.get();
         exitSensorActivated = indexerExit.get();
 
-        // Law 1
-        if(balls.size() == 1 && enterSensorTripped) {
-            loadMode = LoadMode.halfLoad;
-        }
-        if(balls.size() == 2 && enterSensorTripped) {
-            loadMode = LoadMode.fullLoad;
-        }
-
-        // Law 2
-        if(balls.size() > 1 && !isShooting()) {
-            funnel.setOutput(0);
-        } else if(idxCommand.isRunFunnel()) {
-            funnel.setOutput(.6);
-        } else {
-            funnel.setOutput(0);
+        // Update load mode
+        if(enterSensorReleased || exitSensorReleased) {
+            if(balls.size() <= 1) {
+                loadMode = LoadMode.halfLoad;
+            } else {
+                loadMode = LoadMode.fullLoad;
+            }
         }
 
-        // Law 3
-        if(exitSensorTripped && balls.size() == 1) {
-            loadMode = LoadMode.halfLoad;
-        } else if(exitSensorTripped) {
-            loadMode = LoadMode.fullLoad;
-        }
-
-        // Update feeder
+        // Update ball locations
         double dSensor = feeder.getSensor() - lastSensor;
         for(int i = 0; i < balls.size(); i++) {
             balls.set(i, balls.get(i) + dSensor);
         }
         lastSensor = feeder.getSensor();
 
-        // Set outputs
-        if(isShooting()) {
-            feeder.setOutput(.3);
-            if(balls.size() < 2) funnel.setOutput(.3);
-        } else if(idxCommand.isLoad() && loadMode == LoadMode.halfLoad) {
-            if(balls.size() != 0 && balls.get(0) < Constants.feederHalfway) {
-                feeder.setOutput(.3);
-                funnel.setOutput(.3);
-            } else {
-                feeder.setOutput(0);
-            }
-        } else if(idxCommand.isLoad() && loadMode == LoadMode.fullLoad) {
-            if(balls.size() != 0 && balls.get(0) < 2 * Constants.feederHalfway) {
-                feeder.setOutput(.3);
-                funnel.setOutput(.3);
-            } else {
-                feeder.setOutput(0);
-            }
-        } else {
-            feeder.setOutput(0);
+        // Funnel condition
+        if(
+                indexerEnter.get() &&
+                ballsPlaced() &&
+                balls.size() < 2 &&
+                (idxCommand.isRunFunnel() || isShooting())
+        ) {
+            funnel.setOutput(.3);
         }
 
-        if(balls.size() < 3 && !enterSensorActivated) {
-            feeder.setOutput(1);
+        // Feeder condition
+        if(
+                !indexerEnter.get() && balls.size() < 2 ||
+                !ballsPlaced() ||
+                isShooting() ||
+                balls.size() == 0 && idxCommand.isShoot()
+        ) {
+            feeder.setOutput(.3);
         }
 
         // For testing
         if(feeder.getOutput() > .5) {
             feeder.changeSensor(80);
+        }
+    }
+
+    private boolean ballsPlaced() {
+        if(balls.size() == 0) {
+            return true;
+        } else if(loadMode == LoadMode.halfLoad) {
+            return balls.get(0) >= Constants.feederHalfLength;
+        } else if(loadMode == LoadMode.fullLoad) {
+            return balls.get(0) >= Constants.feederLength;
+        } else {
+            return true;
         }
     }
 

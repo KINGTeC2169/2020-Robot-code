@@ -10,28 +10,27 @@ public class Waterloo implements Mode{
         main = new Series(
                 new ShootBalls(),
                 new LinearDrive(66, -45),
-                    new Parallel(
-                        new RunIntake(),
-                            new Series(
-                                    new ChaseMidpoint(45, 48, .2),
-                                    new ChaseBall(9, -30, 36, 60),
-                                    new ChaseMidpoint(60, 72 )
-                            )
+                new Parallel(
+                    new RunIntake(),
+                    new Series(
+                            new ChaseMidpoint(45, 48, .2),
+                            new ChaseBall(9, -30, 36, 60),
+                            new ChaseMidpoint(60, 72 )
+                    )
+                ),
+                new Parallel(
+                    new RunFlywheel(),
+                    new Series(
+                        new Series(
+                            new Parallel(
+                                   new LinearDrive(54, 90),
+                                    new FindTarget()
                             ),
-
-                    new Parallel(
-                        new RunFlywheel(),
-                            new Series(
-                                    new Series(
-                                            new Parallel(
-                                                   new LinearDrive(54, 90),
-                                                    new FindTarget()
-                                            ),
-                                            new GetInRange3()
-                                    ),
-                                    new GetInRange3()
-                            )
-                    ),
+                            new GetInRange3()
+                        ),
+                        new GetInRange3()
+                    )
+                ),
                 new ShootBalls()
         );
     }
