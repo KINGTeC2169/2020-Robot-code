@@ -28,7 +28,7 @@ public class Drive implements Subsystem {
     private final PD turnTowardsZero;
     private final Talon left;
     private final Talon right;
-    private final DSolenoid dog;
+    private final Sol dog;
 
     private boolean highGear = false;
     private double oldWheel = 0;
@@ -51,7 +51,7 @@ public class Drive implements Subsystem {
         limelight = Limelight.getInstance();
         driveState = RobotState.getInstance().getDriveState();
 
-        dog = new DSolenoid(ActuatorMap.dogLow, ActuatorMap.dogHigh);
+        dog = new Sol(ActuatorMap.dog);
         dog.setName("High Gear");
 
         left = ControllerFactory.masterTalon(ActuatorMap.leftTop, true);
@@ -60,6 +60,9 @@ public class Drive implements Subsystem {
         ControllerFactory.slaveVictor(ActuatorMap.leftBack, false, left);
         ControllerFactory.slaveVictor(ActuatorMap.rightFront, true, right);
         ControllerFactory.slaveVictor(ActuatorMap.rightBack, true, right);
+
+        left.setSensorPhase(false);
+        right.setSensorPhase(true);
 
         left.setName("Left Drive");
         right.setName("Right Drive");
@@ -248,9 +251,9 @@ public class Drive implements Subsystem {
     // Aim at the target
     private void visionDrive(double throttle) {
         if(limelight.isValidTarget()) {
-            double output = visionDrive.getOutput(limelight.getCenter().x);
-            left.setOutput(throttle - output);
-            right.setOutput(throttle + output);
+            double output = visionDrive.getOutput(limelight.getCenter().x + 3.5);
+            left.setOutput(throttle + output);
+            right.setOutput(throttle - output);
         } else {
             setOutput(0, 0);
         }

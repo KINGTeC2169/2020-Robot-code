@@ -1,27 +1,27 @@
 package frc.util.drivers;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Solenoid;
 import frc.util.ActuatorMap;
 import frc.util.Constants;
 import frc.util.Debug;
 
-public class DSolenoid {
-    private DoubleSolenoid solenoid;
+public class Sol {
+    private Solenoid solenoid;
     private String name;
     private final boolean testing;
 
-    public DSolenoid(int retract, int extend) {
+    public Sol(int port) {
         testing = Constants.usingTestBed;
         if(!testing) {
-            solenoid = new DoubleSolenoid(ActuatorMap.pcm, extend, retract);
+            solenoid = new Solenoid(ActuatorMap.pcm, port);
         }
     }
 
     public void set(boolean on) {
-        DoubleSolenoid.Value value = on ? DoubleSolenoid.Value.kForward : DoubleSolenoid.Value.kReverse;
         if(!testing) {
-            solenoid.set(value);
-        } else if(name != null) {
+            solenoid.set(on);
+        }
+        if(name != null) {
             Debug.putBoolean(name, on);
         }
     }

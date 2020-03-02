@@ -6,7 +6,7 @@ import frc.robot.states.RobotState;
 import frc.util.ActuatorMap;
 import frc.util.Constants;
 import frc.util.drivers.ControllerFactory;
-import frc.util.drivers.DSolenoid;
+import frc.util.drivers.Sol;
 import frc.util.drivers.Victor;
 
 public class Intake implements Subsystem {
@@ -23,13 +23,13 @@ public class Intake implements Subsystem {
 
     private IntakeCommand iCommand;
     private IntakeState state;
-    private DSolenoid piston;
+    private Sol piston;
     private Victor victor;
 
     public Intake(IntakeCommand iCommand) {
         this.iCommand = iCommand;
         state = RobotState.getInstance().getIntakeState();
-        piston = new DSolenoid(ActuatorMap.intakeRetract, ActuatorMap.intakeExtend);
+        piston = new Sol(ActuatorMap.intakeSol);
         piston.setName("Intake Sol");
         piston.set(false);
         victor = ControllerFactory.victor(ActuatorMap.intake, true);
@@ -45,7 +45,7 @@ public class Intake implements Subsystem {
             victor.setOutput(-1);
         } else if(iCommand.intake()) {
             state.setRunning(true);
-            victor.setOutput(1);
+            victor.setOutput(.8);
         } else {
             state.setRunning(false);
             victor.setOutput(0);

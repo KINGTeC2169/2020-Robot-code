@@ -5,10 +5,15 @@ public class Constants {
 
     public static final double cameraToPowerPort = 66.25;
     public static final double ticksPerRotation = 8192;
-    public static final double ticksPerHoodDegree = 20;
+    public static final double ticksPerHoodDegree = 8192 / 44.0;
     public static final double driveWheelDiameter = 8;
     public static final double limelightDistortion = 2.3964E-4;
     public static final double limelightYOffset = 31;
+
+    /* Device configurations */
+
+    // Talon
+    public static final int talonTimeoutMs = 10;
 
     /* Autonomous */
 
@@ -71,13 +76,14 @@ public class Constants {
     public static final double turnInPlaceD = 0;
 
     // Hood actuation
-    public static final double hoodActuationP = 0.01;
-    public static final double hoodActuationD = 0;
+    public static final double hoodActuationP = .3;
+    public static final double hoodActuationD = 0.010;
+    public static final double hoodActuationI = 0.0005;
 
     // Flywheel
-    public static final double flywheelP = 0.001;
-    public static final double flywheelD = 0.001;
-    public static final double flywheelBase = .7;
+    public static final double flywheelP = 0.0005;
+    public static final double flywheelD = 0.000;
+    public static final double flywheelBase = .5;
 
     /* Other constants */
 
@@ -85,15 +91,15 @@ public class Constants {
     public static final boolean driveEnabled = true;
     public static final boolean indexerEnabled = true;
     public static final boolean intakeEnabled = true;
-    public static final boolean patrickEnabled = true;
+    public static final boolean patrickEnabled = false;
     public static final boolean shooterEnabled = true;
-    public static final boolean telescopeEnabled = true;
+    public static final boolean telescopeEnabled = false;
 
     // Testing
-    public static final boolean usingTestBed = true;
+    public static final boolean usingTestBed = false;
     public static final boolean usingColorSensor = false;
     public static final boolean usingControls = true;
-    public static final boolean usingLimelight = false;
+    public static final boolean usingLimelight = true;
 
     public static final double trenchModeThreshold = .5;
 
@@ -115,16 +121,16 @@ public class Constants {
     public static final double quickStopScalar = 5.0;
 
     // Flywheel
-    public static final double flywheelDeadband = .1;
-    public static final double startingHoodAngle = 70;
+    public static final double flywheelDeadband = .2;
+    public static final double startingHoodAngle = 90;
     public static final double trenchSafeHoodAngle = 25;
-    public static final double minShootingRpm = 7000;
-    public static final double desiredShootingRpm = 7200;
+    public static final double minShootingRpm = 4000;
+    public static final double desiredShootingRpm = 5000;
     public static final double hoodAllowedError = 2;
 
     // Indexer
-    public static final double feederHalfway = 4000;
-    public static final double feederIntakeDelay = 2; // In seconds
+    public static final double feederHalfway = 14000;
+    public static final double feederIntakeDelay = 1.5; // In seconds
 
     // Predicting position
     public static final boolean encoderPositionPrediction = true;

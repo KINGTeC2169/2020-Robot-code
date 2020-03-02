@@ -16,6 +16,7 @@ public class DInput {
 
     public boolean get() {
         if(!testing) {
+            Debug.putBoolean(name, dinput.get());
             return dinput.get();
         } else if(name != null) {
             return Debug.getBoolean(name);

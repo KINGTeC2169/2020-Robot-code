@@ -49,7 +49,7 @@ public class Superstructure {
         limelight.start();
         if(!Constants.usingTestBed) {
             compressor = new Compressor(ActuatorMap.pcm);
-            compressor.start();
+//            compressor.start();
         }
     }
 
@@ -79,6 +79,10 @@ public class Superstructure {
     }
 
     public void reset() {
+        if(compressor != null) {
+            compressor.stop();
+        }
+
         if(drive != null) drive.reset();
         if(indexer != null) indexer.reset();
         if(intake != null) intake.reset();

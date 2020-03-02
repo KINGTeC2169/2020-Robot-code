@@ -30,8 +30,8 @@ public class Indexer implements Subsystem {
     private final DInput indexerExit;
 
     private boolean slowFlywheel = false;
-    private boolean enterSensorActivated = false;
-    private boolean exitSensorActivated = false;
+    private boolean enterSensorActivated = true;
+    private boolean exitSensorActivated = true;
     private boolean shooting = false;
     private enum LoadMode {
             halfLoad, fullLoad
@@ -51,6 +51,9 @@ public class Indexer implements Subsystem {
         feeder = ControllerFactory.masterTalon(ActuatorMap.indexer, true);
         funnel = ControllerFactory.masterTalon(ActuatorMap.funnel, false);
 
+        feeder.zeroSensor();
+        feeder.setSensorPhase(false);
+
         indexerEnter = new DInput(ActuatorMap.indexerSensorEnter);
         indexerExit = new DInput(ActuatorMap.indexerSensorExit);
         indexerEnter.setName("Indexer Enter");
@@ -69,7 +72,7 @@ public class Indexer implements Subsystem {
     }
 
     public boolean isShooting() {
-        if(balls.size() != 0 && idxCommand.isShoot() && !slowFlywheel) {
+        if(/*balls.size() != 0 && */idxCommand.isShoot() && !slowFlywheel) {
             return shooting = true;
         } else {
             return shooting;
@@ -81,13 +84,13 @@ public class Indexer implements Subsystem {
         // Count balls
         boolean enterSensorTripped = false;
         boolean exitSensorTripped = false;
-        if(indexerEnter.get() && !enterSensorActivated) {
+        if(!indexerEnter.get() && enterSensorActivated) {
             enterSensorTripped = true;
             balls.add(0.0);
         }
         if(indexerExit.get() && !exitSensorActivated) {
             shooting = false;
-            balls.remove(0);
+            if(balls.size() > 0) balls.remove(0);
             exitSensorTripped = true;
         }
         enterSensorActivated = indexerEnter.get();
@@ -102,8 +105,10 @@ public class Indexer implements Subsystem {
         }
 
         // Law 2
-        if(idxCommand.isRunFunnel()) {
-            funnel.setOutput(1);
+        if(balls.size() > 1 && !isShooting()) {
+            funnel.setOutput(0);
+        } else if(idxCommand.isRunFunnel()) {
+            funnel.setOutput(.6);
         } else {
             funnel.setOutput(0);
         }
@@ -124,21 +129,28 @@ public class Indexer implements Subsystem {
 
         // Set outputs
         if(isShooting()) {
-            feeder.setOutput(1);
+            feeder.setOutput(.3);
+            if(balls.size() < 2) funnel.setOutput(.3);
         } else if(idxCommand.isLoad() && loadMode == LoadMode.halfLoad) {
             if(balls.size() != 0 && balls.get(0) < Constants.feederHalfway) {
-                feeder.setOutput(1);
+                feeder.setOutput(.3);
+                funnel.setOutput(.3);
             } else {
                 feeder.setOutput(0);
             }
         } else if(idxCommand.isLoad() && loadMode == LoadMode.fullLoad) {
             if(balls.size() != 0 && balls.get(0) < 2 * Constants.feederHalfway) {
-                feeder.setOutput(1);
+                feeder.setOutput(.3);
+                funnel.setOutput(.3);
             } else {
                 feeder.setOutput(0);
             }
         } else {
             feeder.setOutput(0);
+        }
+
+        if(balls.size() < 3 && !enterSensorActivated) {
+            feeder.setOutput(1);
         }
 
         // For testing
@@ -149,15 +161,15 @@ public class Indexer implements Subsystem {
 
     @Override
     public void reset() {
-        enterSensorActivated = false;
+        enterSensorActivated = true;
         exitSensorActivated = false;
         loadMode = LoadMode.halfLoad;
         lastSensor = 0;
 
         balls = new ArrayList<>();
-        balls.add(Constants.feederHalfway * 2);
+        /*balls.add(Constants.feederHalfway * 2);
         balls.add(.0);
-        balls.add(.0);
+        balls.add(.0);*/
 
         feeder.zeroSensor();
         feeder.setOutput(0);

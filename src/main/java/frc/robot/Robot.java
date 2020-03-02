@@ -40,6 +40,7 @@ public class Robot extends TimedRobot {
     @Override
     public void disabledInit(){
         superstructure.reset();
+        commandMachine.reset();
         if (autoMode != null) {
             autoMode.stop();
         }
@@ -74,6 +75,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
+        commandMachine.reset();
         state.reset();
         if (autoMode != null && autoMode.isRunning()) {
             autoMode.stop();

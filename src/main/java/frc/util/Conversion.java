@@ -27,6 +27,10 @@ public class Conversion {
         return 600 * ticksPerDecisecond / Constants.ticksPerRotation;
     }
 
+    public static double rpmToVelocity(double rpm) {
+        return Constants.ticksPerRotation * rpm / 600;
+    }
+
     public static int[] hsvToRgb(double h, double s, double v) {
         int x = Color.HSBtoRGB((float) h, (float) s, (float) v);
         int[] rgb = {(x>>16)&0xFF, (x>>8)&0xFF, x&0xFF};

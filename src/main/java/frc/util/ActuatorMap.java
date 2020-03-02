@@ -2,18 +2,14 @@ package frc.util;
 
 public class ActuatorMap {
     // Digital input
-    public static final int indexerSensorEnter = 0;
-    public static final int indexerSensorExit = 1;
+    public static final int indexerSensorExit = 0;
+    public static final int indexerSensorEnter = 1;
 
     // PCM
-    public static final int dogLow = 0;
-    public static final int dogHigh = 1;
-    public static final int intakeRetract = 2;
-    public static final int intakeExtend = 3;
-    public static final int climberRetract = 4;
-    public static final int climberExtend = 5;
-    public static final int pawlRetract = 6;
-    public static final int pawlExtend = 7;
+    public static final int dog = 0;
+    public static final int intakeSol = 1;
+    public static final int climber = 2;
+    public static final int pawl = 3;
 
     // PDP
     public static final int flywheelSlave = 1;

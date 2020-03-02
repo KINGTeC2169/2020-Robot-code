@@ -38,6 +38,10 @@ public class IndexerCommand {
         }
     }
 
+    protected void reset() {
+        loadMode = LoadMode.LOAD;
+    }
+
     public void load() {
         loadMode = LoadMode.LOAD;
     }

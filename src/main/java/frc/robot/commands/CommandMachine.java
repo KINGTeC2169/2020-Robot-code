@@ -35,6 +35,11 @@ public class CommandMachine {
         tCommand.teleop();
     }
 
+    public void reset() {
+        idxCommand.reset();
+        sCommand.reset();
+    }
+
     public DriveCommand getDriveCommand() {
         return dCommand;
     }

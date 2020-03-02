@@ -23,7 +23,9 @@ public class ShooterCommand {
     }
 
     protected void teleop() {
+        if(controls.xbox.getAButton()) {
 
+        }
     }
 
     /* Auto */
@@ -61,5 +63,9 @@ public class ShooterCommand {
         } else {
             return controls.right.getRawButton(2);
         }
+    }
+
+    public void reset() {
+        shoot = false;
     }
 }

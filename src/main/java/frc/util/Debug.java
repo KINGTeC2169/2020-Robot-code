@@ -34,8 +34,9 @@ public class Debug {
     public static void vision(Limelight limelight) {
         if(targetInformation) {
             out("Center", limelight.getCenter());
-            out("Valid Target?", limelight.isValidTarget());
+//            out("Valid Target?", limelight.isValidTarget());
         }
+        /*
         if(targetCorners) {
             Vector2[] corners = limelight.getCorners();
             for(int i = 0; i < corners.length; i++) {
@@ -47,6 +48,7 @@ public class Debug {
             out("Position", limelight.getPosition());
             out("Rotation", limelight.getRotation());
         }
+        */
     }
 
     public static void colorSensor(ColorSensor colorSensor) {

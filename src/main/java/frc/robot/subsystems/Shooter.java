@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.ShooterCommand;
 import frc.util.*;
 import frc.util.drivers.*;
@@ -20,9 +21,8 @@ public class Shooter implements Subsystem {
     private final Limelight limelight;
     private final Talon master;
     private final Talon hood;
-    private final PD hoodActuator;
-    private final PD flywheelController;
 
+    private PD flywheelController;
     private double hoodError = Double.MAX_VALUE;
     private boolean forceShoot = false;
     private boolean hoodConfigured = false;
@@ -32,14 +32,18 @@ public class Shooter implements Subsystem {
         limelight = Limelight.getInstance();
 
         master = ControllerFactory.masterTalon(ActuatorMap.flywheelMaster, true);
-        ControllerFactory.slaveTalon(ActuatorMap.flywheelSlave, false, master);
-        hood = ControllerFactory.masterTalon(ActuatorMap.flywheelHood, false);
+        ControllerFactory.slaveVictor(ActuatorMap.flywheelSlave, false, master);
+        hood = ControllerFactory.masterTalon(ActuatorMap.flywheelHood, true);
+
+        master.setSensorPhase(true);
+        hood.setSensorPhase(true);
+
+        hood.setPID(Constants.hoodActuationP, Constants.hoodActuationI, Constants.hoodActuationD);
+//        master.setPID(Constants.flywheelP, 0, Constants.flywheelD);
+        flywheelController = new PD(Constants.flywheelP, Constants.flywheelD);
 
         master.setName("Flywheel");
         hood.setName("Flywheel Hood");
-
-        hoodActuator = new PD(Constants.hoodActuationP, Constants.hoodActuationD);
-        flywheelController = new PD(Constants.flywheelP, Constants.flywheelD);
     }
 
     public void forceShoot(boolean on) {
@@ -47,6 +51,7 @@ public class Shooter implements Subsystem {
     }
 
     public void aimHood(boolean aim, boolean trenchMode) {
+        aim = true;
         if(!hoodConfigured) {
             hood.setOutput(-.5);
             if(hood.isRevLimit()) {
@@ -59,10 +64,19 @@ public class Shooter implements Subsystem {
                 hood.setOutput(-1);
             }
         } else if(aim) {
-            double wantedAngle = Conversion.getHoodAngle(limelight.isValidTarget(), limelight.getDistance());
+//            double wantedAngle = Conversion.getHoodAngle(limelight.isValidTarget(), limelight.getDistance());
+            if(!SmartDashboard.containsKey("Get Wanted Angle")) SmartDashboard.putNumber("Get Wanted Angle", 45);
+            double ty = limelight.getCenter().y;
+//            double wantedAngle = 0.159 * ty * ty - 9.499 * ty + 181.02;
+            double wantedAngle = SmartDashboard.getNumber("Get Wanted Angle", 45);
             double realAngle = Constants.startingHoodAngle - hood.getSensor() / Constants.ticksPerHoodDegree;
+            SmartDashboard.putNumber("Hood encoder", hood.getSensor());
+            SmartDashboard.putNumber("Wanted Hood encoder", (Constants.startingHoodAngle - wantedAngle) * Constants.ticksPerHoodDegree);
+            SmartDashboard.putNumber("Wanted angle", wantedAngle);
+            SmartDashboard.putNumber("Real angle", realAngle);
             hoodError = realAngle - wantedAngle;
-            hood.setOutput(hoodActuator.getOutput(hoodError));
+
+            hood.setDesiredPosition((Constants.startingHoodAngle - wantedAngle) * Constants.ticksPerHoodDegree);
         } else {
             hood.setOutput(0);
         }
@@ -80,11 +94,15 @@ public class Shooter implements Subsystem {
     public void update() {
         // Run flywheel
         if(sCommand.isShooting() || forceShoot) {
-            double output = flywheelController.getOutput(Constants.desiredShootingRpm - getRpm());
-            master.setOutput(output);
+            master.setOutput(Constants.flywheelBase + flywheelController.getOutput(Constants.desiredShootingRpm - getRpm()));
+//            master.setEncoderVelocity(Conversion.rpmToVelocity(Constants.desiredShootingRpm));
         } else {
             master.setOutput(0);
         }
+
+        SmartDashboard.putNumber("Hood Error", hood.talon.getClosedLoopError());
+
+        SmartDashboard.putNumber("RPM", getRpm());
 
         // Adjust hood
         aimHood(sCommand.isAimHood(), sCommand.isTrenchMode());

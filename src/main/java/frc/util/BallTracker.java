@@ -5,7 +5,6 @@ import frc.util.geometry.Vector2;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
