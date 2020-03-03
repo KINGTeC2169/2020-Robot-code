@@ -84,7 +84,7 @@ public class Shooter implements Subsystem {
             hoodError = realAngle - wantedAngle;
             hood.set(ControlMode.Position, (Constants.startingHoodAngle - wantedAngle) * Constants.ticksPerHoodDegree);
         } else {
-            hood.set(ControlMode.PercentOutput, 0);
+            hood.set(ControlMode.PercentOutput, -.5);
         }
     }
 

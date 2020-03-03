@@ -19,7 +19,7 @@ public class Robot extends TimedRobot {
 
     // Auto stuff
     private Mode autoMode;
-    private SendableChooser<Mode> chooser = new SendableChooser<Mode>();
+    private SendableChooser<Mode> chooser = new SendableChooser<>();
 
     @Override
     public void robotInit() {
