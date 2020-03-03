@@ -85,9 +85,9 @@ public class Indexer implements Subsystem {
             enterSensorReleased = true;
             balls.add(0.0);
         }
-        if(indexerExit.get() && !exitSensorActivated || balls.size() > 0 && balls.get(0) >= Constants.feederToFlywheelLength) {
+        if(balls.size() > 0 && balls.get(0) >= Constants.feederToFlywheelLength) {
             shooting = false;
-            if(balls.size() > 0) balls.remove(0);
+            balls.remove(0);
             exitSensorReleased = true;
         }
         enterSensorActivated = indexerEnter.get();
@@ -111,12 +111,13 @@ public class Indexer implements Subsystem {
 
         // Funnel condition
         if(
-                indexerEnter.get() &&
                 ballsPlaced() &&
-                balls.size() < 2 &&
-                (idxCommand.isRunFunnel() || isShooting())
+                balls.size() < 2 && idxCommand.isRunFunnel() ||
+                balls.size() < 3 && isShooting()
         ) {
             funnel.setOutput(.3);
+        } else {
+            funnel.setOutput(0);
         }
 
         // Feeder condition
@@ -127,6 +128,8 @@ public class Indexer implements Subsystem {
                 balls.size() == 0 && idxCommand.isShoot()
         ) {
             feeder.setOutput(.3);
+        } else {
+            feeder.setOutput(0);
         }
 
         // For testing

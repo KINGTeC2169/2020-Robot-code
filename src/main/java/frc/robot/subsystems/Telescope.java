@@ -5,7 +5,7 @@ import frc.util.ActuatorMap;
 import frc.util.Constants;
 import frc.util.Controls;
 import frc.util.drivers.ControllerFactory;
-import frc.util.drivers.Sol;
+import frc.util.drivers.DSolenoid;
 import frc.util.drivers.Talon;
 
 public class Telescope implements Subsystem {
@@ -24,16 +24,16 @@ public class Telescope implements Subsystem {
     private final TelescopeCommand tCommand;
 
     private Talon master;
-    private Sol piston;
-    private Sol pawl;
+    private DSolenoid piston;
+    private DSolenoid pawl;
 
     private Telescope(TelescopeCommand tCommand) {
         controls = Controls.getInstance();
         this.tCommand = tCommand;
         master = ControllerFactory.masterTalon(ActuatorMap.telescopingMaster, false);
         ControllerFactory.slaveVictor(ActuatorMap.telescopingSlave, false, master);
-        piston = new Sol(ActuatorMap.climber);
-        pawl = new Sol(ActuatorMap.pawl);
+        piston = new DSolenoid(ActuatorMap.climberExtend, ActuatorMap.climberRetract);
+        pawl = new DSolenoid(ActuatorMap.pawlExtend, ActuatorMap.pawlRetract);
 
         master.setName("Telescope");
         piston.setName("Climber Piston");

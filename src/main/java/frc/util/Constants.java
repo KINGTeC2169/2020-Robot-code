@@ -129,10 +129,10 @@ public class Constants {
     public static final double hoodAllowedError = 2;
 
     // Indexer
-    public static final double feederHalfLength = 14000;
-    public static final double feederLength = 28000;
-    public static final double feederToFlywheelLength = 35000;
-    public static final double feederIntakeDelay = 1.5; // In seconds
+    public static final double feederHalfLength = 15000;
+    public static final double feederLength = 40000;
+    public static final double feederToFlywheelLength = 56000;
+    public static final double feederIntakeDelay = 2.5; // In seconds
 
     // Predicting position
     public static final boolean encoderPositionPrediction = true;

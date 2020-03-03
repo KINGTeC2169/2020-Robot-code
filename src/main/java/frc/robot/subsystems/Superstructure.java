@@ -79,9 +79,9 @@ public class Superstructure {
     }
 
     public void reset() {
-        if(compressor != null) {
-            compressor.stop();
-        }
+//        if(compressor != null) {
+//            compressor.stop();
+//        }
 
         if(drive != null) drive.reset();
         if(indexer != null) indexer.reset();
