@@ -62,7 +62,7 @@ public class ShooterCommand {
         if(aimHood) {
             return true;
         } else {
-            return controls.right.getRawButton(2);
+            return controls.xbox.getRawAxis(3) > Constants.flywheelDeadband;
         }
     }
 

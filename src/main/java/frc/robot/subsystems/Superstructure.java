@@ -49,7 +49,7 @@ public class Superstructure {
         limelight.start();
         if(!Constants.usingTestBed) {
             compressor = new Compressor(ActuatorMap.pcm);
-//            compressor.start();
+            compressor.start();
         }
     }
 
@@ -60,7 +60,7 @@ public class Superstructure {
         if(drive != null) drive.update();
 
         if(indexer != null) {
-            if(shooter != null) indexer.setSlowFlywheel(shooter.getRpm() < Constants.minShootingRpm);
+            if(shooter != null) indexer.setSlowFlywheel(isSlowFlywheel());
             indexer.update();
         }
 
@@ -79,10 +79,6 @@ public class Superstructure {
     }
 
     public void reset() {
-//        if(compressor != null) {
-//            compressor.stop();
-//        }
-
         if(drive != null) drive.reset();
         if(indexer != null) indexer.reset();
         if(intake != null) intake.reset();
@@ -91,10 +87,16 @@ public class Superstructure {
         if(telescope != null) telescope.reset();
     }
 
+    public void stop() {
+        if(compressor != null) {
+            compressor.stop();
+        }
+    }
+
     /* For communicating */
 
     public boolean isSlowFlywheel() {
-        return shooter.getRpm() < Constants.minShootingRpm;
+        return Math.abs(shooter.getRpmError()) < Constants.minShootingError;
     }
 
     public double getLinearDriveDistance() {

@@ -39,8 +39,8 @@ public class Limelight {
         double x = xd / (1 + k * r2);
         double y = yd / (1 + k * r2);
 
-        double rx = x * Math.cos(.1358) - y * Math.sin(.1358);
-        double ry = x * Math.sin(.1358) + y * Math.cos(.1358);
+        double rx = x * Math.cos(Constants.limelightRotation) - y * Math.sin(Constants.limelightRotation);
+        double ry = x * Math.sin(Constants.limelightRotation) + y * Math.cos(Constants.limelightRotation);
 
         if(testing) {
             x = Debug.getNumber("tx");

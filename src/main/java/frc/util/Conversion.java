@@ -37,7 +37,23 @@ public class Conversion {
         return rgb;
     }
 
-    public static double getHoodAngle(boolean isValidTarget, double distance) {
-        return isValidTarget ? 90 - 180 * Math.atan(distance / 100) / Math.PI : 45;
+    public static double getDesiredHoodAngle(boolean isValidTarget, double ty) {
+        if(!isValidTarget) {
+            return 79.4;
+        } else if(ty < Constants.farShotPitch) {
+            return 35; // TODO: Make this nonconstant
+        } else {
+            return .024065 * ty * ty - .907483 * ty + 47.411007;
+        }
+    }
+
+    public static double getDesiredRpm(boolean isValidTarget, double ty) {
+        if(!isValidTarget) {
+            return Constants.wallDesiredRpm;
+        } else if(ty < Constants.farShotPitch) {
+            return Constants.farDesiredRpm;
+        } else {
+            return Constants.closeDesiredRpm;
+        }
     }
 }

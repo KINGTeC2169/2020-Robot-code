@@ -9,6 +9,7 @@ public class Constants {
     public static final double driveWheelDiameter = 8;
     public static final double limelightDistortion = 2.3964E-4;
     public static final double limelightYOffset = 31;
+    public static final double limelightRotation = .1358;
 
     /* Device configurations */
 
@@ -86,6 +87,7 @@ public class Constants {
     public static final double flywheelP = 0.0005;
     public static final double flywheelD = 0.000;
     public static final double flywheelBase = .5;
+    public static final double flywheelBaseP = .00002;
 
     /* Other constants */
 
@@ -127,9 +129,12 @@ public class Constants {
     public static final double flywheelDeadband = .2;
     public static final double startingHoodAngle = 90;
     public static final double trenchSafeHoodAngle = 25;
-    public static final double minShootingRpm = 4000;
-    public static final double desiredShootingRpm = 6000;
+    public static final double minShootingError = 100;
+    public static final double wallDesiredRpm = 4900;
+    public static final double closeDesiredRpm = 5000;
+    public static final double farDesiredRpm = 6000;
     public static final double hoodAllowedError = 2;
+    public static final double farShotPitch = 20;
 
     // Indexer
     public static final double feederHalfLength = 15000;

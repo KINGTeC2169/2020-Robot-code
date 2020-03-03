@@ -26,6 +26,7 @@ public class Shooter implements Subsystem {
 
     private PD flywheelController;
     private double hoodError = Double.MAX_VALUE;
+    private double flywheelBase = Constants.flywheelBase;
     private boolean forceShoot = false;
     private boolean hoodConfigured = false;
 
@@ -51,7 +52,6 @@ public class Shooter implements Subsystem {
     }
 
     public void aimHood(boolean aim, boolean trenchMode) {
-        aim = true;
         if(hood.isFwdLimitSwitchClosed() == 1) {
             hoodConfigured = false; // Recalibrate if we hit the forward limit switch
         }
@@ -72,16 +72,16 @@ public class Shooter implements Subsystem {
             if(Constants.manualHoodControl) {
                 wantedAngle = sCommand.getWantedAngle();
             } else {
-                double ty = limelight.getCenter().y;
-                wantedAngle = .024065 * ty * ty - .907483 * ty + 47.411007;
+                wantedAngle = Conversion.getDesiredHoodAngle(limelight.isValidTarget(), limelight.getCenter().y);
             }
             double realAngle = Constants.startingHoodAngle - hood.getSelectedSensorPosition() / Constants.ticksPerHoodDegree;
-            SmartDashboard.putNumber("Hood encoder", hood.getSelectedSensorPosition());
-            SmartDashboard.putNumber("Wanted Hood encoder", (Constants.startingHoodAngle - wantedAngle) * Constants.ticksPerHoodDegree);
+
+//            SmartDashboard.putNumber("Hood encoder", hood.getSelectedSensorPosition());
+//            SmartDashboard.putNumber("Wanted Hood encoder", (Constants.startingHoodAngle - wantedAngle) * Constants.ticksPerHoodDegree);
             SmartDashboard.putNumber("Wanted angle", wantedAngle);
             SmartDashboard.putNumber("Real angle", realAngle);
-            hoodError = realAngle - wantedAngle;
 
+            hoodError = realAngle - wantedAngle;
             hood.set(ControlMode.Position, (Constants.startingHoodAngle - wantedAngle) * Constants.ticksPerHoodDegree);
         } else {
             hood.set(ControlMode.PercentOutput, 0);
@@ -92,18 +92,21 @@ public class Shooter implements Subsystem {
         return Conversion.velocityToRpm(master.getSelectedSensorVelocity(0));
     }
 
+    public double getRpmError() {
+        return Conversion.getDesiredRpm(limelight.isValidTarget(), limelight.getCenter().y) - getRpm();
+    }
+
     public boolean isHoodAimed() {
         return hoodConfigured && Math.abs(hoodError) < Constants.hoodAllowedError;
     }
 
-    private double flywheelBase = Constants.flywheelBase;
     @Override
     public void update() {
         // Run flywheel
         if(sCommand.isShooting() || forceShoot) {
-            double error = Constants.desiredShootingRpm - getRpm();
+            double error = getRpmError();
             if(error < 500) {
-                flywheelBase += .00002 * error;
+                flywheelBase += Constants.flywheelBaseP * error;
                 SmartDashboard.putNumber("Flywheel base", flywheelBase);
             } else {
                 flywheelBase = Constants.flywheelBase;
