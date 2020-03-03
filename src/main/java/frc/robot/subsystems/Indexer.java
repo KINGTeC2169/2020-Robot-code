@@ -112,8 +112,8 @@ public class Indexer implements Subsystem {
         // Funnel condition
         if(
                 ballsPlaced() &&
-                balls.size() < 2 && idxCommand.isRunFunnel() ||
-                balls.size() < 3 && isShooting()
+                (balls.size() < 2 && idxCommand.isRunFunnel() ||
+                balls.size() < 3 && isShooting())
         ) {
             funnel.setOutput(.3);
         } else {

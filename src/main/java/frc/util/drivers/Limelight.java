@@ -39,11 +39,14 @@ public class Limelight {
         double x = xd / (1 + k * r2);
         double y = yd / (1 + k * r2);
 
+        double rx = x * Math.cos(.1358) - y * Math.sin(.1358);
+        double ry = x * Math.sin(.1358) + y * Math.cos(.1358);
+
         if(testing) {
             x = Debug.getNumber("tx");
             y= Debug.getNumber("ty");
         }
-        return new Vector2(x, y + Constants.limelightYOffset);
+        return new Vector2(rx, ry + Constants.limelightYOffset);
     }
 
     public static Vector2 undistort(Vector2 v) {

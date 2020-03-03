@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.ShooterCommand;
 import frc.util.*;
@@ -57,6 +58,7 @@ public class Shooter implements Subsystem {
             if(hood.isRevLimit()) {
                 hood.zeroSensor();
                 hoodConfigured = true;
+                DriverStation.reportError("Zeroed Hood!", false);
             }
         } else if(trenchMode) {
             // Ooh yeah it's trench time
@@ -68,7 +70,8 @@ public class Shooter implements Subsystem {
             if(!SmartDashboard.containsKey("Get Wanted Angle")) SmartDashboard.putNumber("Get Wanted Angle", 45);
             double ty = limelight.getCenter().y;
 //            double wantedAngle = 0.159 * ty * ty - 9.499 * ty + 181.02;
-            double wantedAngle = SmartDashboard.getNumber("Get Wanted Angle", 45);
+//            double wantedAngle = SmartDashboard.getNumber("Get Wanted Angle", 45);
+            double wantedAngle = sCommand.getWantedAngle();
             double realAngle = Constants.startingHoodAngle - hood.getSensor() / Constants.ticksPerHoodDegree;
             SmartDashboard.putNumber("Hood encoder", hood.getSensor());
             SmartDashboard.putNumber("Wanted Hood encoder", (Constants.startingHoodAngle - wantedAngle) * Constants.ticksPerHoodDegree);
@@ -90,11 +93,19 @@ public class Shooter implements Subsystem {
         return hoodConfigured && Math.abs(hoodError) < Constants.hoodAllowedError;
     }
 
+    private double flywheelBase = Constants.flywheelBase;
     @Override
     public void update() {
         // Run flywheel
         if(sCommand.isShooting() || forceShoot) {
-            master.setOutput(Constants.flywheelBase + flywheelController.getOutput(Constants.desiredShootingRpm - getRpm()));
+            double error = Constants.desiredShootingRpm - getRpm();
+            if(error < 500) {
+                flywheelBase += .00002 * error;
+                SmartDashboard.putNumber("Flywheel base", flywheelBase);
+            } else {
+                flywheelBase = Constants.flywheelBase;
+            }
+            master.setOutput(flywheelBase + flywheelController.getOutput(error));
 //            master.setEncoderVelocity(Conversion.rpmToVelocity(Constants.desiredShootingRpm));
         } else {
             master.setOutput(0);

@@ -50,9 +50,11 @@ public class Constants {
     /* PID */
 
     // Aiming to vision target
-    public static final double visionDriveP = .03;
-    public static final double visionDriveI = 0;
-    public static final double visionDriveD = .000;
+    public static final double visionTurnOutput = .4;
+    public static final double outsideP = .02;
+    public static final double visionDriveP = .05;
+    public static final double visionDriveI = .00;
+    public static final double visionDriveD = .001;
     public static final double acceptedAimError = 1;
 
     // Getting in range of target
@@ -125,7 +127,7 @@ public class Constants {
     public static final double startingHoodAngle = 90;
     public static final double trenchSafeHoodAngle = 25;
     public static final double minShootingRpm = 4000;
-    public static final double desiredShootingRpm = 5000;
+    public static final double desiredShootingRpm = 6000;
     public static final double hoodAllowedError = 2;
 
     // Indexer

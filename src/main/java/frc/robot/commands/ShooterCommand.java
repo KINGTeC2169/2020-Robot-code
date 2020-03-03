@@ -15,6 +15,7 @@ public class ShooterCommand {
 
     private final Controls controls;
 
+    private double wantedAngle = 45;
     private boolean aimHood = false;
     private boolean shoot = false;
 
@@ -23,8 +24,8 @@ public class ShooterCommand {
     }
 
     protected void teleop() {
-        if(controls.xbox.getAButton()) {
-
+        if(Math.abs(controls.xbox.getRawAxis(1)) > .2) {
+            wantedAngle += .1 * controls.xbox.getRawAxis(1);
         }
     }
 
@@ -67,5 +68,9 @@ public class ShooterCommand {
 
     public void reset() {
         shoot = false;
+    }
+
+    public double getWantedAngle() {
+        return wantedAngle;
     }
 }

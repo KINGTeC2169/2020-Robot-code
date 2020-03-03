@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DriveCommand;
 import frc.robot.states.DriveState;
 import frc.robot.states.RobotState;
@@ -22,7 +24,7 @@ public class Drive implements Subsystem {
     private final Limelight limelight;
     private final DriveState driveState;
     private final NavX navX;
-    private final PID visionDrive;
+    private final MiniPID visionDrive;
     private final PD turnControl;
     private final PD driveControl;
     private final PD turnTowardsZero;
@@ -69,10 +71,15 @@ public class Drive implements Subsystem {
 
         navX = NavX.getInstance();
 
-        visionDrive = new PID(Constants.visionDriveP, Constants.visionDriveI, Constants.visionDriveD);
+        visionDrive = new MiniPID(Constants.visionDriveP, Constants.visionDriveI, Constants.visionDriveD);
+        visionDrive.setSetpoint(0);
         turnControl = new PD(Constants.linearDriveTurnP, Constants.linearDriveTurnD);
         driveControl = new PD(Constants.linearDriveDriveP, Constants.linearDriveDriveD);
         turnTowardsZero = new PD(Constants.alignToGyroP, Constants.alignToGyroD);
+
+        SmartDashboard.putNumber("Vision P", Constants.visionDriveP);
+        SmartDashboard.putNumber("Vision I", Constants.visionDriveI);
+        SmartDashboard.putNumber("Vision D", Constants.visionDriveD);
     }
 
     @Override
@@ -251,10 +258,47 @@ public class Drive implements Subsystem {
     // Aim at the target
     private void visionDrive(double throttle) {
         if(limelight.isValidTarget()) {
-            double output = visionDrive.getOutput(limelight.getCenter().x + 3.5);
-            left.setOutput(throttle + output);
-            right.setOutput(throttle - output);
+            DriverStation.reportWarning(""+SmartDashboard.getNumber("Vision P", Constants.visionDriveP),false);
+            visionDrive.setP(SmartDashboard.getNumber("Vision P", Constants.visionDriveP));
+            visionDrive.setI(SmartDashboard.getNumber("Vision I", Constants.visionDriveI));
+            visionDrive.setD(SmartDashboard.getNumber("Vision D", Constants.visionDriveD));
+            visionDrive.setMaxIOutput(.225);
+            double error = limelight.getCenter().x;
+            double output = Constants.outsideP * -error;
+            if(Math.abs(error) < 4) {
+                SmartDashboard.putString("In PID?", "PID");
+                output = visionDrive.getOutput(error);
+                left.setOutput(throttle - output);
+                right.setOutput(throttle + output);
+                SmartDashboard.putNumber("PID Output", output);
+            }
+            else if(Math.abs(error) < 7 && Math.abs(error) > 2){
+                double val = .2;
+                if (error < 0){
+                    SmartDashboard.putString("In PID?", "1");
+                    left.setOutput(-val);
+                    right.setOutput(val);
+                }
+                else if (error > 0){
+                    SmartDashboard.putString("In PID?", "2");
+                    left.setOutput(val);
+                    right.setOutput(-val);
+                }
+            }
+            else if (error < 0){
+                SmartDashboard.putString("In PID?", "3");
+                left.setOutput(-.25);
+                right.setOutput(.25);
+            }
+            else if (error > 0){
+                SmartDashboard.putString("In PID?", "4");
+                left.setOutput(.25);
+                right.setOutput(-.25);
+            }
+
+            SmartDashboard.putNumber("Error", error);
         } else {
+            visionDrive.reset();
             setOutput(0, 0);
         }
     }
