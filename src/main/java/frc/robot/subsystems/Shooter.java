@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.ShooterCommand;
 import frc.util.*;
@@ -57,11 +56,11 @@ public class Shooter implements Subsystem {
             hoodConfigured = false; // Recalibrate if we hit the forward limit switch
         }
         if(!hoodConfigured) {
+            // Calibrate the hood
             hood.set(ControlMode.PercentOutput, -.5);
             if(hood.isRevLimitSwitchClosed() == 1) {
                 hood.getSelectedSensorPosition(0);
                 hoodConfigured = true;
-                DriverStation.reportError("Zeroed Hood!", false);
             }
         } else if(trenchMode) {
             // Ooh yeah it's trench time
@@ -69,12 +68,13 @@ public class Shooter implements Subsystem {
                 hood.set(ControlMode.PercentOutput, -1);
             }
         } else if(aim) {
-//            double wantedAngle = Conversion.getHoodAngle(limelight.isValidTarget(), limelight.getDistance());
-            if(!SmartDashboard.containsKey("Get Wanted Angle")) SmartDashboard.putNumber("Get Wanted Angle", 45);
-            double ty = limelight.getCenter().y;
-            double wantedAngle = .024065 * ty * ty - .907483 * ty + 47.411007;
-//            double wantedAngle = SmartDashboard.getNumber("Get Wanted Angle", 45);
-//            double wantedAngle = sCommand.getWantedAngle();
+            double wantedAngle;
+            if(Constants.manualHoodControl) {
+                wantedAngle = sCommand.getWantedAngle();
+            } else {
+                double ty = limelight.getCenter().y;
+                wantedAngle = .024065 * ty * ty - .907483 * ty + 47.411007;
+            }
             double realAngle = Constants.startingHoodAngle - hood.getSelectedSensorPosition() / Constants.ticksPerHoodDegree;
             SmartDashboard.putNumber("Hood encoder", hood.getSelectedSensorPosition());
             SmartDashboard.putNumber("Wanted Hood encoder", (Constants.startingHoodAngle - wantedAngle) * Constants.ticksPerHoodDegree);

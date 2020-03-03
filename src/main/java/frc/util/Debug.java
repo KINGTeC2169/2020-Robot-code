@@ -1,42 +1,43 @@
 package frc.util;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.states.RobotState;
-import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Superstructure;
 import frc.util.drivers.ColorSensor;
 import frc.util.drivers.Limelight;
 import frc.util.geometry.Vector2;
 
-import java.util.ArrayList;
-
 public class Debug {
     // Vision
     private static final boolean targetInformation = true;
-    private static final boolean targetCorners = true;
-    private static final boolean visionPositionEstimate = true;
+    private static final boolean targetCorners = false;
+    private static final boolean visionPositionEstimate = false;
 
     // Color Sensor
-    private static final boolean colorSensor = true;
+    private static final boolean colorSensor = false;
 
     // Robot state
     private static final boolean positionEstimate = true;
 
     public static void debugAll() {
+        flywheel(Superstructure.getInstance());
         vision(Limelight.getInstance());
         colorSensor(ColorSensor.getInstance());
         state(RobotState.getInstance());
         out("Balls in feeder", Superstructure.getInstance().getBallsInFeeder());
     }
 
+    public static void flywheel(Superstructure superstructure) {
+        out("Flywheel Up to Speed", superstructure.isSlowFlywheel());
+    }
+
     public static void vision(Limelight limelight) {
         if(targetInformation) {
             out("Center", limelight.getCenter());
-//            out("Valid Target?", limelight.isValidTarget());
+            out("Valid Target?", limelight.isValidTarget());
         }
-        /*
+
         if(targetCorners) {
             Vector2[] corners = limelight.getCorners();
             for(int i = 0; i < corners.length; i++) {
@@ -48,7 +49,6 @@ public class Debug {
             out("Position", limelight.getPosition());
             out("Rotation", limelight.getRotation());
         }
-        */
     }
 
     public static void colorSensor(ColorSensor colorSensor) {

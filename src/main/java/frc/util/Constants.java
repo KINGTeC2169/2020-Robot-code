@@ -102,6 +102,7 @@ public class Constants {
     public static final boolean usingColorSensor = false;
     public static final boolean usingControls = true;
     public static final boolean usingLimelight = true;
+    public static final boolean manualHoodControl = false;
 
     public static final double trenchModeThreshold = .5;
 
@@ -135,12 +136,4 @@ public class Constants {
     public static final double feederLength = 40000;
     public static final double feederToFlywheelLength = 56000;
     public static final double feederIntakeDelay = 2.5; // In seconds
-
-    // Predicting position
-    public static final boolean encoderPositionPrediction = true;
-    public static final boolean visionPositionPrediction = false;
-    // Any change in position greater than this many inches won't be counted
-    public static final double maxPositionChange = 10;
-    // Once we've hit this many similar outliers, they're no longer outliers
-    public static final int consecutiveOutliers = 50;
 }

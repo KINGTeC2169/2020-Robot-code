@@ -93,6 +93,10 @@ public class Superstructure {
 
     /* For communicating */
 
+    public boolean isSlowFlywheel() {
+        return shooter.getRpm() < Constants.minShootingRpm;
+    }
+
     public double getLinearDriveDistance() {
         if(drive == null) {
             return 0;
