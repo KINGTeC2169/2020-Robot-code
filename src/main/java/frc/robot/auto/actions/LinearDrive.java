@@ -1,9 +1,10 @@
 package frc.robot.auto.actions;
 
+import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.SPI;
 import frc.robot.commands.CommandMachine;
 import frc.robot.commands.DriveCommand;
 import frc.robot.subsystems.Superstructure;
-import frc.util.drivers.NavX;
 
 public class LinearDrive implements Action {
     private final Superstructure superstructure;
@@ -13,7 +14,7 @@ public class LinearDrive implements Action {
     private final double turnMultiplier;
 
     public LinearDrive(double distance) {
-        this(distance, NavX.getInstance().getAngle(), 1);
+        this(distance, new AHRS(SPI.Port.kMXP, (byte) 200).getAngle(), 1);
     }
 
     public LinearDrive(double distance, double direction) {

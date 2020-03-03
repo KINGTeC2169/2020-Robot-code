@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.states.IntakeState;
 import frc.robot.states.RobotState;
@@ -7,7 +9,6 @@ import frc.util.ActuatorMap;
 import frc.util.Constants;
 import frc.util.drivers.ControllerFactory;
 import frc.util.drivers.DSolenoid;
-import frc.util.drivers.Victor;
 
 public class Intake implements Subsystem {
     private static Intake instance;
@@ -24,7 +25,7 @@ public class Intake implements Subsystem {
     private IntakeCommand iCommand;
     private IntakeState state;
     private DSolenoid piston;
-    private Victor victor;
+    private VictorSPX victor;
 
     public Intake(IntakeCommand iCommand) {
         this.iCommand = iCommand;
@@ -33,7 +34,6 @@ public class Intake implements Subsystem {
         piston.setName("Intake Sol");
         piston.set(false);
         victor = ControllerFactory.victor(ActuatorMap.intake, true);
-        victor.setName("Intake");
     }
 
     @Override
@@ -42,13 +42,13 @@ public class Intake implements Subsystem {
 
         if(iCommand.exhaust()) {
             state.setRunning(false);
-            victor.setOutput(-1);
+            victor.set(ControlMode.PercentOutput, -1);
         } else if(iCommand.intake()) {
             state.setRunning(true);
-            victor.setOutput(.8);
+            victor.set(ControlMode.PercentOutput, .8);
         } else {
             state.setRunning(false);
-            victor.setOutput(0);
+            victor.set(ControlMode.PercentOutput, 0);
         }
     }
 

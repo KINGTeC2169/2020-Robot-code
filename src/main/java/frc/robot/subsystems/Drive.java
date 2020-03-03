@@ -1,6 +1,10 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DriveCommand;
 import frc.robot.states.DriveState;
@@ -23,13 +27,13 @@ public class Drive implements Subsystem {
     private final DriveCommand dCommand;
     private final Limelight limelight;
     private final DriveState driveState;
-    private final NavX navX;
+    private final AHRS navX;
     private final MiniPID visionDrive;
     private final PD turnControl;
     private final PD driveControl;
     private final PD turnTowardsZero;
-    private final Talon left;
-    private final Talon right;
+    private final TalonSRX left;
+    private final TalonSRX right;
     private final DSolenoid dog;
 
     private boolean highGear = false;
@@ -66,10 +70,7 @@ public class Drive implements Subsystem {
         left.setSensorPhase(false);
         right.setSensorPhase(true);
 
-        left.setName("Left Drive");
-        right.setName("Right Drive");
-
-        navX = NavX.getInstance();
+        navX = new AHRS(SPI.Port.kMXP, (byte) 200);
 
         visionDrive = new MiniPID(Constants.visionDriveP, Constants.visionDriveI, Constants.visionDriveD);
         visionDrive.setSetpoint(0);
@@ -116,8 +117,6 @@ public class Drive implements Subsystem {
 
     @Override
     public void reset() {
-        left.reset();
-        right.reset();
         dog.set(false);
         highGear = false;
     }
@@ -251,8 +250,8 @@ public class Drive implements Subsystem {
             rightPwm = -1;
         }
 
-        left.setOutput(leftPwm);
-        right.setOutput(rightPwm);
+        left.set(ControlMode.PercentOutput, leftPwm);
+        right.set(ControlMode.PercentOutput, rightPwm);
     }
 
     // Aim at the target
@@ -268,32 +267,32 @@ public class Drive implements Subsystem {
             if(Math.abs(error) < 4) {
                 SmartDashboard.putString("In PID?", "PID");
                 output = visionDrive.getOutput(error);
-                left.setOutput(throttle - output);
-                right.setOutput(throttle + output);
+                left.set(ControlMode.PercentOutput, throttle - output);
+                right.set(ControlMode.PercentOutput, throttle + output);
                 SmartDashboard.putNumber("PID Output", output);
             }
             else if(Math.abs(error) < 7 && Math.abs(error) > 2){
                 double val = .2;
                 if (error < 0){
                     SmartDashboard.putString("In PID?", "1");
-                    left.setOutput(-val);
-                    right.setOutput(val);
+                    left.set(ControlMode.PercentOutput, -val);
+                    right.set(ControlMode.PercentOutput, val);
                 }
                 else if (error > 0){
                     SmartDashboard.putString("In PID?", "2");
-                    left.setOutput(val);
-                    right.setOutput(-val);
+                    left.set(ControlMode.PercentOutput, val);
+                    right.set(ControlMode.PercentOutput, -val);
                 }
             }
             else if (error < 0){
                 SmartDashboard.putString("In PID?", "3");
-                left.setOutput(-.25);
-                right.setOutput(.25);
+                left.set(ControlMode.PercentOutput, -.25);
+                right.set(ControlMode.PercentOutput, .25);
             }
             else if (error > 0){
                 SmartDashboard.putString("In PID?", "4");
-                left.setOutput(.25);
-                right.setOutput(-.25);
+                left.set(ControlMode.PercentOutput, .25);
+                right.set(ControlMode.PercentOutput, -.25);
             }
 
             SmartDashboard.putNumber("Error", error);
@@ -306,21 +305,21 @@ public class Drive implements Subsystem {
     // Rotates the robot to drive some error to zero
     private void rotateDrive(double throttle, double error) {
         double output = visionDrive.getOutput(error);
-        left.setOutput(throttle - output);
-        right.setOutput(throttle + output);
+        left.set(ControlMode.PercentOutput, throttle - output);
+        right.set(ControlMode.PercentOutput, throttle + output);
     }
 
     private void setOutput(double l, double r) {
-        left.setOutput(l);
-        right.setOutput(r);
+        left.set(ControlMode.PercentOutput, l);
+        right.set(ControlMode.PercentOutput, r);
     }
 
     private double getLeftRotations() {
-        return Conversion.encoderTicksToRotations(left.getSensor());
+        return Conversion.encoderTicksToRotations(left.getSelectedSensorPosition(0));
     }
 
     private double getRightRotations() {
-        return Conversion.encoderTicksToRotations(right.getSensor());
+        return Conversion.encoderTicksToRotations(right.getSelectedSensorPosition(0));
     }
 
     private double getAngle() {

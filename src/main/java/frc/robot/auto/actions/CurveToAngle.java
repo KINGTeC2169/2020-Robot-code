@@ -1,12 +1,13 @@
 package frc.robot.auto.actions;
 
+import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.SPI;
 import frc.robot.commands.CommandMachine;
 import frc.robot.commands.DriveCommand;
-import frc.util.drivers.NavX;
 
 public class CurveToAngle implements Action {
     private final DriveCommand dCommand;
-    private final NavX navX;
+    private final AHRS navX;
     private final double angle;
     private final double error;
     private final double throttle;
@@ -16,7 +17,7 @@ public class CurveToAngle implements Action {
 
     public CurveToAngle(double angle, double error, double throttle, double wheel) {
         dCommand = CommandMachine.getInstance().getDriveCommand();
-        navX = NavX.getInstance();
+        navX = new AHRS(SPI.Port.kMXP, (byte) 200);
         this.angle = angle;
         this.error = error;
         this.throttle = throttle;

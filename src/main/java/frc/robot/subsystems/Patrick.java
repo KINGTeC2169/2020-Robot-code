@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import frc.robot.commands.PatrickCommand;
 import frc.util.ActuatorMap;
 import frc.util.Constants;
@@ -7,7 +9,6 @@ import frc.util.Debug;
 import frc.util.drivers.ColorSensor;
 import frc.util.drivers.ControllerFactory;
 import frc.util.drivers.DStation;
-import frc.util.drivers.Talon;
 
 public class Patrick implements Subsystem {
     private static Patrick instance;
@@ -23,7 +24,7 @@ public class Patrick implements Subsystem {
 
     private final PatrickCommand pCommand;
     private final ColorSensor colorSensor;
-    private Talon talon;
+    private TalonSRX talon;
     private int slices = 0;
     private ColorSensor.CpColor prevColor;
     private ColorSensor.CpColor desiredColor;
@@ -34,7 +35,6 @@ public class Patrick implements Subsystem {
         this.pCommand = pCommand;
         colorSensor = ColorSensor.getInstance();
         talon = ControllerFactory.masterTalon(ActuatorMap.patrick, false);
-        talon.setName("Patrick");
     }
 
     public void rotationalControl(ColorSensor.CpColor detectedColor) {
@@ -62,9 +62,9 @@ public class Patrick implements Subsystem {
 
         // Spin the wheel
         if (slices < 25) {
-            talon.setOutput(1);
+            talon.set(ControlMode.PercentOutput, 1);
         } else {
-            talon.setOutput(0);
+            talon.set(ControlMode.PercentOutput, 0);
         }
     }
 
@@ -97,13 +97,13 @@ public class Patrick implements Subsystem {
 
         // Determine which direction to move control panel
         if(detectedIndex - desiredIndex == 1 || detectedIndex - desiredIndex == -3) {
-            talon.setOutput(1);
+            talon.set(ControlMode.PercentOutput, 1);
         } else if(detectedIndex - desiredIndex == 3 || detectedIndex - desiredIndex == -1) {
-            talon.setOutput(-1);
+            talon.set(ControlMode.PercentOutput, -1);
         } else if(detectedIndex == desiredIndex) {
-            talon.setOutput(0);
+            talon.set(ControlMode.PercentOutput, 0);
         } else {
-            talon.setOutput(-1);
+            talon.set(ControlMode.PercentOutput, -1);
         }
         Debug.putNumber("Control Panel Slices", slices);
     }
@@ -117,7 +117,7 @@ public class Patrick implements Subsystem {
         } else if(pCommand.isPositionalControl()) {
             positionalControl(detectedColor);
         } else {
-            talon.setOutput(0);
+            talon.set(ControlMode.PercentOutput, 0);
         }
         prevColor = detectedColor;
     }

@@ -1,5 +1,7 @@
 package frc.robot.auto.actions;
 
+import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.SPI;
 import frc.robot.commands.CommandMachine;
 import frc.robot.commands.DriveCommand;
 import frc.robot.subsystems.Superstructure;
@@ -7,7 +9,6 @@ import frc.util.BallTracker;
 import frc.util.Constants;
 import frc.util.Conversion;
 import frc.util.Debug;
-import frc.util.drivers.NavX;
 
 import java.text.DecimalFormat;
 
@@ -36,7 +37,7 @@ public class ChaseBall implements Action {
     private final Superstructure superstructure;
     private final BallTracker ballTracker;
     private final DriveCommand dCommand;
-    private final NavX navX;
+    private final AHRS navX;
     private final double maxD;
     private final double gamma;
     private final double beta;
@@ -67,7 +68,7 @@ public class ChaseBall implements Action {
         ballTracker = BallTracker.getInstance();
         CommandMachine commandMachine = CommandMachine.getInstance();
         dCommand = commandMachine.getDriveCommand();
-        this.navX = NavX.getInstance();
+        navX = new AHRS(SPI.Port.kMXP, (byte) 200);
         this.beta = beta;
         this.k = k;
         this.maxD = maxD;

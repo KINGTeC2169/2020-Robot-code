@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.ShooterCommand;
@@ -20,8 +22,8 @@ public class Shooter implements Subsystem {
 
     private final ShooterCommand sCommand;
     private final Limelight limelight;
-    private final Talon master;
-    private final Talon hood;
+    private final TalonSRX master;
+    private final TalonSRX hood;
 
     private PD flywheelController;
     private double hoodError = Double.MAX_VALUE;
@@ -39,12 +41,10 @@ public class Shooter implements Subsystem {
         master.setSensorPhase(true);
         hood.setSensorPhase(true);
 
-        hood.setPID(Constants.hoodActuationP, Constants.hoodActuationI, Constants.hoodActuationD);
-//        master.setPID(Constants.flywheelP, 0, Constants.flywheelD);
+        hood.config_kP(0, Constants.hoodActuationP, Constants.talonTimeoutMs);
+        hood.config_kI(0, Constants.hoodActuationI, Constants.talonTimeoutMs);
+        hood.config_kD(0, Constants.hoodActuationD, Constants.talonTimeoutMs);
         flywheelController = new PD(Constants.flywheelP, Constants.flywheelD);
-
-        master.setName("Flywheel");
-        hood.setName("Flywheel Hood");
     }
 
     public void forceShoot(boolean on) {
@@ -53,40 +53,43 @@ public class Shooter implements Subsystem {
 
     public void aimHood(boolean aim, boolean trenchMode) {
         aim = true;
+        if(hood.isFwdLimitSwitchClosed() == 1) {
+            hoodConfigured = false; // Recalibrate if we hit the forward limit switch
+        }
         if(!hoodConfigured) {
-            hood.setOutput(-.5);
-            if(hood.isRevLimit()) {
-                hood.zeroSensor();
+            hood.set(ControlMode.PercentOutput, -.5);
+            if(hood.isRevLimitSwitchClosed() == 1) {
+                hood.getSelectedSensorPosition(0);
                 hoodConfigured = true;
                 DriverStation.reportError("Zeroed Hood!", false);
             }
         } else if(trenchMode) {
             // Ooh yeah it's trench time
-            if(Constants.startingHoodAngle + Conversion.encoderTicksToDegrees(hood.getSensor()) > Constants.trenchSafeHoodAngle) {
-                hood.setOutput(-1);
+            if(Constants.startingHoodAngle + Conversion.encoderTicksToDegrees(hood.getSelectedSensorPosition(0)) > Constants.trenchSafeHoodAngle) {
+                hood.set(ControlMode.PercentOutput, -1);
             }
         } else if(aim) {
 //            double wantedAngle = Conversion.getHoodAngle(limelight.isValidTarget(), limelight.getDistance());
             if(!SmartDashboard.containsKey("Get Wanted Angle")) SmartDashboard.putNumber("Get Wanted Angle", 45);
             double ty = limelight.getCenter().y;
-//            double wantedAngle = 0.159 * ty * ty - 9.499 * ty + 181.02;
+            double wantedAngle = .024065 * ty * ty - .907483 * ty + 47.411007;
 //            double wantedAngle = SmartDashboard.getNumber("Get Wanted Angle", 45);
-            double wantedAngle = sCommand.getWantedAngle();
-            double realAngle = Constants.startingHoodAngle - hood.getSensor() / Constants.ticksPerHoodDegree;
-            SmartDashboard.putNumber("Hood encoder", hood.getSensor());
+//            double wantedAngle = sCommand.getWantedAngle();
+            double realAngle = Constants.startingHoodAngle - hood.getSelectedSensorPosition() / Constants.ticksPerHoodDegree;
+            SmartDashboard.putNumber("Hood encoder", hood.getSelectedSensorPosition());
             SmartDashboard.putNumber("Wanted Hood encoder", (Constants.startingHoodAngle - wantedAngle) * Constants.ticksPerHoodDegree);
             SmartDashboard.putNumber("Wanted angle", wantedAngle);
             SmartDashboard.putNumber("Real angle", realAngle);
             hoodError = realAngle - wantedAngle;
 
-            hood.setDesiredPosition((Constants.startingHoodAngle - wantedAngle) * Constants.ticksPerHoodDegree);
+            hood.set(ControlMode.Position, (Constants.startingHoodAngle - wantedAngle) * Constants.ticksPerHoodDegree);
         } else {
-            hood.setOutput(0);
+            hood.set(ControlMode.PercentOutput, 0);
         }
     }
 
     public double getRpm() {
-        return Conversion.velocityToRpm(master.getVelocity());
+        return Conversion.velocityToRpm(master.getSelectedSensorVelocity(0));
     }
 
     public boolean isHoodAimed() {
@@ -105,13 +108,12 @@ public class Shooter implements Subsystem {
             } else {
                 flywheelBase = Constants.flywheelBase;
             }
-            master.setOutput(flywheelBase + flywheelController.getOutput(error));
-//            master.setEncoderVelocity(Conversion.rpmToVelocity(Constants.desiredShootingRpm));
+            master.set(ControlMode.PercentOutput, flywheelBase + flywheelController.getOutput(error));
         } else {
-            master.setOutput(0);
+            master.set(ControlMode.PercentOutput, 0);
         }
 
-        SmartDashboard.putNumber("Hood Error", hood.talon.getClosedLoopError());
+        SmartDashboard.putNumber("Hood Error", hood.getClosedLoopError());
 
         SmartDashboard.putNumber("RPM", getRpm());
 
@@ -121,7 +123,7 @@ public class Shooter implements Subsystem {
 
     @Override
     public void reset() {
-        master.setOutput(0);
+        master.set(ControlMode.PercentOutput, 0);
         hoodConfigured = false;
     }
 }

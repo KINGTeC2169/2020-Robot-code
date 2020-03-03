@@ -1,35 +1,36 @@
 package frc.util.drivers;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import frc.util.Constants;
 
 public class ControllerFactory {
-    public static Talon masterTalon(int id, boolean inverted) {
-        Talon talon = new Talon(id);
+    public static TalonSRX masterTalon(int id, boolean inverted) {
+        TalonSRX talon = new TalonSRX(id);
         talon.setInverted(inverted);
-        if(!Constants.usingTestBed) {
-            talon.talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
-        }
+        talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
         return talon;
     }
 
-    public static Talon slaveTalon(int id, boolean inverted, Talon master) {
-        Talon talon = new Talon(id);
+    public static TalonSRX slaveTalon(int id, boolean inverted, TalonSRX master) {
+        TalonSRX talon = new TalonSRX(id);
         talon.setInverted(inverted);
-        talon.makeFollower(master);
+        talon.set(ControlMode.Follower, master.getDeviceID());
         return talon;
     }
 
-    public static Victor victor(int id, boolean inverted) {
-        Victor victor = new Victor(id);
+    public static VictorSPX victor(int id, boolean inverted) {
+        VictorSPX victor = new VictorSPX(id);
         victor.setInverted(inverted);
         return victor;
     }
 
-    public static Victor slaveVictor(int id, boolean inverted, Talon master) {
-        Victor victor = new Victor(id);
+    public static VictorSPX slaveVictor(int id, boolean inverted, TalonSRX master) {
+        VictorSPX victor = new VictorSPX(id);
         victor.setInverted(inverted);
-        victor.makeFollower(master);
+        victor.follow(master);
         return victor;
     }
 }

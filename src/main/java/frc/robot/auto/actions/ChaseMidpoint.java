@@ -1,19 +1,19 @@
 package frc.robot.auto.actions;
 
+import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.SPI;
 import frc.robot.commands.CommandMachine;
 import frc.robot.commands.DriveCommand;
-import frc.robot.commands.IntakeCommand;
 import frc.util.BallTracker;
 import frc.util.Constants;
 import frc.util.Conversion;
-import frc.util.drivers.NavX;
 
 public class ChaseMidpoint implements Action {
 
     private final GhostDrive ghostDrive;
     private final BallTracker ballTracker;
     private final DriveCommand dCommand;
-    private final NavX navX;
+    private final AHRS navX;
     private final double maxD;
     private final double gamma;
     private final double hs; // Horizontal shift
@@ -42,7 +42,7 @@ public class ChaseMidpoint implements Action {
         ballTracker = BallTracker.getInstance();
         CommandMachine commandMachine = CommandMachine.getInstance();
         dCommand = commandMachine.getDriveCommand();
-        this.navX = NavX.getInstance();
+        this.navX = new AHRS(SPI.Port.kMXP, (byte) 200);
         this.maxD = maxD;
         this.gamma = gamma;
         this.hs = hs;
