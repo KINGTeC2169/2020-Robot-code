@@ -141,4 +141,5 @@ public class Constants {
     public static final double feederLength = 40000;
     public static final double feederToFlywheelLength = 56000;
     public static final double feederIntakeDelay = 2.5; // In seconds
+    public static final double antiBounce = 5;
 }

@@ -7,6 +7,9 @@ import frc.util.Debug;
 public class DInput {
     private final boolean testing;
     private final DigitalInput dinput;
+
+    private boolean realState = false;
+    private double loopsWithNewState = 0;
     private String name;
 
     public DInput(int channel) {
@@ -17,7 +20,12 @@ public class DInput {
     public boolean get() {
         if(!testing) {
             Debug.putBoolean(name, dinput.get());
-            return dinput.get();
+            if(dinput.get() != realState && ++loopsWithNewState >= Constants.antiBounce) {
+                realState = dinput.get();
+            } else {
+                loopsWithNewState = 0;
+            }
+            return realState;
         } else if(name != null) {
             return Debug.getBoolean(name);
         }
