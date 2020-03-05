@@ -20,7 +20,7 @@ public class DInput {
     public boolean get() {
         if(!testing) {
             Debug.putBoolean(name, dinput.get());
-            if(dinput.get() != realState && ++loopsWithNewState >= Constants.antiBounce) {
+            if(dinput.get() != realState) {
                 realState = dinput.get();
             } else {
                 loopsWithNewState = 0;

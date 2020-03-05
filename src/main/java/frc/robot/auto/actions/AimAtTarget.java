@@ -1,5 +1,6 @@
 package frc.robot.auto.actions;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.CommandMachine;
 import frc.robot.commands.DriveCommand;
 import frc.util.Constants;
@@ -10,6 +11,9 @@ public class AimAtTarget implements Action {
 
     private final DriveCommand dCommand;
     private final Limelight limelight;
+
+    private final int minimumAimedCycles = 10;
+    private int aimedCycles = 0;
 
     public AimAtTarget() {
         dCommand = CommandMachine.getInstance().getDriveCommand();
@@ -50,6 +54,16 @@ public class AimAtTarget implements Action {
 
     @Override
     public boolean isFinished() {
-        return limelight.isValidTarget() && Math.abs(limelight.getCenter().x) < Constants.acceptedAimError;
+//        SmartDashboard.putNumber("aimed cycles", aimedCycles);
+        if(limelight.isValidTarget() && Math.abs(limelight.getCenter().x) < Constants.acceptedAimError) {
+            aimedCycles++;
+        } else {
+            aimedCycles = 0;
+        }
+        if(aimedCycles >= minimumAimedCycles) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

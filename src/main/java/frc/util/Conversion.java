@@ -41,7 +41,7 @@ public class Conversion {
         if(!isValidTarget) {
             return 79.4;
         } else if(ty < Constants.farShotPitch) {
-            return 35; // TODO: Make this nonconstant
+            return 30.5;
         } else {
             return .024065 * ty * ty - .907483 * ty + 47.411007;
         }

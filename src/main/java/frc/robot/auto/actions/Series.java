@@ -20,7 +20,7 @@ public class Series implements Action {
     @Override
     public void run() {
         if(stopped) return;
-        while(idx < actions.length && actions[idx].isFinished()) {
+        if(idx < actions.length && actions[idx].isFinished()) {
             actions[idx].stop();
             idx++;
             if(idx < actions.length) {

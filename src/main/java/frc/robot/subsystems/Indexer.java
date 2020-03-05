@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.IndexerCommand;
 import frc.util.ActuatorMap;
 import frc.util.Constants;
@@ -32,6 +33,7 @@ public class Indexer implements Subsystem {
     private boolean enterSensorActivated = true;
     private boolean exitSensorActivated = true;
     private boolean shooting = false;
+    private boolean shotABall = false;
     private enum LoadMode {
             halfLoad, fullLoad
     }
@@ -65,7 +67,7 @@ public class Indexer implements Subsystem {
     }
 
     public boolean isShooting() {
-        if(balls.size() != 0 && idxCommand.isShoot() && !slowFlywheel) {
+        if(balls.size() != 0 && idxCommand.isShoot()){
             return shooting = true;
         } else {
             return shooting;
@@ -85,9 +87,13 @@ public class Indexer implements Subsystem {
             shooting = false;
             balls.remove(0);
             exitSensorReleased = true;
+            shotABall = true;
         }
         enterSensorActivated = indexerEnter.get();
         exitSensorActivated = indexerExit.get();
+
+//        SmartDashboard.putBoolean("Exit Sensor State", exitSensorActivated);
+//        SmartDashboard.putBoolean("Enter Sensor State", enterSensorActivated);
 
         // Update load mode
         if(enterSensorReleased || exitSensorReleased) {
@@ -105,16 +111,24 @@ public class Indexer implements Subsystem {
         }
         lastSensor = feeder.getSelectedSensorPosition(0);
 
+//        SmartDashboard.putNumber("Balls.size()", balls.size());
+//        SmartDashboard.putBoolean("ballsPlaced()", ballsPlaced());
+//        SmartDashboard.putBoolean("idxCommand.isShoot()", idxCommand.isShoot());
         // Funnel condition
         if(
                 ballsPlaced() &&
                 (balls.size() < 2 && idxCommand.isRunFunnel() ||
-                balls.size() < 3 && isShooting())
+                balls.size() < 3 && isShooting() ||
+                balls.size() == 0 && idxCommand.isShoot())
         ) {
             funnel.set(ControlMode.PercentOutput, .3);
+//            SmartDashboard.putString("Funnel Status", "Line 119");
         } else {
             funnel.set(ControlMode.PercentOutput, 0);
+//            SmartDashboard.putString("Funnel Status", "Line 122");
         }
+
+//        SmartDashboard.putBoolean("isShooting", isShooting());
 
         // Feeder condition
         if(
@@ -123,13 +137,16 @@ public class Indexer implements Subsystem {
                 isShooting() ||
                 balls.size() == 0 && idxCommand.isShoot()
         ) {
+//            SmartDashboard.putString("Feeder Status", "Line 132");
             feeder.set(ControlMode.PercentOutput, .3);
         } else {
+//            SmartDashboard.putString("Feeder Status", "Line 135");
             feeder.set(ControlMode.PercentOutput, 0);
         }
     }
 
     private boolean ballsPlaced() {
+//        SmartDashboard.putString("Load Number", loadMode.toString());
         if(balls.size() == 0) {
             return true;
         } else if(loadMode == LoadMode.halfLoad) {
@@ -141,8 +158,13 @@ public class Indexer implements Subsystem {
         }
     }
 
+    public boolean isShotABall() {
+        return shotABall;
+    }
+
     @Override
     public void reset() {
+        shotABall = false;
         enterSensorActivated = true;
         exitSensorActivated = false;
         loadMode = LoadMode.halfLoad;

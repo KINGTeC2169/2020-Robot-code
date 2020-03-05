@@ -30,11 +30,9 @@ public class ShootBalls implements Action {
     @Override
     public void run() {
         sCommand.aimHood(true);
+        aim.run();
         if(!aimed && aim.isFinished()) {
-            aim.stop();
             aimed = true;
-        } else if(!aimed) {
-            aim.run();
         }
         if(superstructure.isHoodAimed() && aimed) {
             idxCommand.shoot();
@@ -55,6 +53,6 @@ public class ShootBalls implements Action {
 
     @Override
     public boolean isFinished() {
-        return superstructure.getBallsInFeeder() == 0;
+        return superstructure.getBallsInFeeder() == 0 && superstructure.isShotABall();
     }
 }

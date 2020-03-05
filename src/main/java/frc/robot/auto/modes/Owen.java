@@ -1,8 +1,6 @@
 package frc.robot.auto.modes;
 
-import frc.robot.auto.actions.LinearDrive;
-import frc.robot.auto.actions.Series;
-import frc.robot.auto.actions.ShootBalls;
+import frc.robot.auto.actions.*;
 import frc.robot.commands.CommandMachine;
 import frc.robot.subsystems.Superstructure;
 
@@ -17,7 +15,8 @@ public class Owen implements Mode {
     public Owen() {
         series = new Series(
                 new ShootBalls(),
-                new LinearDrive(48, 0)
+                new Wait(.5),
+                new TimedDrive(0.5)
         );
     }
 

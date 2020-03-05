@@ -1,21 +1,23 @@
 package frc.robot.auto.actions;
 
-public class Wait implements Action {
-    private int loops = 0;
-    private int seconds = 0;
+import edu.wpi.first.wpilibj.Timer;
 
-    public Wait(int seconds) {
+public class Wait implements Action {
+    private Timer timer;
+    private double seconds;
+
+    public Wait(double seconds) {
+        timer = new Timer();
         this.seconds = seconds;
     }
 
     @Override
     public void start() {
-
+        timer.start();
     }
 
     @Override
     public void run() {
-        loops++;
     }
 
     @Override
@@ -25,6 +27,6 @@ public class Wait implements Action {
 
     @Override
     public boolean isFinished() {
-        return loops * 50 >= seconds;
+        return timer.get() >= seconds;
     }
 }

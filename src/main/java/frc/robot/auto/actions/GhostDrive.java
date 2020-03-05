@@ -21,7 +21,7 @@ public class GhostDrive extends Ghost {
 
     @Override
     public boolean isFinished() {
-        System.out.println(backwards + " " + superstructure.getDriveDistance() + " " + startingDistance + " " + distance);
+//        System.out.println(backwards + " " + superstructure.getDriveDistance() + " " + startingDistance + " " + distance);
         return backwards != superstructure.getDriveDistance() - startingDistance > distance;
     }
 }

@@ -18,7 +18,7 @@ public class PD {
             lastError = error;
         }
         double output = P * error + D * (lastError - error) * 50;
-        System.out.println(lastError - error);
+//        System.out.println(lastError - error);
         lastError = error;
         return output;
     }

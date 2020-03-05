@@ -6,14 +6,14 @@ public class ActuatorMap {
     public static final int indexerSensorEnter = 1;
 
     // PCM
-    public static final int dogExtend = 0;
-    public static final int dogRetract = 2;
-    public static final int intakeExtend = 1;
-    public static final int intakeRetract = 5;
-    public static final int climberExtend = 3;
-    public static final int climberRetract = 4;
-    public static final int pawlExtend = 6;
-    public static final int pawlRetract = 7;
+    public static final int dogExtend = 2;
+    public static final int dogRetract = 5;
+    public static final int intakeExtend = 4;
+    public static final int intakeRetract = 3;
+    public static final int climberExtend = 0;
+    public static final int climberRetract = 7;
+    public static final int pawlExtend = 1;
+    public static final int pawlRetract = 6;
 
     // PDP
     public static final int flywheelSlave = 1;

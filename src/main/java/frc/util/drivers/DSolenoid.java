@@ -1,34 +1,27 @@
 package frc.util.drivers;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.Solenoid;
 import frc.util.ActuatorMap;
-import frc.util.Constants;
-import frc.util.Debug;
 
 public class DSolenoid {
-    private DoubleSolenoid solenoid;
-    private String name;
-    private final boolean testing;
 
-    public DSolenoid(int extend, int retract) {
-        testing = Constants.usingTestBed;
-        if(!testing) {
-            solenoid = new DoubleSolenoid(ActuatorMap.pcm, extend, retract);
+    private DoubleSolenoid sol;
+
+    public DSolenoid(int input, int output){
+        sol = new DoubleSolenoid(ActuatorMap.pcm, input, output);
+    }
+
+    public void setName(String s){
+
+    }
+
+    public void set(boolean extended){
+        if(extended){
+            sol.set(DoubleSolenoid.Value.kForward);
+        }
+        else{
+            sol.set(DoubleSolenoid.Value.kReverse);
         }
     }
 
-    public void set(boolean extend) {
-        DoubleSolenoid.Value value = extend ? DoubleSolenoid.Value.kForward : DoubleSolenoid.Value.kReverse;
-        if(!testing) {
-            solenoid.set(value);
-        }
-        if(name != null) {
-            Debug.putBoolean(name, extend);
-        }
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }

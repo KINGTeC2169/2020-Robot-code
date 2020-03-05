@@ -53,8 +53,8 @@ public class Constants {
     // Aiming to vision target
     public static final double visionTurnOutput = .4;
     public static final double outsideP = .02;
-    public static final double visionDriveP = .05;
-    public static final double visionDriveI = .00;
+    public static final double visionDriveP = .07;
+    public static final double visionDriveI = .00001;
     public static final double visionDriveD = .001;
     public static final double acceptedAimError = 1;
 
@@ -80,8 +80,9 @@ public class Constants {
 
     // Hood actuation
     public static final double hoodActuationP = .3;
-    public static final double hoodActuationD = 0.010;
-    public static final double hoodActuationI = 0.0005;
+    public static final double hoodActuationD = 0.00001;
+    public static final double hoodActuationI = 0.0000;
+    public static final double hoodActuationF = 0;
 
     // Flywheel
     public static final double flywheelP = 0.0005;
@@ -142,4 +143,5 @@ public class Constants {
     public static final double feederToFlywheelLength = 56000;
     public static final double feederIntakeDelay = 2.5; // In seconds
     public static final double antiBounce = 5;
+
 }

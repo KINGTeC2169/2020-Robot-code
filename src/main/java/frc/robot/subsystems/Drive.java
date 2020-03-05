@@ -27,7 +27,7 @@ public class Drive implements Subsystem {
     private final DriveCommand dCommand;
     private final Limelight limelight;
     private final DriveState driveState;
-    private final AHRS navX;
+//    private final AHRS navX;
     private final MiniPID visionDrive;
     private final PD turnControl;
     private final PD driveControl;
@@ -70,7 +70,7 @@ public class Drive implements Subsystem {
         left.setSensorPhase(false);
         right.setSensorPhase(true);
 
-        navX = new AHRS(SPI.Port.kMXP, (byte) 200);
+//        navX = new AHRS(SPI.Port.kMXP, (byte) 200);
 
         visionDrive = new MiniPID(Constants.visionDriveP, Constants.visionDriveI, Constants.visionDriveD);
         visionDrive.setSetpoint(0);
@@ -78,9 +78,14 @@ public class Drive implements Subsystem {
         driveControl = new PD(Constants.linearDriveDriveP, Constants.linearDriveDriveD);
         turnTowardsZero = new PD(Constants.alignToGyroP, Constants.alignToGyroD);
 
-        SmartDashboard.putNumber("Vision P", Constants.visionDriveP);
-        SmartDashboard.putNumber("Vision I", Constants.visionDriveI);
-        SmartDashboard.putNumber("Vision D", Constants.visionDriveD);
+        visionDrive.setP(Constants.visionDriveP);
+        visionDrive.setI(Constants.visionDriveI);
+        visionDrive.setD(Constants.visionDriveD);
+        visionDrive.setMaxIOutput(.225);
+
+//        SmartDashboard.putNumber("Vision P", Constants.visionDriveP);
+//        SmartDashboard.putNumber("Vision I", Constants.visionDriveI);
+//        SmartDashboard.putNumber("Vision D", Constants.visionDriveD);
     }
 
     @Override
@@ -101,7 +106,9 @@ public class Drive implements Subsystem {
             findTargetStarted = false;
         }
 
-        if(dCommand.isVision()) {
+        if(dCommand.isDriveForward()) {
+            setOutput(1, 1);
+        } else if(dCommand.isVision()) {
             visionDrive(dCommand.getThrottle());
         } else if(dCommand.isCheesy()) {
             cheesyDrive(dCommand.getThrottle(), dCommand.getWheel(), dCommand.getQuickTurn());
@@ -131,11 +138,11 @@ public class Drive implements Subsystem {
 
     // Drive straight with gyro assistance
     private void updateLinearDrive() {
-        double rotations = (getLeftRotations() + getRightRotations()) / 2;
-        linearDriveDistance = Conversion.rotationsToInches(rotations, Constants.driveWheelDiameter);
-        double angleController = turnControl.getOutput(linearDriveMultiplier * (navX.getAngle() - linearDriveTargetAngle));
-        double driveController = driveControl.getOutput(linearDriveTargetDistance - linearDriveDistance);
-        setOutput(driveController + angleController, driveController - angleController);
+//        double rotations = (getLeftRotations() + getRightRotations()) / 2;
+//        linearDriveDistance = Conversion.rotationsToInches(rotations, Constants.driveWheelDiameter);
+//        double angleController = turnControl.getOutput(linearDriveMultiplier * (navX.getAngle() - linearDriveTargetAngle));
+//        double driveController = driveControl.getOutput(linearDriveTargetDistance - linearDriveDistance);
+//        setOutput(driveController + angleController, driveController - angleController);
     }
 
     private void startFindTarget() {
@@ -257,40 +264,40 @@ public class Drive implements Subsystem {
     // Aim at the target
     private void visionDrive(double throttle) {
         if(limelight.isValidTarget()) {
-            DriverStation.reportWarning(""+SmartDashboard.getNumber("Vision P", Constants.visionDriveP),false);
-            visionDrive.setP(SmartDashboard.getNumber("Vision P", Constants.visionDriveP));
-            visionDrive.setI(SmartDashboard.getNumber("Vision I", Constants.visionDriveI));
-            visionDrive.setD(SmartDashboard.getNumber("Vision D", Constants.visionDriveD));
-            visionDrive.setMaxIOutput(.225);
+//            DriverStation.reportWarning(""+SmartDashboard.getNumber("Vision P", Constants.visionDriveP),false);
+//            visionDrive.setP(SmartDashboard.getNumber("Vision P", Constants.visionDriveP));
+//            visionDrive.setI(SmartDashboard.getNumber("Vision I", Constants.visionDriveI));
+//            visionDrive.setD(SmartDashboard.getNumber("Vision D", Constants.visionDriveD));
+//            visionDrive.setMaxIOutput(.225);
             double error = limelight.getCenter().x;
             double output = Constants.outsideP * -error;
             if(Math.abs(error) < 4) {
-                SmartDashboard.putString("In PID?", "PID");
+//                SmartDashboard.putString("In PID?", "PID");
                 output = visionDrive.getOutput(error);
                 left.set(ControlMode.PercentOutput, throttle - output);
                 right.set(ControlMode.PercentOutput, throttle + output);
-                SmartDashboard.putNumber("PID Output", output);
+//                SmartDashboard.putNumber("PID Output", output);
             }
             else if(Math.abs(error) < 7 && Math.abs(error) > 2){
                 double val = .2;
                 if (error < 0){
-                    SmartDashboard.putString("In PID?", "1");
+//                    SmartDashboard.putString("In PID?", "1");
                     left.set(ControlMode.PercentOutput, -val);
                     right.set(ControlMode.PercentOutput, val);
                 }
                 else if (error > 0){
-                    SmartDashboard.putString("In PID?", "2");
+//                    SmartDashboard.putString("In PID?", "2");
                     left.set(ControlMode.PercentOutput, val);
                     right.set(ControlMode.PercentOutput, -val);
                 }
             }
             else if (error < 0){
-                SmartDashboard.putString("In PID?", "3");
+//                SmartDashboard.putString("In PID?", "3");
                 left.set(ControlMode.PercentOutput, -.25);
                 right.set(ControlMode.PercentOutput, .25);
             }
             else if (error > 0){
-                SmartDashboard.putString("In PID?", "4");
+//                SmartDashboard.putString("In PID?", "4");
                 left.set(ControlMode.PercentOutput, .25);
                 right.set(ControlMode.PercentOutput, -.25);
             }
@@ -323,11 +330,12 @@ public class Drive implements Subsystem {
     }
 
     private double getAngle() {
-        if(Constants.usingTestBed) {
-            return Debug.getNumber("navX angle");
-        } else {
-            return navX.getAngle();
-        }
+//        if(Constants.usingTestBed) {
+//            return Debug.getNumber("navX angle");
+//        } else {
+//            return navX.getAngle();
+//        }
+        return 10;
     }
 
     protected double getLinearDriveDistance() {

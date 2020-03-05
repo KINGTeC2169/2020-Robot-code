@@ -56,7 +56,7 @@ public class Robot extends TimedRobot {
         superstructure.reset();
         ballTracker.enable();
         state.reset();
-        autoMode = chooser.getSelected();
+        autoMode = new Owen();
         if (autoMode != null) {
             if(autoMode instanceof TestMode) {
                 autoMode = new TestMode((int) SmartDashboard.getNumber("Test Mode", 0));

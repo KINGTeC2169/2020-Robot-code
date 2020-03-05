@@ -1,5 +1,8 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.cscore.CvSink;
+import edu.wpi.cscore.CvSource;
 import edu.wpi.first.wpilibj.Compressor;
 import frc.robot.commands.CommandMachine;
 import frc.robot.states.RobotState;
@@ -45,6 +48,9 @@ public class Superstructure {
     private Compressor compressor;
 
     public void start() {
+
+        CameraServer.getInstance().startAutomaticCapture();
+
         reset();
         limelight.start();
         if(!Constants.usingTestBed) {
@@ -55,6 +61,13 @@ public class Superstructure {
 
     public void update(RobotState state) {
         colorSensor.update();
+
+        if(shooter.isSpinningUp()){
+            compressor.stop();
+        }
+        else{
+            compressor.start();
+        }
 
         // Update subsystems
         if(drive != null) drive.update();
@@ -128,6 +141,14 @@ public class Superstructure {
             return false;
         } else {
             return shooter.isHoodAimed();
+        }
+    }
+
+    public boolean isShotABall() {
+        if(indexer == null) {
+            return false;
+        } else {
+            return indexer.isShotABall();
         }
     }
 }

@@ -13,7 +13,7 @@ public class DriveCommand {
         }
     }
 
-    private enum DriveCommandState {RESTING, CHEESY, AUTO_VISION, ARCADE_VISION, ROTATE_DRIVE, FIND_TARGET, LINEAR_DRIVE}
+    private enum DriveCommandState {RESTING, FORWARD, CHEESY, AUTO_VISION, ARCADE_VISION, ROTATE_DRIVE, FIND_TARGET, LINEAR_DRIVE}
 
     private final Controls controls;
 
@@ -58,6 +58,10 @@ public class DriveCommand {
 
     public void rest() {
         state = DriveCommandState.RESTING;
+    }
+
+    public void driveForward() {
+        state = DriveCommandState.FORWARD;
     }
 
     public void setAutoVision(double throttle) {
@@ -152,6 +156,10 @@ public class DriveCommand {
 
     public boolean isResting() {
         return state == DriveCommandState.RESTING;
+    }
+
+    public boolean isDriveForward() {
+        return state == DriveCommandState.FORWARD;
     }
 
     public boolean isCheesy() {
