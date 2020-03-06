@@ -43,7 +43,9 @@ public class Shooter implements Subsystem {
 
         master.configContinuousCurrentLimit(40);
         master.configClosedloopRamp(.03,0);
-        master.enableCurrentLimit(true);
+        master.configPeakCurrentLimit(70);
+        master.configPeakCurrentDuration(100);
+        master.enableCurrentLimit(false);
 
         master.setSensorPhase(true);
         hood.setSensorPhase(true);

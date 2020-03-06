@@ -61,7 +61,17 @@ public class Drive implements Subsystem {
         dog.setName("High Gear");
 
         left = ControllerFactory.masterTalon(ActuatorMap.leftTop, true);
+        left.configOpenloopRamp(.3);
         right = ControllerFactory.masterTalon(ActuatorMap.rightTop, false);
+        left.configContinuousCurrentLimit(40);
+        left.configPeakCurrentLimit(70);
+        left.enableCurrentLimit(true);
+        left.configPeakCurrentDuration(100);
+        right.configPeakCurrentLimit(70);
+        right.configPeakCurrentDuration(100);
+        right.configContinuousCurrentLimit(40);
+        right.enableCurrentLimit(true);
+        right.configOpenloopRamp(.3);
         ControllerFactory.slaveVictor(ActuatorMap.leftFront, false, left);
         ControllerFactory.slaveVictor(ActuatorMap.leftBack, false, left);
         ControllerFactory.slaveVictor(ActuatorMap.rightFront, true, right);
