@@ -13,7 +13,7 @@ public class IndexerCommand {
         }
     }
 
-    private enum LoadMode {REST, LOAD, SHOOT}
+    private enum LoadMode {REST, LOAD, SHOOT, EXHAUST}
 
     private final Controls controls;
 
@@ -25,7 +25,9 @@ public class IndexerCommand {
     }
 
     protected void teleop() {
-        if(controls.xbox.getRawButton(6)) {
+        if(controls.xbox.getXButton()) {
+            loadMode = LoadMode.EXHAUST;
+        } else if(controls.xbox.getRawButton(6)) {
             loadMode = LoadMode.SHOOT;
         } else {
             loadMode = LoadMode.LOAD;
@@ -51,6 +53,10 @@ public class IndexerCommand {
     }
 
     /* Getters */
+
+    public boolean isExhaust() {
+        return loadMode == LoadMode.EXHAUST;
+    }
 
     public boolean isLoad() {
         return loadMode == LoadMode.LOAD;

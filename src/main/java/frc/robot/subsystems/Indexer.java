@@ -115,7 +115,10 @@ public class Indexer implements Subsystem {
 //        SmartDashboard.putBoolean("ballsPlaced()", ballsPlaced());
 //        SmartDashboard.putBoolean("idxCommand.isShoot()", idxCommand.isShoot());
         // Funnel condition
-        if(
+        if(idxCommand.isExhaust()) {
+            funnel.set(ControlMode.PercentOutput, -.3);
+            balls = new ArrayList<Double>();
+        } else if(
                 ballsPlaced() &&
                 (balls.size() < 2 && idxCommand.isRunFunnel() ||
                 balls.size() < 3 && isShooting() ||
@@ -131,7 +134,9 @@ public class Indexer implements Subsystem {
 //        SmartDashboard.putBoolean("isShooting", isShooting());
 
         // Feeder condition
-        if(
+        if(idxCommand.isExhaust()) {
+            funnel.set(ControlMode.PercentOutput, -.3);
+        } else if(
                 !indexerEnter.get() && balls.size() < 2 ||
                 !ballsPlaced() ||
                 isShooting() ||

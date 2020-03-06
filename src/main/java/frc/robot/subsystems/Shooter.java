@@ -149,7 +149,7 @@ public class Shooter implements Subsystem {
                 master.set(ControlMode.PercentOutput, flywheelBase + flywheelController.getOutput(error));
             }
 
-            SmartDashboard.putBoolean("Primed?", Math.abs(getRpmError()) < 50);
+            SmartDashboard.putBoolean("Primed?", Math.abs(getRpmError()) < Constants.minShootingError);
 
         } else {
             SmartDashboard.putBoolean("Primed?", false);

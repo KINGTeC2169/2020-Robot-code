@@ -14,7 +14,7 @@ public class IntakeCommand {
 
     private final Controls controls;
 
-    private boolean piston = true;
+    private boolean piston = false;
     private boolean forceIntake = false;
 
     private IntakeCommand() {
@@ -31,6 +31,10 @@ public class IntakeCommand {
 
     public void setIntake() {
         forceIntake = true;
+    }
+
+    public void setBallJail(boolean on) {
+        piston = !on;
     }
 
     public void rest() {

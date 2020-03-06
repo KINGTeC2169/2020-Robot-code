@@ -54,9 +54,9 @@ public class Constants {
     public static final double visionTurnOutput = .4;
     public static final double outsideP = .02;
     public static final double visionDriveP = .07;
-    public static final double visionDriveI = .00001;
+    public static final double visionDriveI = .001;
     public static final double visionDriveD = .001;
-    public static final double acceptedAimError = 1;
+    public static final double acceptedAimError = 2;
 
     // Getting in range of target
     public static final double turnTowardsTargetP = 0.02;
