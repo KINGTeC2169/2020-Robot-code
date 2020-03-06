@@ -42,10 +42,10 @@ public class Shooter implements Subsystem {
         hood = ControllerFactory.masterTalon(ActuatorMap.flywheelHood, true);
 
         master.configContinuousCurrentLimit(40);
-        master.configClosedloopRamp(.03,0);
-        master.configPeakCurrentLimit(70);
-        master.configPeakCurrentDuration(100);
-        master.enableCurrentLimit(false);
+        master.configOpenloopRamp(.07,0);
+        master.configPeakCurrentLimit(60);
+        master.configPeakCurrentDuration(25);
+        master.enableCurrentLimit(true);
 
         master.setSensorPhase(true);
         hood.setSensorPhase(true);
@@ -143,7 +143,7 @@ public class Shooter implements Subsystem {
             else{
                 double error = getRpmError();
                 if(error < 500) {
-                    flywheelBase += (Constants.flywheelBaseP + .00003) * error;
+                    flywheelBase += (Constants.flywheelBaseP + .00005) * error;
 //                    SmartDashboard.putNumber("Flywheel base", flywheelBase);
                 } else {
                     flywheelBase = Constants.flywheelBase + .25;

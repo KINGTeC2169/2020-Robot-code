@@ -14,7 +14,7 @@ public class Owen implements Mode {
 
     public Owen() {
         series = new Series(
-                new BallJail(),
+                new BallJail(),s
                 new ShootBalls(),
                 new Wait(.5),
                 new TimedDrive(0.5)
