@@ -1,8 +1,6 @@
 package frc.robot.auto.modes;
 
 import frc.robot.auto.actions.*;
-import frc.robot.commands.CommandMachine;
-import frc.robot.subsystems.Superstructure;
 
 public class Owen implements Mode {
     /*
@@ -16,6 +14,7 @@ public class Owen implements Mode {
         series = new Series(
                 new BallJail(),
                 new Wait(6),
+                new BallJail(),
                 new ShootBalls(),
                 new Wait(.5),
                 new TimedDrive(0.5)
