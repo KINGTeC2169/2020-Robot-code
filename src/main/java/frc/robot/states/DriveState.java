@@ -76,8 +76,6 @@ public class DriveState {
                     Math.sqrt(cd2*cd2 - robotY * robotY) * ((d1d2c > Math.PI / 2) ? 1 : -1),
                     robotY
             );
-
-            Debug.visionEstimate(Conversion.radToDeg(p1ty), Conversion.radToDeg(p2ty), cd1, cd2, Conversion.radToDeg(d1d2c), visionEstimate);
         } else {
             visionEstimate = new Vector2();
         }

@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.ShooterCommand;
 import frc.util.*;
@@ -80,11 +79,8 @@ public class Shooter implements Subsystem {
 
         if(hood.isFwdLimitSwitchClosed() == 1) {
             hoodConfigured = false; // Recalibrate if we hit the forward limit switch
-//            System.out.println("Fwd Limit Hit!");
         }
         if(!hoodConfigured) {
-//            SmartDashboard.putNumber("Hood State", 1);
-//            System.out.println("Configuring Hood!");
             // Calibrate the hood
             hood.set(ControlMode.PercentOutput, -.5);
             if(hood.isRevLimitSwitchClosed() == 1) {
@@ -92,23 +88,16 @@ public class Shooter implements Subsystem {
                 hoodConfigured = true;
             }
         } else if(trenchMode) {
-//            SmartDashboard.putNumber("Hood State", 2);
             // Ooh yeah it's trench time
             if(Constants.startingHoodAngle + Conversion.encoderTicksToDegrees(hood.getSelectedSensorPosition(0)) > Constants.trenchSafeHoodAngle) {
                 hood.set(ControlMode.PercentOutput, -1);
             }
         } else if(aim) {
-//            SmartDashboard.putNumber("Hood State", 3);
             double realAngle = Constants.startingHoodAngle - hood.getSelectedSensorPosition() / Constants.ticksPerHoodDegree;
-
-//            SmartDashboard.putNumber("Hood encoder", hood.getSelectedSensorPosition());
-//            SmartDashboard.putNumber("Wanted Hood encoder", (Constants.startingHoodAngle - wantedAngle) * Constants.ticksPerHoodDegree);
-            SmartDashboard.putNumber("Current Hood Angle", realAngle);
 
             hoodError = realAngle - wantedAngle;
             hood.set(ControlMode.Position, (Constants.startingHoodAngle - wantedAngle) * Constants.ticksPerHoodDegree);
         } else {
-//            SmartDashboard.putNumber("Hood State", 4);
             hood.set(ControlMode.PercentOutput, -.5);
         }
     }
@@ -134,7 +123,6 @@ public class Shooter implements Subsystem {
                 double error = getRpmError();
                 if(error < 500) {
                     flywheelBase += Constants.flywheelBaseP * error;
-//                    SmartDashboard.putNumber("Flywheel base", flywheelBase);
                 } else {
                     flywheelBase = Constants.flywheelBase;
                 }
@@ -144,7 +132,6 @@ public class Shooter implements Subsystem {
                 double error = getRpmError();
                 if(error < 500) {
                     flywheelBase += (Constants.flywheelBaseP + .00005) * error;
-//                    SmartDashboard.putNumber("Flywheel base", flywheelBase);
                 } else {
                     flywheelBase = Constants.flywheelBase + .25;
                 }
