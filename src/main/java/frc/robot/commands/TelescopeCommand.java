@@ -18,6 +18,7 @@ public class TelescopeCommand {
     private boolean up = false;
     private boolean extending = false;
     private boolean retracting = false;
+    private boolean lb = false; // Left bumper
     private boolean pawl = true;
 
     private TelescopeCommand() {
@@ -32,14 +33,24 @@ public class TelescopeCommand {
         }
         if(controls.xbox.getPOV() == 0 && up && pawl) {
             extending = true;
-        } else if(retracting && controls.xbox.getRawButton(5)) {
-            pawl = false;
+        } else if(retracting && !lb && controls.xbox.getRawButton(5)) {
+            pawl = !pawl;
         } else if(controls.xbox.getPOV() == 180 && up) {
             retracting = true;
         } else {
             extending = false;
             retracting = false;
         }
+//        if(controls.xbox.getPOV() == 0) {
+//            extending = true;
+//        } else if(controls.xbox.getPOV() == 180) {
+//            retracting = true;
+//        } else {
+//            extending = false;
+//            retracting = false;
+//        }
+
+        lb = controls.xbox.getRawButton(5);
     }
 
     /* Getters */

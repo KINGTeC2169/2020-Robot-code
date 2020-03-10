@@ -10,8 +10,8 @@ public class ActuatorMap {
     public static final int dogRetract = 5;
     public static final int intakeExtend = 4;
     public static final int intakeRetract = 3;
-    public static final int climberExtend = 0;
-    public static final int climberRetract = 7;
+    public static final int climberExtend = 7;
+    public static final int climberRetract = 0;
     public static final int pawlExtend = 1;
     public static final int pawlRetract = 6;
 

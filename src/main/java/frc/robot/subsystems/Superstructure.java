@@ -109,7 +109,7 @@ public class Superstructure {
     /* For communicating */
 
     public boolean isSlowFlywheel() {
-        return Math.abs(shooter.getRpmError()) < Constants.minShootingError;
+        return shooter.getRpm() < Constants.minShootingRpm;
     }
 
     public double getLinearDriveDistance() {

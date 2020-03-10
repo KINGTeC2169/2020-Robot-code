@@ -21,7 +21,6 @@ public class Telescope implements Subsystem {
         }
     }
 
-    private final Controls controls;
     private final TelescopeCommand tCommand;
 
     private TalonSRX master;
@@ -29,7 +28,6 @@ public class Telescope implements Subsystem {
     private DSolenoid pawl;
 
     private Telescope(TelescopeCommand tCommand) {
-        controls = Controls.getInstance();
         this.tCommand = tCommand;
         master = ControllerFactory.masterTalon(ActuatorMap.telescopingMaster, false);
         ControllerFactory.slaveVictor(ActuatorMap.telescopingSlave, false, master);
@@ -45,9 +43,9 @@ public class Telescope implements Subsystem {
     public void update() {
         pawl.set(tCommand.isPawl());
         if(tCommand.isExtending()) {
-            master.set(ControlMode.PercentOutput, 1);
+            master.set(ControlMode.PercentOutput, -.5);
         } else if(tCommand.isRetracting()) {
-            master.set(ControlMode.PercentOutput, -1);
+            master.set(ControlMode.PercentOutput, 1);
         } else {
             master.set(ControlMode.PercentOutput, 0);
         }
@@ -63,6 +61,6 @@ public class Telescope implements Subsystem {
     @Override
     public void reset() {
         master.set(ControlMode.PercentOutput, 0);
-        piston.set(false);
+        piston.set(true);
     }
 }

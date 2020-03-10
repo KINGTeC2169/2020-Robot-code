@@ -1,5 +1,6 @@
 package frc.robot.auto.actions;
 
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.commands.CommandMachine;
 import frc.robot.commands.IndexerCommand;
 import frc.robot.commands.ShooterCommand;
@@ -10,15 +11,24 @@ public class ShootBalls implements Action {
     private final IndexerCommand idxCommand;
     private final ShooterCommand sCommand;
     private final AimAtTarget aim;
+    private final double seconds;
+    private final Timer timer;
 
     private boolean aimed;
 
     public ShootBalls() {
+        this(30);
+    }
+
+    public ShootBalls(double seconds) {
         superstructure = Superstructure.getInstance();
         CommandMachine commandMachine = CommandMachine.getInstance();
         idxCommand = commandMachine.getIndexerCommand();
         sCommand = commandMachine.getShooterCommand();
         aim = new AimAtTarget();
+
+        this.seconds = seconds;
+        this.timer = new Timer();
     }
 
     @Override
@@ -34,7 +44,7 @@ public class ShootBalls implements Action {
         if(!aimed && aim.isFinished()) {
             aimed = true;
         }
-        if(superstructure.isHoodAimed() && aimed) {
+        if(superstructure.isHoodAimed() && aimed || timer.get() >= seconds) {
             idxCommand.shoot();
         } else {
             idxCommand.load();

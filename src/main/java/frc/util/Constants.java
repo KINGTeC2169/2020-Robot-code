@@ -98,7 +98,7 @@ public class Constants {
     public static final boolean intakeEnabled = true;
     public static final boolean patrickEnabled = false;
     public static final boolean shooterEnabled = true;
-    public static final boolean telescopeEnabled = false;
+    public static final boolean telescopeEnabled = true;
 
     // Testing
     public static final boolean usingTestBed = false;
@@ -131,6 +131,7 @@ public class Constants {
     public static final double startingHoodAngle = 90;
     public static final double trenchSafeHoodAngle = 25;
     public static final double minShootingError = 100;
+    public static final double minShootingRpm = 2000;
     public static final double wallDesiredRpm = 4900;
     public static final double closeDesiredRpm = 5000;
     public static final double farDesiredRpm = 6000;

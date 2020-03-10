@@ -67,7 +67,7 @@ public class Indexer implements Subsystem {
     }
 
     public boolean isShooting() {
-        if(balls.size() != 0 && idxCommand.isShoot()){
+        if(balls.size() != 0 && idxCommand.isShoot() && !slowFlywheel){
             return shooting = true;
         } else {
             return shooting;
@@ -135,12 +135,11 @@ public class Indexer implements Subsystem {
 
         // Feeder condition
         if(idxCommand.isExhaust()) {
-            funnel.set(ControlMode.PercentOutput, -.3);
+            feeder.set(ControlMode.PercentOutput, -.3);
         } else if(
                 !indexerEnter.get() && balls.size() < 2 ||
                 !ballsPlaced() ||
-                isShooting() ||
-                balls.size() == 0 && idxCommand.isShoot()
+                isShooting()
         ) {
 //            SmartDashboard.putString("Feeder Status", "Line 132");
             feeder.set(ControlMode.PercentOutput, .3);
