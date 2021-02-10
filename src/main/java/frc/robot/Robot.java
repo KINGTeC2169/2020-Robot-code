@@ -12,6 +12,7 @@ import frc.util.BallTracker;
 
 public class Robot extends TimedRobot {
 
+
     private final CommandMachine commandMachine = CommandMachine.getInstance();
     private final Superstructure superstructure = Superstructure.getInstance();
     private final RobotState state = RobotState.getInstance();
