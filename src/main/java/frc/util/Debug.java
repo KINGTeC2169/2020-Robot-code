@@ -136,10 +136,10 @@ public class Debug {
 
     private static void writeCsv() throws IOException {
         if(!headerCompleted) {
-            csvWriter.append(header).append("\n");
+            //csvWriter.append(header).append("\n");
             headerCompleted = true;
         }
-        csvWriter.append(line).append("\n");
+        //csvWriter.append(line).append("\n");
     }
 
     private static void out(String key, Object x) {
