@@ -17,6 +17,6 @@ public final class Main {
     RobotBase.startRobot(Robot::new);
 
     //disable telemetry to stop multithreading error
-    LiveWindow.disableAllTelemetry();
+    //LiveWindow.disableAllTelemetry();
   }
 }

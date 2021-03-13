@@ -50,7 +50,7 @@ public class ShooterCommand {
         if(shoot) {
             return true;
         } else {
-            return controls.xbox.getRawAxis(3) > Constants.flywheelDeadband;
+            return controls.xbox.getRawAxis(1) > Constants.flywheelDeadband;
         }
     }
 
@@ -62,7 +62,8 @@ public class ShooterCommand {
         if(aimHood) {
             return true;
         } else {
-            return controls.xbox.getRawAxis(3) > Constants.flywheelDeadband;
+            return controls.xbox.getRawAxis(1) > Constants.flywheelDeadband;
+            //it's 1 - rawAxis in order to flip the direction the joystick is pushed
         }
     }
 

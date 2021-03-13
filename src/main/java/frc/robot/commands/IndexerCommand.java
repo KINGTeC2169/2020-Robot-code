@@ -25,7 +25,7 @@ public class IndexerCommand {
     }
 
     protected void teleop() {
-        if(controls.xbox.getXButton()) {
+        if(controls.xbox.getRawButton(3)) {
             loadMode = LoadMode.EXHAUST;
         } else if(controls.xbox.getRawButton(6)) {
             loadMode = LoadMode.SHOOT;

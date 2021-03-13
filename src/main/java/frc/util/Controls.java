@@ -28,6 +28,17 @@ public class Controls {
         return false;
     }
 
+    //added X toggle to controls
+    private boolean holdingX = false;
+    public boolean xButton() {
+        if(!holdingX && xbox.getRawButton(1)) {
+            return holdingX = true;
+        } else if(!xbox.getXButton()) {
+            holdingX = false;
+        }
+        return false;
+    }
+
     public Controls() {
         testing = !Constants.usingControls;
     }

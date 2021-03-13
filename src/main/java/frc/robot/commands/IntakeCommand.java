@@ -52,6 +52,6 @@ public class IntakeCommand {
     }
 
     public boolean exhaust() {
-        return controls.xbox.getStartButton();
+        return controls.xbox.getRawButton(3);
     }
 }
