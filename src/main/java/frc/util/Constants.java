@@ -1,5 +1,7 @@
 package frc.util;
 
+
+
 public class Constants {
     /* Physical measurements */
 
@@ -130,12 +132,12 @@ public class Constants {
     public static final double flywheelDeadband = .2;
     public static final double startingHoodAngle = 90;
     public static final double trenchSafeHoodAngle = 25;
-    public static final double minShootingError = 100;
-    public static final double minShootingRpm = 2000;
-    public static final double wallDesiredRpm = 4900;
-    public static final double closeDesiredRpm = 5000;
-    public static final double farDesiredRpm = 6000;
-    public static final double hoodAllowedError = 2;
+    public static final double minShootingError = 500;
+    public static final double minShootingRpm = 2000; //2000
+    public static final double wallDesiredRpm = 4900; //4900
+    public static final double closeDesiredRpm = 5000; //5000
+    public static final double farDesiredRpm = 6000; //6000
+    public static final double hoodAllowedError = 250; //2
     public static final double farShotPitch = 20;
 
     // Indexer

@@ -148,7 +148,8 @@ public class Shooter implements Subsystem {
 
         SmartDashboard.putNumber("Hood Error", hood.getClosedLoopError());
 
-        SmartDashboard.putNumber("RPM", getRpm());
+        SmartDashboard.putNumber("Flywheel RPM", getRpm());
+        SmartDashboard.putNumber("Flywheel Ticks", master.getSelectedSensorVelocity(0));
 
         // Adjust hood
         aimHood(sCommand.isAimHood(), sCommand.isTrenchMode());

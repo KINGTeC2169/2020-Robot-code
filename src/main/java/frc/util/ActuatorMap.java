@@ -2,7 +2,7 @@ package frc.util;
 
 public class ActuatorMap {
     // Digital input
-    public static final int indexerSensorExit = 0;
+    public static final int indexerSensorExit = 2;
     public static final int indexerSensorEnter = 1;
 
     // PCM

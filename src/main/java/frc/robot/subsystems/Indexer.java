@@ -92,8 +92,9 @@ public class Indexer implements Subsystem {
         enterSensorActivated = indexerEnter.get();
         exitSensorActivated = indexerExit.get();
 
-//        SmartDashboard.putBoolean("Exit Sensor State", exitSensorActivated);
-//        SmartDashboard.putBoolean("Enter Sensor State", enterSensorActivated);
+
+        SmartDashboard.putBoolean("Exit Sensor State", exitSensorActivated);
+        SmartDashboard.putBoolean("Enter Sensor State", enterSensorActivated);
 
         // Update load mode
         if(enterSensorReleased || exitSensorReleased) {
@@ -111,9 +112,9 @@ public class Indexer implements Subsystem {
         }
         lastSensor = feeder.getSelectedSensorPosition(0);
 
-//        SmartDashboard.putNumber("Balls.size()", balls.size());
-//        SmartDashboard.putBoolean("ballsPlaced()", ballsPlaced());
-//        SmartDashboard.putBoolean("idxCommand.isShoot()", idxCommand.isShoot());
+        SmartDashboard.putNumber("Balls.size()", balls.size());
+        SmartDashboard.putBoolean("ballsPlaced()", ballsPlaced());
+        SmartDashboard.putBoolean("idxCommand.isShoot()", idxCommand.isShoot());
         // Funnel condition
         if(idxCommand.isExhaust()) {
             funnel.set(ControlMode.PercentOutput, -.3);
@@ -125,13 +126,13 @@ public class Indexer implements Subsystem {
                 balls.size() == 0 && idxCommand.isShoot())
         ) {
             funnel.set(ControlMode.PercentOutput, .3);
-//            SmartDashboard.putString("Funnel Status", "Line 119");
+            SmartDashboard.putString("Funnel Status", "Line 119");
         } else {
             funnel.set(ControlMode.PercentOutput, 0);
-//            SmartDashboard.putString("Funnel Status", "Line 122");
+            SmartDashboard.putString("Funnel Status", "Line 122");
         }
 
-//        SmartDashboard.putBoolean("isShooting", isShooting());
+        SmartDashboard.putBoolean("isShooting", isShooting());
 
         // Feeder condition
         if(idxCommand.isExhaust()) {
@@ -141,16 +142,16 @@ public class Indexer implements Subsystem {
                 !ballsPlaced() ||
                 isShooting()
         ) {
-//            SmartDashboard.putString("Feeder Status", "Line 132");
+            SmartDashboard.putString("Feeder Status", "Line 132");
             feeder.set(ControlMode.PercentOutput, .3);
         } else {
-//            SmartDashboard.putString("Feeder Status", "Line 135");
+            SmartDashboard.putString("Feeder Status", "Line 135");
             feeder.set(ControlMode.PercentOutput, 0);
         }
     }
 
     private boolean ballsPlaced() {
-//        SmartDashboard.putString("Load Number", loadMode.toString());
+        SmartDashboard.putString("Load Number", loadMode.toString());
         if(balls.size() == 0) {
             return true;
         } else if(loadMode == LoadMode.halfLoad) {
