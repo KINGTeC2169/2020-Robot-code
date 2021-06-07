@@ -34,10 +34,8 @@ public class Indexer implements Subsystem {
     private boolean exitSensorActivated = true;
     private boolean shooting = false;
     private boolean shotABall = false;
-    private enum LoadMode {
-            halfLoad, fullLoad
-    }
-    private LoadMode loadMode = LoadMode.halfLoad;
+    private int feederCooldownTicks = 0;
+
     private double lastSensor = 0;
     private ArrayList<Double> balls;
 
@@ -76,12 +74,19 @@ public class Indexer implements Subsystem {
 
     @Override
     public void update() {
+
+        updateShuffle();
+        feederCooldownTicks++;
+
         // Count balls
         boolean enterSensorReleased = false;
         boolean exitSensorReleased = false;
         if(indexerEnter.get() && !enterSensorActivated) {
-            enterSensorReleased = true;
-            balls.add(0.0);
+            if(feederCooldownTicks > 25){
+                enterSensorReleased = true;
+                balls.add(0.0);
+                feederCooldownTicks = 0;
+            }
         }
         if(balls.size() > 0 && balls.get(0) >= Constants.feederToFlywheelLength) {
             shooting = false;
@@ -99,9 +104,9 @@ public class Indexer implements Subsystem {
         // Update load mode
         if(enterSensorReleased || exitSensorReleased) {
             if(balls.size() <= 1) {
-                loadMode = LoadMode.halfLoad;
+//                loadMode = LoadMode.halfLoad;
             } else {
-                loadMode = LoadMode.fullLoad;
+//                loadMode = LoadMode.fullLoad;
             }
         }
 
@@ -110,6 +115,7 @@ public class Indexer implements Subsystem {
         for(int i = 0; i < balls.size(); i++) {
             balls.set(i, balls.get(i) + dSensor);
         }
+
         lastSensor = feeder.getSelectedSensorPosition(0);
 
         SmartDashboard.putNumber("Balls.size()", balls.size());
@@ -118,7 +124,7 @@ public class Indexer implements Subsystem {
         // Funnel condition
         if(idxCommand.isExhaust()) {
             funnel.set(ControlMode.PercentOutput, -.3);
-            balls = new ArrayList<Double>();
+            balls = new ArrayList<>();
         } else if(
                 ballsPlaced() &&
                 (balls.size() < 2 && idxCommand.isRunFunnel() ||
@@ -138,8 +144,11 @@ public class Indexer implements Subsystem {
         if(idxCommand.isExhaust()) {
             feeder.set(ControlMode.PercentOutput, -.3);
         } else if(
+                //Enter sensor is blocked and there is less than 2 balls in feeder
                 !indexerEnter.get() && balls.size() < 2 ||
+                // or !ballsPlaced()
                 !ballsPlaced() ||
+                // or we are shooting
                 isShooting()
         ) {
             SmartDashboard.putString("Feeder Status", "Line 132");
@@ -151,15 +160,42 @@ public class Indexer implements Subsystem {
     }
 
     private boolean ballsPlaced() {
-        SmartDashboard.putString("Load Number", loadMode.toString());
-        if(balls.size() == 0) {
+        if(balls.size() == 0){
             return true;
-        } else if(loadMode == LoadMode.halfLoad) {
+        }
+        else if(balls.size() == 1){
             return balls.get(0) >= Constants.feederHalfLength;
-        } else if(loadMode == LoadMode.fullLoad) {
+        }
+        else if(balls.size() == 2){
             return balls.get(0) >= Constants.feederLength;
-        } else {
-            return true;
+        }
+        return true;
+    }
+
+    private void updateShuffle(){
+        if(balls.size() > 0){
+            SmartDashboard.putNumber("Ball 0", balls.get(0));
+        }
+        else{
+            SmartDashboard.putNumber("Ball 0", -1);
+        }
+        if(balls.size() > 1){
+            SmartDashboard.putNumber("Ball 1", balls.get(1));
+        }
+        else{
+            SmartDashboard.putNumber("Ball 1", -1);
+        }
+        if(balls.size() > 2){
+            SmartDashboard.putNumber("Ball 2", balls.get(2));
+        }
+        else{
+            SmartDashboard.putNumber("Ball 2", -1);
+        }
+        if(balls.size() > 3){
+            SmartDashboard.putNumber("Ball 3", balls.get(3));
+        }
+        else{
+            SmartDashboard.putNumber("Ball 3", -1);
         }
     }
 
@@ -172,7 +208,6 @@ public class Indexer implements Subsystem {
         shotABall = false;
         enterSensorActivated = true;
         exitSensorActivated = false;
-        loadMode = LoadMode.halfLoad;
         lastSensor = 0;
 
         balls = new ArrayList<>();
