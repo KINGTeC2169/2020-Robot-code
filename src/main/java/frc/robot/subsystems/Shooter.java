@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Robot;
 import frc.robot.commands.ShooterCommand;
 import frc.util.*;
 import frc.util.drivers.*;
@@ -116,6 +117,7 @@ public class Shooter implements Subsystem {
 
     @Override
     public void update() {
+
         // Run flywheel
         if(sCommand.isShooting() || forceShoot) {
             isSpinning = true;
@@ -131,7 +133,7 @@ public class Shooter implements Subsystem {
             else{
                 double error = getRpmError();
                 if(error < 500) {
-                    flywheelBase += (Constants.flywheelBaseP + .00005) * error;
+                    flywheelBase += (Constants.flywheelBaseP) * error;
                 } else {
                     flywheelBase = Constants.flywheelBase + .25;
                 }
